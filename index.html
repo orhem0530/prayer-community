@@ -2,475 +2,201 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Faith Together</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faith Together: Every Request Matters</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Imported Lora (Serif) and Inter (Sans-serif) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: #333;
+            min-height: 100vh;
         }
-        
-        .font-serif-custom {
+        h1, h2, h3, .serif {
             font-family: 'Lora', serif;
         }
-
-        /* Ethereal & Glassmorphism Styles */
-        .sunset-gradient {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 50%, #f3f4f6 100%);
-            background-attachment: fixed;
-        }
-        
         .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
         }
-
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        /* Animations */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
-        .fade-in { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Breathing Animation for Prayer Mode */
-        .breathe-anim {
-            animation: breathe 8s ease-in-out infinite;
+        .breathe-animation {
+            animation: breathe 8s ease-in-out forwards;
         }
         @keyframes breathe {
-            0%, 100% { transform: scale(0.85); opacity: 0.15; }
-            50% { transform: scale(1.3); opacity: 0.4; }
+            0% { transform: scale(1); opacity: 0.8; }
+            40% { transform: scale(1.15); opacity: 1; }
+            60% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
-
-        .loader {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid #0369a1; /* sky-700 */
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .msg-in { animation: slideInLeft 0.4s ease-out; }
-        .msg-out { animation: slideInRight 0.4s ease-out; }
-        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
-        
-        .avatar-img {
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
-        }
-        
-        /* Layout utilities */
-        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
     </style>
 </head>
-<body class="text-slate-700 h-screen flex flex-col overflow-hidden relative sunset-gradient">
+<body class="flex flex-col h-screen overflow-hidden">
 
-    <!-- Auth Screen Overlay -->
-    <div id="auth-screen" class="absolute inset-0 bg-slate-50/90 backdrop-blur-md z-[100] flex flex-col items-center justify-center p-4 fade-in overflow-y-auto">
-        <div class="w-20 h-20 bg-white/80 border border-white rounded-full flex items-center justify-center text-4xl mb-6 shadow-sm text-sky-700 shrink-0">
-            <i class="fa-solid fa-hands-praying"></i>
-        </div>
-        <div class="glass-card p-6 sm:p-8 rounded-3xl w-full max-w-md relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-100/50 rounded-full blur-2xl"></div>
-            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-sky-100/50 rounded-full blur-2xl"></div>
+    <!-- AUTHENTICATION VIEW -->
+    <div id="authView" class="flex-1 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md p-8 text-center">
+            <h1 class="text-3xl font-semibold mb-2 text-indigo-900">Faith Together</h1>
+            <p class="text-sm text-gray-600 mb-6">Every Request Matters. Every Prayer Counts.</p>
             
-            <h2 class="text-2xl font-serif-custom font-bold text-center text-slate-800 mb-2 relative z-10" id="auth-title">Welcome Back</h2>
-            <p class="text-center text-slate-500 text-sm mb-6 relative z-10" id="auth-subtitle">Sign in to join the community.</p>
-            
-            <form id="auth-form" class="space-y-4 relative z-10">
-                <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">Email or Username</label>
-                    <input type="text" id="auth-email" placeholder="Email or 'admin'" required class="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none text-sm transition-all shadow-sm">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">Password</label>
-                    <input type="password" id="auth-password" required class="w-full px-4 py-3 rounded-xl border border-white/50 bg-white/50 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none text-sm transition-all shadow-sm">
-                </div>
-                <div id="auth-avatar-section" class="hidden">
-                    <label class="block text-sm font-medium text-slate-600 mb-1">Profile Photo (Optional)</label>
-                    <input type="file" id="auth-avatar" accept="image/*" class="w-full px-4 py-2 rounded-xl border border-white/50 bg-white/50 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100 transition-all cursor-pointer">
-                </div>
-                <div id="auth-error" class="text-rose-500 text-xs font-medium hidden text-center bg-rose-50 p-2 rounded-lg border border-rose-100"></div>
-                <button type="submit" id="auth-submit-btn" class="w-full bg-sky-700/90 text-white py-3 rounded-xl font-medium shadow-md hover:bg-sky-800 transition-colors flex justify-center items-center backdrop-blur-sm">
-                    <span>Sign In</span>
-                </button>
-            </form>
-            <div class="mt-6 text-center relative z-10">
-                <button type="button" id="auth-toggle-btn" class="text-sm text-sky-700 font-medium hover:underline p-2">
-                    Need an account? Sign Up
-                </button>
-            </div>
-            <div class="mt-4 text-center relative z-10 text-[10px] text-slate-400">
-                Admin Demo: admin / iloveCOC
+            <div class="space-y-4">
+                <input type="email" id="loginEmail" placeholder="Email (or 'admin')" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                <button id="loginBtn" class="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition">Enter Sanctuary</button>
+                <button id="registerBtn" class="w-full bg-white text-indigo-600 p-3 rounded-lg border border-indigo-600 hover:bg-indigo-50 transition">Register New Account</button>
             </div>
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="glass-nav z-10 px-4 py-3 flex justify-between items-center shrink-0 shadow-sm w-full max-w-4xl mx-auto rounded-b-2xl sm:rounded-b-3xl">
-        <div class="flex items-center space-x-3 overflow-hidden">
-            <div class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-full bg-gradient-to-br from-amber-100 to-sky-100 border border-white flex items-center justify-center text-sky-700 shadow-sm relative overflow-hidden group">
-                <img id="header-avatar" src="" class="avatar-img hidden z-10 absolute inset-0">
-                <i class="fa-solid fa-hands-praying relative z-0 group-hover:scale-110 transition-transform"></i>
-            </div>
-            <div class="flex flex-col truncate">
-                <div class="flex items-center">
-                    <h1 class="font-serif-custom font-bold text-lg sm:text-xl tracking-tight text-slate-800 leading-tight truncate">Faith Together</h1>
-                    <span id="admin-badge" class="hidden ml-2 shrink-0 bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Admin</span>
+    <!-- MAIN USER VIEW -->
+    <div id="userView" class="hidden flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40">
+        <!-- Top Nav -->
+        <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl sticky top-0 z-10">
+            <h2 class="text-xl font-semibold text-indigo-900">Faith Together</h2>
+            <div class="flex items-center gap-3">
+                <div class="text-right">
+                    <p class="text-xs text-gray-500">Life Score</p>
+                    <p id="navLifeScore" class="font-bold text-indigo-600">0</p>
                 </div>
-                <p class="text-[10px] sm:text-xs text-slate-500 leading-tight truncate font-medium">Every Request Matters. Every Prayer Counts</p>
+                <div id="navProfileIcon" class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold overflow-hidden border border-indigo-200 cursor-pointer">
+                    <span id="navInitials">U</span>
+                    <img id="navAvatar" src="" alt="Profile" class="w-full h-full object-cover hidden">
+                </div>
             </div>
-        </div>
-        <div class="flex items-center space-x-3 sm:space-x-4 shrink-0">
-            <div id="user-mini-stats" class="flex items-center space-x-2 cursor-pointer hidden">
-                <span class="text-[10px] sm:text-xs font-medium text-slate-500 bg-white/50 px-2 py-1.5 rounded-lg border border-white/40 shadow-sm whitespace-nowrap" id="nav-prayer-count">0 prayers</span>
-            </div>
-            <button id="logout-btn" class="text-slate-400 hover:text-sky-700 transition-colors p-2" title="Sign Out">
-                <i class="fa-solid fa-arrow-right-from-bracket text-lg"></i>
-            </button>
-        </div>
-    </header>
+        </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col overflow-y-auto pb-24 relative w-full sm:max-w-2xl md:max-w-4xl mx-auto pt-2 px-2 sm:px-4">
-        
-        <!-- Loading State -->
-        <div id="app-loading" class="absolute inset-0 flex flex-col items-center justify-center z-50 backdrop-blur-sm bg-white/30 rounded-3xl">
-            <div class="loader mb-4"></div>
-            <p class="text-sm text-slate-600 font-medium animate-pulse">Gathering community...</p>
-        </div>
-
-        <!-- TAB: Feed (User View) -->
-        <div id="tab-feed" class="tab-content hidden w-full p-2 sm:p-4 space-y-4 sm:space-y-5">
-            <div class="mb-2 sm:mb-4 px-1">
-                <h2 class="text-2xl sm:text-3xl font-serif-custom font-bold text-slate-800 drop-shadow-sm">Community Requests</h2>
-                <p class="text-slate-500 text-sm mt-1">Lift up others in prayer today.</p>
-            </div>
+        <!-- Scrollable Content -->
+        <main class="flex-1 overflow-y-auto px-4 pb-24 space-y-6">
             
-            <!-- Dynamic Life Score Bot Prompt -->
-            <div id="life-score-prompt" class="hidden glass-card p-4 rounded-2xl mb-2 flex items-start space-x-3 fade-in border-l-4 border-l-sky-400"></div>
-
-            <div id="feed-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            <div id="feed-empty" class="hidden flex flex-col items-center justify-center py-16 text-center">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white/50 border border-white rounded-full flex items-center justify-center text-sky-200 mb-4 shadow-sm">
-                    <i class="fa-solid fa-wind text-2xl sm:text-3xl"></i>
-                </div>
-                <h3 class="font-serif-custom font-bold text-lg text-slate-700">All caught up</h3>
-                <p class="text-sm text-slate-500 mt-1">There are no new active requests right now.</p>
-            </div>
-        </div>
-
-        <!-- TAB: Add Request (Bot Wizard) -->
-        <div id="tab-add" class="tab-content hidden w-full p-2 sm:p-4 flex-col h-full min-h-[70vh] fade-in">
-            <div class="mb-2 sm:mb-4 px-1 shrink-0">
-                <h2 class="text-2xl sm:text-3xl font-serif-custom font-bold text-slate-800 drop-shadow-sm" id="add-form-title">Share a Request</h2>
-                <p class="text-slate-500 text-sm mt-1" id="add-form-subtitle">Let our prayer guide assist you.</p>
+            <!-- Dynamic Bot Banner -->
+            <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-indigo-500">
+                <p id="botMessage" class="italic text-gray-700">"Peace be with you. How can the community support you today?"</p>
             </div>
 
-            <!-- Bot Chat Interface -->
-            <div class="flex-1 flex flex-col glass-card rounded-3xl overflow-hidden mb-2 relative min-h-[400px]">
-                <div id="bot-chat-history" class="flex-1 p-4 sm:p-5 space-y-4 sm:space-y-5 overflow-y-auto z-10 pb-4">
-                    <!-- Chat messages injected here -->
-                </div>
-                
-                <div id="bot-input-area" class="p-3 sm:p-4 bg-white/60 border-t border-white/50 backdrop-blur-md z-10 shrink-0">
-                    <!-- Dynamic inputs injected here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB: My Requests -->
-        <div id="tab-my-requests" class="tab-content hidden w-full p-2 sm:p-4 space-y-4 sm:space-y-5">
-            <div class="mb-2 sm:mb-4 px-1">
-                <h2 class="text-2xl sm:text-3xl font-serif-custom font-bold text-slate-800 drop-shadow-sm">My Requests</h2>
-                <p class="text-slate-500 text-sm mt-1">Manage your shared prayers.</p>
-            </div>
-            <div id="my-requests-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-            <div id="my-requests-empty" class="hidden flex flex-col items-center justify-center py-16 text-center">
-                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white/50 border border-white rounded-full flex items-center justify-center text-amber-200 mb-4 shadow-sm">
-                    <i class="fa-solid fa-folder-open text-2xl sm:text-3xl"></i>
-                </div>
-                <h3 class="font-serif-custom font-bold text-lg text-slate-700">No requests yet</h3>
-                <button id="btn-empty-add" class="mt-4 bg-sky-50 text-sky-700 px-4 py-2 rounded-xl font-medium text-sm hover:bg-sky-100 transition-colors border border-sky-100">Add a request</button>
-            </div>
-        </div>
-
-        <!-- TAB: Profile (Journey) -->
-        <div id="tab-profile" class="tab-content hidden w-full p-2 sm:p-4">
-            <div class="mb-4 sm:mb-6 px-1 flex justify-between items-start">
-                <div>
-                    <h2 class="text-2xl sm:text-3xl font-serif-custom font-bold text-slate-800 drop-shadow-sm">My Journey</h2>
-                    <p class="text-slate-500 text-sm mt-1">Track your spiritual milestones.</p>
-                </div>
-                <!-- Profile Avatar Manager -->
-                <div class="relative group cursor-pointer" id="profile-avatar-wrapper">
-                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white border-2 border-sky-200 overflow-hidden shadow-sm flex items-center justify-center relative text-sky-300">
-                        <img id="profile-avatar-img" src="" class="hidden avatar-img z-10 absolute inset-0">
-                        <i class="fa-solid fa-user text-2xl z-0"></i>
-                        <div class="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center z-20 transition-all">
-                            <i class="fa-solid fa-camera text-white text-xs sm:text-sm"></i>
-                        </div>
+            <!-- Profile Management Section (Hidden by default) -->
+            <div id="profileSection" class="hidden glass-card p-6 space-y-4">
+                <h3 class="text-lg font-semibold border-b pb-2">Your Profile</h3>
+                <div class="flex items-center gap-4">
+                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border">
+                        <span id="profileInitials" class="text-2xl text-gray-500">U</span>
+                        <img id="profilePreview" src="" class="w-full h-full object-cover hidden">
                     </div>
-                    <input type="file" id="profile-avatar-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-30">
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Update Photo</label>
+                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 w-full">
+                    </div>
                 </div>
+                <button id="saveProfileBtn" class="w-full bg-indigo-600 text-white py-2 rounded-lg mt-2 hidden">Save Photo</button>
+                <button id="logoutBtn" class="w-full bg-red-50 text-red-600 py-2 rounded-lg border border-red-200">Sign Out</button>
             </div>
 
-            <!-- Life Score Display (Spiritual Milestone) -->
-            <div class="glass-card rounded-3xl p-6 sm:p-8 text-center mb-6 relative overflow-hidden border border-amber-200/50">
-                <div class="absolute -top-12 -right-12 w-32 h-32 sm:w-40 sm:h-40 bg-amber-300/40 rounded-full blur-3xl"></div>
-                <div class="absolute -bottom-12 -left-12 w-32 h-32 sm:w-40 sm:h-40 bg-sky-300/30 rounded-full blur-3xl"></div>
-                
-                <i class="fa-solid fa-sun text-amber-500 text-4xl sm:text-5xl mb-4 drop-shadow-md relative z-10"></i>
-                <h3 class="font-serif-custom text-slate-700 text-base sm:text-lg mb-1 relative z-10">Spiritual Milestone</h3>
-                <div class="text-6xl sm:text-7xl font-serif-custom font-bold text-slate-800 mb-2 drop-shadow-sm relative z-10" style="text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);" id="profile-life-score">0</div>
-                <p class="text-amber-800/80 text-xs sm:text-sm font-semibold uppercase tracking-wider relative z-10">Your Life Score</p>
-                <p class="text-slate-600 text-xs mt-3 font-medium relative z-10">You have prayed for <strong id="profile-pray-count" class="text-slate-800">0</strong> requests overall.</p>
+            <!-- Bot Wizard: Add Request (Hidden by default) -->
+            <div id="addRequestSection" class="hidden glass-card p-6 space-y-4">
+                <h3 class="text-lg font-semibold text-indigo-900">Share Your Burden</h3>
+                <input type="text" id="reqDesc" placeholder="What are we praying for?" class="w-full p-2 border rounded">
+                <input type="text" id="reqNickname" placeholder="Your Nickname (e.g. Faithful_01)" class="w-full p-2 border rounded">
+                <div class="flex gap-2">
+                    <input type="number" id="reqGoal" placeholder="Prayer Goal (e.g. 50)" class="w-1/2 p-2 border rounded">
+                    <input type="date" id="reqDate" class="w-1/2 p-2 border rounded">
+                </div>
+                <button id="submitRequestBtn" class="w-full bg-indigo-600 text-white py-2 rounded-lg">Submit Request (-1 Score)</button>
             </div>
 
-            <!-- Life Score Explanation -->
-            <div class="glass-card rounded-3xl p-5 sm:p-6 mb-6 text-sm text-slate-600 space-y-3 sm:space-y-4">
-                <h3 class="font-serif-custom font-bold text-slate-800 text-lg mb-1">Understanding Your Score</h3>
-                <p class="leading-relaxed text-xs sm:text-sm">To keep our community balanced between asking for help and supporting others, we track a simple Life Score:</p>
-                <ul class="space-y-2 ml-1 text-xs sm:text-sm">
-                    <li class="flex items-center"><span class="w-7 sm:w-8 font-bold text-emerald-600 bg-emerald-50 py-0.5 px-1.5 rounded-md text-center mr-2">+1</span> when you pray for someone.</li>
-                    <li class="flex items-center"><span class="w-7 sm:w-8 font-bold text-rose-500 bg-rose-50 py-0.5 px-1.5 rounded-md text-center mr-2">-1</span> when you add a request.</li>
-                    <li class="flex items-center"><span class="w-7 sm:w-8 font-bold text-rose-500 bg-rose-50 py-0.5 px-1.5 rounded-md text-center mr-2">-1</span> when you skip a request.</li>
-                </ul>
+            <!-- Community Feed -->
+            <div id="communityFeed" class="space-y-4">
+                <!-- Cards injected via JS -->
             </div>
 
-            <h3 class="font-serif-custom font-bold text-slate-700 text-lg mb-4 px-2">Earned Badges</h3>
-            <div id="badges-container" class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4"></div>
+            <!-- Copyright Footer -->
+            <div class="w-full text-center py-6 mt-auto">
+                <p class="text-xs text-gray-500 opacity-70" style="font-family: 'Inter', sans-serif;">
+                    &copy; 2026 Orhem Abasolo-CCPYAM2026. All rights reserved.
+                </p>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="glass-card absolute bottom-0 w-full p-4 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200">
+            <button id="tabFeed" class="text-indigo-600 flex flex-col items-center"><i class="fas fa-hands-praying text-xl"></i><span class="text-xs mt-1">Community</span></button>
+            <button id="tabAdd" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center"><i class="fas fa-pen text-xl"></i><span class="text-xs mt-1">Request</span></button>
+            <button id="tabProfile" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center"><i class="fas fa-user text-xl"></i><span class="text-xs mt-1">Profile</span></button>
+        </nav>
+
+        <!-- Prayer Modal (Overlay) -->
+        <div id="prayerModal" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+            <div id="breathingCircle" class="w-32 h-32 rounded-full bg-indigo-100 border-4 border-indigo-300 mb-8 flex items-center justify-center shadow-lg">
+                <i class="fas fa-spa text-4xl text-indigo-500"></i>
+            </div>
+            <h3 class="text-2xl serif mb-2 text-indigo-900">Focus & Breathe</h3>
+            <p id="prayerFocusText" class="text-gray-600 mb-8 italic">"Praying for peace and healing..."</p>
+            <button id="confirmPrayBtn" class="bg-indigo-300 text-white px-8 py-3 rounded-full font-semibold cursor-not-allowed transition" disabled>Wait 8s...</button>
+        </div>
+    </div>
+
+    <!-- ADMIN COMMAND CENTER VIEW -->
+    <div id="adminView" class="hidden flex-col h-full w-full max-w-4xl mx-auto p-4 space-y-6">
+        <header class="glass-card p-6 flex justify-between items-center rounded-2xl bg-indigo-900 text-white border-none">
+            <div>
+                <h1 class="text-2xl font-bold">Admin Command Center</h1>
+                <p class="text-indigo-200 text-sm">Faith Together Operations</p>
+            </div>
+            <button id="adminLogoutBtn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm font-semibold transition">Log Out</button>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="glass-card p-6 text-center">
+                <p class="text-sm text-gray-500">Total Users</p>
+                <p id="statUsers" class="text-3xl font-bold text-indigo-900">0</p>
+            </div>
+            <div class="glass-card p-6 text-center">
+                <p class="text-sm text-gray-500">Active Requests</p>
+                <p id="statRequests" class="text-3xl font-bold text-indigo-900">0</p>
+            </div>
+            <div class="glass-card p-6 text-center border-b-4 border-red-500">
+                <p class="text-sm text-gray-500">Reported Posts</p>
+                <p id="statReports" class="text-3xl font-bold text-red-600">0</p>
+            </div>
         </div>
 
-        <!-- TAB: Admin Command Center -->
-        <div id="tab-admin" class="tab-content hidden w-full p-2 sm:p-4 space-y-4 sm:space-y-6">
-            <div class="mb-2 sm:mb-4 px-1 flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h2 class="text-2xl sm:text-3xl font-serif-custom font-bold text-slate-800 drop-shadow-sm"><i class="fa-solid fa-shield-halved text-rose-600 mr-2"></i>Command Center</h2>
-                    <p class="text-slate-500 text-sm mt-1">Manage platform safety and users.</p>
-                </div>
-            </div>
-
-            <!-- Admin Stats Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                    <i class="fa-solid fa-list-check text-sky-500 mb-2 text-xl"></i>
-                    <span class="text-2xl font-bold text-slate-800" id="admin-stat-active">0</span>
-                    <span class="text-[10px] sm:text-xs text-slate-500 font-medium uppercase mt-1">Active Posts</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                    <i class="fa-solid fa-users text-amber-500 mb-2 text-xl"></i>
-                    <span class="text-2xl font-bold text-slate-800" id="admin-stat-users">0</span>
-                    <span class="text-[10px] sm:text-xs text-slate-500 font-medium uppercase mt-1">Users</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center">
-                    <i class="fa-solid fa-hands-praying text-emerald-500 mb-2 text-xl"></i>
-                    <span class="text-2xl font-bold text-slate-800" id="admin-stat-prayers">0</span>
-                    <span class="text-[10px] sm:text-xs text-slate-500 font-medium uppercase mt-1">Total Prayers</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center bg-rose-50/50 border-rose-200/50">
-                    <i class="fa-solid fa-flag text-rose-500 mb-2 text-xl"></i>
-                    <span class="text-2xl font-bold text-rose-700" id="admin-stat-reported">0</span>
-                    <span class="text-[10px] sm:text-xs text-rose-600 font-medium uppercase mt-1">Reported</span>
-                </div>
-            </div>
-
-            <!-- Reported Posts Section -->
-            <div class="glass-card rounded-3xl p-4 sm:p-5">
-                <h3 class="font-serif-custom font-bold text-slate-700 text-lg mb-3 flex items-center"><i class="fa-solid fa-triangle-exclamation text-rose-500 mr-2"></i> Moderation Queue</h3>
-                <div id="admin-reported-container" class="space-y-3">
-                    <!-- Reported posts inject here -->
-                </div>
-            </div>
-
-            <!-- User Management Section -->
-            <div class="glass-card rounded-3xl p-4 sm:p-5">
-                <h3 class="font-serif-custom font-bold text-slate-700 text-lg mb-3 flex items-center"><i class="fa-solid fa-user-gear text-slate-500 mr-2"></i> Manage Users</h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[400px]">
-                        <thead>
-                            <tr class="border-b border-slate-200/60 text-xs uppercase text-slate-500">
-                                <th class="pb-2 font-medium">Member</th>
-                                <th class="pb-2 font-medium text-center">Score</th>
-                                <th class="pb-2 font-medium text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-users-table" class="text-sm divide-y divide-slate-100/50">
-                            <!-- User rows inject here -->
-                        </tbody>
-                    </table>
-                </div>
+        <div class="glass-card p-6 flex-1 overflow-y-auto">
+            <h3 class="text-lg font-bold mb-4">User Management</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="p-2">User</th>
+                            <th class="p-2">Score</th>
+                            <th class="p-2">Role</th>
+                            <th class="p-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminUserTable">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
             </div>
         </div>
         
         <!-- Copyright Footer -->
-        <div class="w-full text-center py-6 mt-auto shrink-0">
-            <p class="text-sm text-slate-500 opacity-70">
+        <div class="w-full text-center py-6 mt-auto">
+            <p class="text-xs text-gray-500 opacity-70" style="font-family: 'Inter', sans-serif;">
                 &copy; 2026 Orhem Abasolo-CCPYAM2026. All rights reserved.
             </p>
         </div>
-
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="glass-nav absolute bottom-0 w-full z-20 rounded-t-2xl sm:rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
-        <div class="flex justify-around max-w-2xl mx-auto items-end pb-safe pt-2 px-2 sm:px-6">
-            
-            <button id="nav-btn-feed" class="nav-btn flex flex-col items-center p-2 text-slate-400 hover:text-sky-700 transition-colors w-14 sm:w-16 group">
-                <div class="relative transition-transform group-hover:-translate-y-1">
-                    <i class="fa-solid fa-house text-lg sm:text-xl mb-1"></i>
-                </div>
-                <span class="text-[9px] sm:text-[10px] font-medium hidden sm:block">Feed</span>
-            </button>
-
-            <button id="nav-btn-my-requests" class="nav-btn flex flex-col items-center p-2 text-slate-400 hover:text-sky-700 transition-colors w-14 sm:w-16 group">
-                <div class="relative transition-transform group-hover:-translate-y-1">
-                    <i class="fa-solid fa-list-check text-lg sm:text-xl mb-1"></i>
-                </div>
-                <span class="text-[9px] sm:text-[10px] font-medium hidden sm:block">Mine</span>
-            </button>
-
-            <!-- FAB: ADD -->
-            <div class="relative -top-5 sm:-top-6 px-2">
-                <button id="nav-btn-add" class="bg-gradient-to-tr from-sky-700 to-sky-500 text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-[0_8px_20px_rgba(3,105,161,0.4)] flex items-center justify-center hover:shadow-[0_8px_25px_rgba(3,105,161,0.6)] transition-all transform hover:scale-105 active:scale-95 border-4 border-white/80 shrink-0">
-                    <i class="fa-solid fa-plus text-xl sm:text-2xl"></i>
-                </button>
-            </div>
-
-            <button id="nav-btn-both" class="nav-btn flex flex-col items-center p-2 text-slate-400 hover:text-sky-700 transition-colors w-14 sm:w-16 group">
-                <div class="relative transition-transform group-hover:-translate-y-1">
-                    <i class="fa-solid fa-arrows-rotate text-lg sm:text-xl mb-1"></i>
-                </div>
-                <span class="text-[9px] sm:text-[10px] font-medium hidden sm:block">Both</span>
-            </button>
-
-            <button id="nav-btn-profile" class="nav-btn flex flex-col items-center p-2 text-slate-400 hover:text-sky-700 transition-colors w-14 sm:w-16 group">
-                <div class="relative transition-transform group-hover:-translate-y-1">
-                    <i class="fa-solid fa-compass text-lg sm:text-xl mb-1"></i>
-                </div>
-                <span class="text-[9px] sm:text-[10px] font-medium hidden sm:block">Journey</span>
-            </button>
-            
-            <button id="nav-btn-admin" class="nav-btn flex flex-col items-center p-2 text-slate-400 hover:text-rose-600 transition-colors w-14 sm:w-16 group hidden">
-                <div class="relative transition-transform group-hover:-translate-y-1">
-                    <i class="fa-solid fa-shield-halved text-lg sm:text-xl mb-1"></i>
-                </div>
-                <span class="text-[9px] sm:text-[10px] font-medium hidden sm:block">Admin</span>
-            </button>
-            
-        </div>
-    </nav>
-
-    <!-- Edit Modal -->
-    <div id="edit-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card bg-white/90 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden fade-in border-0">
-            <div class="px-5 py-4 sm:px-6 sm:py-5 border-b border-slate-200/60 flex justify-between items-center bg-white/50">
-                <h3 class="font-serif-custom font-bold text-slate-800 text-lg">Edit Request</h3>
-                <button id="edit-close-btn" class="text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200/50 transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <form id="edit-form" class="p-5 sm:p-6 space-y-4">
-                <input type="hidden" id="edit-id">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Request Text</label>
-                    <textarea id="edit-title" required rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-200/80 bg-white/80 focus:ring-2 focus:ring-sky-500 outline-none text-sm resize-none shadow-sm"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Nickname</label>
-                    <input type="text" id="edit-nickname" placeholder="Anonymous" class="w-full px-4 py-3 rounded-xl border border-slate-200/80 bg-white/80 focus:ring-2 focus:ring-sky-500 outline-none text-sm shadow-sm">
-                </div>
-                <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Prayer Goal</label>
-                        <input type="number" id="edit-goal" min="1" class="w-full px-4 py-3 rounded-xl border border-slate-200/80 bg-white/80 focus:ring-2 focus:ring-sky-500 outline-none text-sm shadow-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Deadline</label>
-                        <input type="date" id="edit-deadline" class="w-full px-3 py-3 rounded-xl border border-slate-200/80 bg-white/80 focus:ring-2 focus:ring-sky-500 outline-none text-[13px] shadow-sm">
-                    </div>
-                </div>
-                <div id="edit-error" class="text-rose-500 text-xs hidden font-medium text-center bg-rose-50 p-2 rounded-lg"></div>
-                <div class="flex space-x-3 pt-4">
-                    <button type="submit" class="w-full bg-sky-700/90 text-white py-3 rounded-xl font-medium text-sm hover:bg-sky-800 transition-colors shadow-md backdrop-blur-sm">Save Changes</button>
-                </div>
-            </form>
-        </div>
     </div>
 
-    <!-- Prayer Mode Modal with Breathing Orb -->
-    <div id="prayer-mode-modal" class="fixed inset-0 bg-slate-900/85 backdrop-blur-xl z-[70] hidden flex flex-col items-center justify-center p-4 sm:p-6 fade-in text-white overflow-hidden">
-        
-        <!-- Breathing Visual Element -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-            <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-sky-300/30 blur-[60px] breathe-anim"></div>
-        </div>
-
-        <button id="pm-close-btn" class="absolute top-6 right-6 sm:top-8 sm:right-8 text-white/60 hover:text-white text-xl sm:text-2xl transition-colors z-20 bg-white/10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        
-        <div id="prayer-mode-content" class="w-full max-w-lg text-center z-10 relative px-4">
-            <div class="mb-8 sm:mb-10">
-                <i class="fa-solid fa-hands-praying text-4xl sm:text-5xl text-sky-200/80 mb-4 sm:mb-6 drop-shadow-md"></i>
-                <h2 class="text-lg sm:text-xl font-medium text-sky-100/90 mb-2 sm:mb-3 tracking-wide flex justify-center items-center gap-2" id="pm-nickname">Nickname</h2>
-                <p class="text-2xl sm:text-3xl font-serif-custom font-bold text-white leading-relaxed max-w-md mx-auto" style="text-shadow: 0 2px 10px rgba(0,0,0,0.3);" id="pm-title">Prayer request text</p>
-            </div>
-            
-            <div id="pm-action-area" class="h-32 flex flex-col items-center justify-center mt-6 sm:mt-8 w-full">
-                <button id="pm-pray-btn" disabled class="bg-white/10 text-white/50 cursor-not-allowed px-6 py-3.5 sm:px-8 sm:py-4 rounded-2xl font-medium text-base sm:text-lg w-full max-w-[280px] transition-all flex items-center justify-center border border-white/20 backdrop-blur-sm shadow-sm">
-                    <i class="fa-regular fa-clock mr-2"></i> Breathe... <span id="pm-timer" class="ml-1 w-4 text-left">8</span>
-                </button>
-                <button id="pm-skip-btn" class="mt-4 sm:mt-5 text-white/50 font-medium text-xs sm:text-sm hover:text-white transition-colors py-2 px-4 rounded-xl border border-transparent hover:border-white/20 hover:bg-white/5">
-                    Skip Request (-1 Score)
-                </button>
-            </div>
-            
-            <div id="pm-success-area" class="h-32 flex flex-col items-center justify-center hidden mt-6 sm:mt-8 w-full">
-                <p class="text-amber-300 font-bold mb-4 sm:mb-5 text-xl sm:text-2xl font-serif-custom drop-shadow-md"><i class="fa-solid fa-check-circle mr-2"></i>Prayer logged</p>
-                <p class="text-sky-100 mb-5 sm:mb-6 font-medium text-sm sm:text-base">Would you like to pray for another request?</p>
-                <div class="flex space-x-3 sm:space-x-4 justify-center w-full max-w-[300px]">
-                    <button id="pm-next-btn" class="flex-1 bg-amber-500/90 text-white py-3 rounded-xl font-medium hover:bg-amber-600 transition-colors shadow-lg shadow-amber-500/30 backdrop-blur-sm border border-amber-400">Yes</button>
-                    <button id="pm-close-btn-2" class="flex-1 bg-white/20 text-white py-3 rounded-xl font-medium hover:bg-white/30 transition-colors backdrop-blur-sm border border-white/30">No</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase & Application Logic -->
+    <!-- FIREBASE MODULE & LOGIC -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc, arrayUnion, increment, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        
-        let app, db, auth;
-        let currentUser = null;
-        let currentUserId = null;
-        let isAdmin = false;
-        let prayersList = [];
-        let userStats = {};
-        let allProfilesCache = {}; // For mapping UIDs to avatars
-        let redirectAfterSubmit = false;
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, arrayUnion, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // Firebase Configuration (Specific to User Project)
         const firebaseConfig = {
             apiKey: "AIzaSyDuuj14B0MjgFdzBQ5hqhnEv854044O1uw",
             authDomain: "faith-together-9cdc5.firebaseapp.com",
@@ -480,1078 +206,299 @@
             appId: "1:271648318318:web:266242f0939b33c212977f",
             measurementId: "G-1FH08EF823"
         };
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        let knownBadges = new Set();
-        let unsubscribePrayers = null;
-        let unsubscribeProfile = null;
-        let unsubscribeAllProfiles = null;
-        let isLoginMode = true;
-        let pendingSignupAvatarBase64 = null;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        let prayerTimerInterval = null;
-        let currentActivePrayer = null;
-        let sessionSkipped = new Set();
+        let currentUserDoc = null;
+        let activePrayerId = null;
 
-        let botStep = 0;
-        let draftRequest = { text: '', nickname: '', goal: 0, expiry: 0 };
-        let pendingDeleteId = null;
+        // --- AUTHENTICATION LOGIC ---
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            let email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPassword').value;
+            
+            if (email === 'admin' && pass === 'iloveCOC') email = 'mherabasolo@gmail.com';
 
-        const getPublicCollectionPath = (colName) => `artifacts/${appId}/public/data/${colName}`;
-        const getPublicDocPath = (colName, docId) => `artifacts/${appId}/public/data/${colName}/${docId}`;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) { alert("Login failed: " + err.message); }
+        });
 
-        const BADGES = [
-            { id: 'first_prayer', threshold: 1, name: "First Light", icon: "🌅", color: "bg-amber-100 text-amber-700 border border-amber-200/50", desc: "Offered first prayer" },
-            { id: 'warrior', threshold: 5, name: "Gentle Spirit", icon: "🕊️", color: "bg-sky-100 text-sky-700 border border-sky-200/50", desc: "Prayed for 5 requests" },
-            { id: 'intercessor', threshold: 10, name: "Faithful Guide", icon: "✨", color: "bg-purple-100 text-purple-700 border border-purple-200/50", desc: "Lifted up 10 requests" },
-        ];
+        document.getElementById('registerBtn').addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value;
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                await setDoc(doc(db, "users", cred.user.uid), {
+                    email: email,
+                    role: 'user',
+                    lifeScore: 5,
+                    photoURL: ""
+                });
+            } catch (err) { alert("Registration failed: " + err.message); }
+        });
 
-        try {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-        } catch (e) {
-            console.error("Firebase init error:", e);
-        }
+        const handleLogout = () => signOut(auth);
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        document.getElementById('adminLogoutBtn').addEventListener('click', handleLogout);
 
-        async function initApp() {
-            if(!auth) return;
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userSnap = await getDoc(doc(db, "users", user.uid));
+                currentUserDoc = userSnap.data();
 
-            if (initialAuthToken && !currentUser) {
-                try { await signInWithCustomToken(auth, initialAuthToken); } 
-                catch(e) { console.log("Custom token failed, falling back to UI"); }
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                const authScreen = document.getElementById('auth-screen');
-                const loadingScreen = document.getElementById('app-loading');
-
-                if (user) {
-                    currentUser = user;
-                    currentUserId = user.uid;
-                    isAdmin = user.email === 'admin@prayer.com';
-                    
-                    if(isAdmin) {
-                        document.getElementById('admin-badge').classList.remove('hidden');
-                        document.getElementById('nav-btn-admin').classList.remove('hidden');
-                    }
-                    else {
-                        document.getElementById('admin-badge').classList.add('hidden');
-                        document.getElementById('nav-btn-admin').classList.add('hidden');
-                    }
-
-                    document.getElementById('user-mini-stats').classList.remove('hidden');
-                    authScreen.classList.add('hidden');
-                    loadingScreen.classList.add('hidden');
-                    
-                    setupListeners();
-                    switchTab(isAdmin ? 'admin' : 'feed');
+                if (user.email === 'mherabasolo@gmail.com') {
+                    document.getElementById('authView').classList.add('hidden');
+                    document.getElementById('userView').classList.add('hidden');
+                    document.getElementById('adminView').classList.remove('hidden');
+                    loadAdminData();
                 } else {
-                    currentUser = null;
-                    currentUserId = null;
-                    isAdmin = false;
-                    document.getElementById('user-mini-stats').classList.add('hidden');
-                    document.getElementById('header-avatar').classList.add('hidden');
-                    document.getElementById('header-avatar').src = '';
-                    
-                    if(unsubscribePrayers) unsubscribePrayers();
-                    if(unsubscribeProfile) unsubscribeProfile();
-                    if(unsubscribeAllProfiles) unsubscribeAllProfiles();
-                    
-                    loadingScreen.classList.add('hidden');
-                    authScreen.classList.remove('hidden');
+                    document.getElementById('authView').classList.add('hidden');
+                    document.getElementById('adminView').classList.add('hidden');
+                    document.getElementById('userView').classList.remove('hidden');
+                    loadUserData();
                 }
-            });
-        }
-
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('auth-title').innerText = isLoginMode ? "Welcome Back" : "Begin Journey";
-            document.getElementById('auth-subtitle').innerText = isLoginMode ? "Sign in to join the community." : "Join our spiritual community.";
-            document.getElementById('auth-submit-btn').innerHTML = `<span>${isLoginMode ? "Sign In" : "Sign Up"}</span>`;
-            document.getElementById('auth-toggle-btn').innerText = isLoginMode ? "Need an account? Sign Up" : "Already on the journey? Sign In";
-            document.getElementById('auth-error').classList.add('hidden');
-            
-            if (!isLoginMode) {
-                document.getElementById('auth-avatar-section').classList.remove('hidden');
             } else {
-                document.getElementById('auth-avatar-section').classList.add('hidden');
+                document.getElementById('authView').classList.remove('hidden');
+                document.getElementById('userView').classList.add('hidden');
+                document.getElementById('adminView').classList.add('hidden');
             }
-        }
+        });
 
-        // Base64 File Reader helper
-        function handleFileInput(fileInputId, callback) {
-            const fileInput = document.getElementById(fileInputId);
-            if (!fileInput.files || !fileInput.files[0]) return;
-            
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            reader.onload = (e) => { callback(e.target.result); };
-            reader.readAsDataURL(file);
-        }
+        // --- USER PROFILE & IMAGE RESIZING LOGIC ---
+        document.getElementById('profilePhotoInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-        async function handleAuth(e) {
-            e.preventDefault();
-            let emailInput = document.getElementById('auth-email').value.trim().toLowerCase();
-            const password = document.getElementById('auth-password').value;
-            const errorDiv = document.getElementById('auth-error');
-            const btn = document.getElementById('auth-submit-btn');
-            
-            // Interceptor for admin shortcut
-            if (emailInput === 'admin' && password === 'iloveCOC') {
-                emailInput = 'admin@prayer.com';
-            } else if (!emailInput.includes('@')) {
-                errorDiv.innerText = "Please enter a valid email.";
-                errorDiv.classList.remove('hidden');
+            if (!file.type.match('image.*')) {
+                alert("Please upload a valid image file.");
                 return;
             }
 
-            errorDiv.classList.add('hidden');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loader !w-5 !h-5 !border-2"></div>';
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const MAX_WIDTH = 200;
+                    const MAX_HEIGHT = 200;
+                    let width = img.width;
+                    let height = img.height;
 
-            try {
-                if (isLoginMode) {
-                    await signInWithEmailAndPassword(auth, emailInput, password);
-                } else {
-                    const cred = await createUserWithEmailAndPassword(auth, emailInput, password);
-                    // Save User Core Record
-                    await setDoc(doc(db, getPublicCollectionPath('users'), cred.user.uid), {
-                        email: emailInput,
-                        uid: cred.user.uid,
-                        createdAt: Date.now()
-                    });
-                    // Save Initial Profile
-                    await setDoc(doc(db, getPublicCollectionPath('profiles'), cred.user.uid), {
-                        prayersDone: 0,
-                        lifeScore: 0,
-                        avatarBase64: pendingSignupAvatarBase64 || null
-                    }, { merge: true });
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height = Math.round(height * (MAX_WIDTH / width));
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width = Math.round(width * (MAX_HEIGHT / height));
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    document.getElementById('profilePreview').src = compressedBase64;
+                    document.getElementById('profilePreview').classList.remove('hidden');
+                    document.getElementById('profileInitials').classList.add('hidden');
+                    document.getElementById('saveProfileBtn').classList.remove('hidden');
+                    
+                    window.currentBase64Photo = compressedBase64; 
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (user && window.currentBase64Photo) {
+                await updateDoc(doc(db, 'users', user.uid), { photoURL: window.currentBase64Photo });
+                alert("Profile photo optimized and saved.");
+                document.getElementById('saveProfileBtn').classList.add('hidden');
+            }
+        });
+
+        // --- USER FEED LOGIC ---
+        function loadUserData() {
+            // Watch current user doc for score and avatar changes
+            onSnapshot(doc(db, "users", auth.currentUser.uid), (doc) => {
+                const data = doc.data();
+                document.getElementById('navLifeScore').innerText = data.lifeScore || 0;
+                
+                // Update Banners based on score
+                const botMsg = document.getElementById('botMessage');
+                if (data.lifeScore > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
+                else if (data.lifeScore <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
+                
+                // Avatar sync
+                if (data.photoURL) {
+                    document.getElementById('navAvatar').src = data.photoURL;
+                    document.getElementById('navAvatar').classList.remove('hidden');
+                    document.getElementById('navInitials').classList.add('hidden');
                 }
-            } catch (error) {
-                let msg = error.message;
-                if(error.code === 'auth/invalid-credential') msg = "Invalid email or password.";
-                if(error.code === 'auth/email-already-in-use') msg = "Email already in use. Please sign in.";
-                errorDiv.innerText = msg;
-                errorDiv.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<span>${isLoginMode ? "Sign In" : "Sign Up"}</span>`;
-            }
+            });
+
+            // Watch requests collection
+            const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const feed = document.getElementById('communityFeed');
+                feed.innerHTML = '';
+                snapshot.forEach((docSnap) => {
+                    const req = docSnap.data();
+                    const reportedCount = req.reportedBy ? req.reportedBy.length : 0;
+                    
+                    // Hide reported posts from the feed
+                    if (reportedCount > 0) return;
+
+                    const percent = Math.min((req.currentPrayers / req.goal) * 100, 100);
+                    
+                    const card = document.createElement('div');
+                    card.className = "glass-card p-4";
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h4 class="font-semibold text-indigo-900">${req.nickname}</h4>
+                                <p class="text-xs text-gray-500">Goal: ${req.currentPrayers} / ${req.goal}</p>
+                            </div>
+                            <button class="text-red-300 hover:text-red-500 text-xs" onclick="reportPost('${docSnap.id}')"><i class="fas fa-flag"></i></button>
+                        </div>
+                        <p class="text-gray-700 text-sm mb-3">"${req.description}"</p>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
+                            <div class="bg-indigo-500 h-1.5 rounded-full" style="width: ${percent}%"></div>
+                        </div>
+                        <button class="w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg font-medium hover:bg-indigo-100" onclick="initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
+                    `;
+                    feed.appendChild(card);
+                });
+            });
         }
 
-        async function logout() { 
-            await signOut(auth); 
-            showToast("Signed out successfully."); 
-        }
-
-        function startBotFlow() {
-            botStep = 1;
-            draftRequest = { text: '', nickname: '', goal: 0, expiry: 0 };
-            document.getElementById('bot-chat-history').innerHTML = '';
+        // --- SUBMIT REQUEST ---
+        document.getElementById('submitRequestBtn').addEventListener('click', async () => {
+            const desc = document.getElementById('reqDesc').value;
+            const nick = document.getElementById('reqNickname').value;
+            const goal = parseInt(document.getElementById('reqGoal').value);
+            const userRef = doc(db, 'users', auth.currentUser.uid);
             
-            appendBotMessage("Write your request: Type out what you would like prayer for.");
-            setInputMode('text', 'e.g., Healing, guidance, peace...');
-        }
-
-        function appendBotMessage(text) {
-            const chat = document.getElementById('bot-chat-history');
-            chat.innerHTML += `
-                <div class="flex items-end gap-2 msg-in mb-3 sm:mb-4">
-                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-amber-100 to-sky-100 border border-white flex items-center justify-center text-sky-600 text-[10px] sm:text-xs shrink-0 shadow-sm"><i class="fa-solid fa-leaf"></i></div>
-                    <div class="bg-white/80 backdrop-blur-sm border border-white/60 p-3 sm:p-3.5 rounded-2xl rounded-bl-none shadow-sm text-xs sm:text-sm text-slate-700 max-w-[85%]">${text}</div>
-                </div>
-            `;
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        function appendUserMessage(text) {
-            const chat = document.getElementById('bot-chat-history');
-            chat.innerHTML += `
-                <div class="flex items-start gap-2 justify-end msg-out mb-3 sm:mb-4">
-                    <div class="bg-sky-700/90 backdrop-blur-sm p-3 sm:p-3.5 rounded-2xl rounded-br-none shadow-sm text-xs sm:text-sm text-white max-w-[85%]">${text}</div>
-                </div>
-            `;
-            chat.scrollTop = chat.scrollHeight;
-        }
-
-        function setInputMode(mode, placeholder = '') {
-            const area = document.getElementById('bot-input-area');
-            area.innerHTML = '';
-
-            if (mode === 'text') {
-                area.innerHTML = `
-                    <form id="bot-text-form" class="flex gap-2 items-end">
-                        <textarea id="bot-text-input" rows="2" placeholder="${placeholder}" required
-                            class="flex-1 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border border-slate-200/80 bg-white/70 focus:bg-white focus:ring-2 focus:ring-sky-400 outline-none text-xs sm:text-sm resize-none transition-all shadow-sm"></textarea>
-                        <button type="submit" class="bg-sky-700/90 text-white h-10 w-10 sm:h-12 sm:w-12 rounded-full flex items-center justify-center shadow-md hover:bg-sky-800 transition-colors shrink-0 backdrop-blur-sm border border-white/20">
-                            <i class="fa-solid fa-paper-plane text-sm"></i>
-                        </button>
-                    </form>
-                `;
-                setTimeout(() => document.getElementById('bot-text-input').focus(), 100);
-            } 
-            else if (mode === 'goal_options') {
-                area.innerHTML = `
-                    <div class="grid grid-cols-3 gap-2">
-                        <button class="btn-bot-goal bg-white/80 text-sky-700 py-2.5 sm:py-3 rounded-xl font-medium text-xs sm:text-sm hover:bg-sky-50 border border-sky-100 shadow-sm transition-colors" data-val="1">1 Person</button>
-                        <button class="btn-bot-goal bg-white/80 text-sky-700 py-2.5 sm:py-3 rounded-xl font-medium text-xs sm:text-sm hover:bg-sky-50 border border-sky-100 shadow-sm transition-colors" data-val="2">2 People</button>
-                        <button class="btn-bot-goal bg-white/80 text-sky-700 py-2.5 sm:py-3 rounded-xl font-medium text-xs sm:text-sm hover:bg-sky-50 border border-sky-100 shadow-sm transition-colors" data-val="5">5 People</button>
-                    </div>
-                `;
+            const userSnap = await getDoc(userRef);
+            if (userSnap.data().lifeScore <= 0) {
+                alert("Your Life Score is too low to add a request. Please pray for others first.");
+                return;
             }
-            else if (mode === 'deadline_options') {
-                area.innerHTML = `
-                    <div class="flex flex-col gap-2 sm:gap-3">
-                        <div class="grid grid-cols-3 gap-2">
-                            <button class="btn-bot-deadline bg-white/80 text-sky-700 py-2 sm:py-2.5 rounded-xl font-medium text-xs sm:text-sm hover:bg-sky-50 border border-sky-100 shadow-sm transition-colors" data-val="1">1 Day</button>
-                            <button class="btn-bot-deadline bg-white/80 text-sky-700 py-2 sm:py-2.5 rounded-xl font-medium text-xs sm:text-sm hover:bg-sky-50 border border-sky-100 shadow-sm transition-colors" data-val="7">7 Days</button>
-                            <button class="btn-bot-deadline bg-white/80 text-sky-700 py-2 sm:py-2.5 rounded-xl font-medium text-xs sm:text-sm hover:bg-sky-50 border border-sky-100 shadow-sm transition-colors" data-val="30">30 Days</button>
-                        </div>
-                        <div class="flex gap-2">
-                            <input type="date" id="bot-custom-date" class="flex-1 px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl border border-slate-200/80 bg-white/80 outline-none text-xs sm:text-sm text-slate-700 shadow-sm">
-                            <button class="btn-bot-custom-date bg-sky-700/90 text-white px-4 sm:px-5 rounded-xl font-medium text-xs sm:text-sm hover:bg-sky-800 shadow-sm transition-colors">Set</button>
-                        </div>
-                    </div>
-                `;
+
+            if (desc && nick && goal) {
+                await addDoc(collection(db, "requests"), {
+                    userId: auth.currentUser.uid,
+                    description: desc,
+                    nickname: nick,
+                    goal: goal,
+                    currentPrayers: 0,
+                    createdAt: new Date(),
+                    reportedBy: []
+                });
+                
+                await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore - 1 });
+                alert("Request posted successfully!");
+                document.getElementById('addRequestSection').classList.add('hidden');
+                document.getElementById('communityFeed').classList.remove('hidden');
             }
-            else if (mode === 'saving') {
-                area.innerHTML = `<div class="flex justify-center items-center h-10 sm:h-12"><div class="loader !w-5 !h-5 sm:!w-6 sm:!h-6 !border-[3px]"></div></div>`;
-            }
-        }
+        });
 
-        function handleBotSubmit(e) {
-            e.preventDefault();
-            const input = document.getElementById('bot-text-input').value.trim();
-            if(botStep === 1 && !input) return;
-            advanceBotFlow(input, input || 'Anonymous');
-        }
-
-        function handleCustomDate() {
-            const dateVal = document.getElementById('bot-custom-date').value;
-            if(!dateVal) return showToast("Please select a date", true);
-            advanceBotFlow(dateVal, `Until ${dateVal}`);
-        }
-
-        function advanceBotFlow(value, displayValue) {
-            appendUserMessage(displayValue);
-            setInputMode('saving');
+        // --- PRAYER MODAL LOGIC (Global window functions for onclick access) ---
+        window.initiatePrayer = (id, desc) => {
+            activePrayerId = id;
+            document.getElementById('prayerFocusText').innerText = `"${desc}"`;
+            document.getElementById('prayerModal').classList.remove('hidden');
+            document.getElementById('breathingCircle').classList.add('breathe-animation');
+            
+            const btn = document.getElementById('confirmPrayBtn');
+            btn.innerText = "Wait 8s...";
+            btn.classList.add('bg-indigo-300', 'cursor-not-allowed');
+            btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
+            btn.disabled = true;
 
             setTimeout(() => {
-                if (botStep === 1) {
-                    draftRequest.text = value;
-                    botStep = 2;
-                    appendBotMessage("Choose a nickname: Type a display name, or leave it blank to remain Anonymous.");
-                    setInputMode('text', 'Nickname (Optional)');
-                } 
-                else if (botStep === 2) {
-                    draftRequest.nickname = value.trim() || 'Anonymous';
-                    botStep = 3;
-                    appendBotMessage("Select prayer goal: Choose how many people you want to pray for your request.");
-                    setInputMode('goal_options');
-                }
-                else if (botStep === 3) {
-                    draftRequest.goal = parseInt(value);
-                    botStep = 4;
-                    appendBotMessage("Set a deadline: Choose how long the request should stay active.");
-                    setInputMode('deadline_options');
-                }
-                else if (botStep === 4) {
-                    if (value === '1') draftRequest.expiry = Date.now() + 86400000;
-                    else if (value === '7') draftRequest.expiry = Date.now() + 86400000 * 7;
-                    else if (value === '30') draftRequest.expiry = Date.now() + 86400000 * 30;
-                    else {
-                        const d = new Date(value);
-                        d.setHours(23, 59, 59, 999);
-                        draftRequest.expiry = d.getTime();
-                    }
-                    botStep = 5;
-                    appendBotMessage("Blessings. Saving your prayer request to the community...");
-                    saveRequestToFirebase();
-                }
-            }, 600);
-        }
+                btn.innerText = "I Prayed";
+                btn.disabled = false;
+                btn.classList.remove('bg-indigo-300', 'cursor-not-allowed');
+                btn.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
+            }, 8000);
+        };
 
-        async function saveRequestToFirebase() {
-            try {
-                await addDoc(collection(db, getPublicCollectionPath('prayers')), {
-                    userId: currentUserId,
-                    title: draftRequest.text,
-                    nickname: draftRequest.nickname,
-                    goal: draftRequest.goal,
-                    expiry: draftRequest.expiry,
-                    createdAt: Date.now(),
-                    prayCount: 0,
-                    prayedBy: []
-                });
+        document.getElementById('confirmPrayBtn').addEventListener('click', async () => {
+            if (activePrayerId) {
+                const reqRef = doc(db, 'requests', activePrayerId);
+                const reqSnap = await getDoc(reqRef);
+                await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
                 
-                await setDoc(doc(db, getPublicDocPath('profiles', currentUserId)), {
-                    lifeScore: increment(-1)
-                }, { merge: true });
-                
-                if (redirectAfterSubmit) {
-                    redirectAfterSubmit = false;
-                    switchTab('feed');
-                    showToast("Request shared! Now, pray for someone else.");
-                } else {
-                    switchTab('my-requests');
-                }
-            } catch (error) {
-                showToast("Failed to add request.", true);
-                setInputMode('none');
-                appendBotMessage("Sorry, there was an error saving your request. Please try again.");
+                const userRef = doc(db, 'users', auth.currentUser.uid);
+                const userSnap = await getDoc(userRef);
+                await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore + 1 });
+
+                document.getElementById('prayerModal').classList.add('hidden');
+                document.getElementById('breathingCircle').classList.remove('breathe-animation');
+                activePrayerId = null;
             }
-        }
+        });
 
-        function setupListeners() {
-            if(unsubscribePrayers) unsubscribePrayers();
-            if(unsubscribeProfile) unsubscribeProfile();
-            if(unsubscribeAllProfiles) unsubscribeAllProfiles();
-
-            const prayersRef = collection(db, getPublicCollectionPath('prayers'));
-            unsubscribePrayers = onSnapshot(prayersRef, (snapshot) => {
-                prayersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                prayersList.sort((a, b) => b.createdAt - a.createdAt);
-                
-                if(isAdmin && document.getElementById('tab-admin').classList.contains('hidden') === false) {
-                    renderAdminDashboard();
-                } else {
-                    renderFeed();
-                    renderMyRequests();
-                }
-            });
-
-            // Listen to all profiles to map avatars for feed/admin
-            const allProfilesRef = collection(db, getPublicCollectionPath('profiles'));
-            unsubscribeAllProfiles = onSnapshot(allProfilesRef, (snapshot) => {
-                allProfilesCache = {};
-                snapshot.forEach(docSnap => {
-                    allProfilesCache[docSnap.id] = docSnap.data();
-                });
-                
-                // Re-render feed to apply avatar updates
-                if(!isAdmin) renderFeed(); 
-                if(isAdmin) renderAdminDashboard();
-            });
-
-            const profileRef = doc(db, getPublicDocPath('profiles', currentUserId));
-            unsubscribeProfile = onSnapshot(profileRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    userStats = docSnap.data();
-                    updateProfileUI();
-                    checkBadges(userStats.prayersDone || 0);
-                } else {
-                    setDoc(profileRef, { prayersDone: 0, lifeScore: 0 }, { merge: true }).catch(console.error);
-                }
-            });
-        }
-
-        async function prayFor(prayerId) {
-            if (!currentUserId) return;
-            const prayer = prayersList.find(p => p.id === prayerId);
-            if (!prayer || (prayer.prayedBy && prayer.prayedBy.includes(currentUserId))) return;
-
-            try {
-                await updateDoc(doc(db, getPublicDocPath('prayers', prayerId)), {
-                    prayedBy: arrayUnion(currentUserId),
-                    prayCount: increment(1)
-                });
-                await setDoc(doc(db, getPublicDocPath('profiles', currentUserId)), {
-                    prayersDone: increment(1),
-                    lifeScore: increment(1)
-                }, { merge: true });
-            } catch (error) {
-                showToast("Something went wrong.", true);
-            }
-        }
-
-        function openPrayerMode(prayerId) {
-            const prayer = prayersList.find(p => p.id === prayerId);
-            if (!prayer) return;
-            
-            currentActivePrayer = prayer;
-            document.getElementById('pm-nickname').innerText = prayer.nickname || 'Anonymous';
-            
-            // Add user avatar to modal if exists
-            const profile = allProfilesCache[prayer.userId];
-            if(profile && profile.avatarBase64) {
-                document.getElementById('pm-nickname').innerHTML = `<img src="${profile.avatarBase64}" class="w-8 h-8 rounded-full border border-white/50 object-cover inline-block mr-2"> ${escapeHTML(prayer.nickname || 'Anonymous')}`;
-            }
-
-            document.getElementById('pm-title').innerText = prayer.title;
-            
-            document.getElementById('pm-action-area').classList.remove('hidden');
-            document.getElementById('pm-success-area').classList.add('hidden');
-            
-            const btn = document.getElementById('pm-pray-btn');
-            btn.disabled = true;
-            btn.className = "bg-white/10 text-white/50 cursor-not-allowed px-6 py-3.5 sm:px-8 sm:py-4 rounded-2xl font-medium text-base sm:text-lg w-full max-w-[280px] transition-all flex items-center justify-center border border-white/20 backdrop-blur-sm shadow-sm";
-            btn.innerHTML = '<i class="fa-regular fa-clock mr-2"></i> Breathe... <span id="pm-timer" class="ml-1 w-4 text-left">8</span>';
-            
-            const skipBtn = document.getElementById('pm-skip-btn');
-            const score = userStats.lifeScore || 0;
-            if (score <= 0) {
-                skipBtn.disabled = true;
-                skipBtn.classList.add('opacity-30', 'cursor-not-allowed');
-                skipBtn.classList.remove('hover:text-white', 'hover:border-white/20', 'hover:bg-white/5');
-            } else {
-                skipBtn.disabled = false;
-                skipBtn.classList.remove('opacity-30', 'cursor-not-allowed');
-                skipBtn.classList.add('hover:text-white', 'hover:border-white/20', 'hover:bg-white/5');
-            }
-            skipBtn.innerText = "Skip Request (-1 Score)";
-            
-            document.getElementById('prayer-mode-modal').classList.remove('hidden');
-            
-            let timeLeft = 8;
-            if(prayerTimerInterval) clearInterval(prayerTimerInterval);
-            
-            prayerTimerInterval = setInterval(() => {
-                timeLeft--;
-                const timerSpan = document.getElementById('pm-timer');
-                if(timerSpan) timerSpan.innerText = timeLeft;
-                
-                if(timeLeft <= 0) {
-                    clearInterval(prayerTimerInterval);
-                    btn.disabled = false;
-                    btn.className = "bg-sky-600/90 text-white px-6 py-3.5 sm:px-8 sm:py-4 rounded-2xl font-medium text-base sm:text-lg w-full max-w-[280px] transition-all hover:bg-sky-500 active:scale-95 shadow-lg shadow-sky-500/40 flex items-center justify-center cursor-pointer border border-sky-400 backdrop-blur-sm";
-                    btn.innerHTML = '<i class="fa-solid fa-hands-praying mr-2"></i> I Prayed';
-                }
-            }, 1000);
-        }
-
-        async function submitPrayer() {
-            if(!currentActivePrayer) return;
-            
-            const btn = document.getElementById('pm-pray-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="loader !w-6 !h-6 !border-[3px]"></div>';
-            
-            await prayFor(currentActivePrayer.id);
-            
-            document.getElementById('pm-action-area').classList.add('hidden');
-            document.getElementById('pm-success-area').classList.remove('hidden');
-        }
-
-        function closePrayerMode() {
-            if(prayerTimerInterval) clearInterval(prayerTimerInterval);
-            document.getElementById('prayer-mode-modal').classList.add('hidden');
-            currentActivePrayer = null;
-        }
-
-        function nextPrayer() {
-            const now = Date.now();
-            const availablePrayers = prayersList.filter(p => 
-                p.userId !== currentUserId && 
-                (!p.expiry || p.expiry >= now) &&
-                !(p.prayedBy && p.prayedBy.includes(currentUserId)) &&
-                (!p.goal || (p.prayCount || 0) < p.goal) &&
-                !sessionSkipped.has(p.id)
-            );
-            
-            if(availablePrayers.length > 0) {
-                openPrayerMode(availablePrayers[0].id);
-            } else {
-                closePrayerMode();
-                showToast("You've prayed for all active requests! Thank you.");
-            }
-        }
-
-        async function skipPrayer() {
-            const score = userStats.lifeScore || 0;
-            if (!currentActivePrayer || score <= 0) return;
-            
-            const skipBtn = document.getElementById('pm-skip-btn');
-            skipBtn.disabled = true;
-            skipBtn.innerText = "Skipping...";
-            
-            try {
-                await setDoc(doc(db, getPublicDocPath('profiles', currentUserId)), {
-                    lifeScore: increment(-1)
-                }, { merge: true });
-                
-                sessionSkipped.add(currentActivePrayer.id);
-                nextPrayer();
-            } catch(e) {
-                showToast("Failed to skip.", true);
-                skipBtn.disabled = false;
-                skipBtn.innerText = "Skip Request (-1 Score)";
-            }
-        }
-
-        async function renderAdminDashboard() {
-            if(!isAdmin) return;
-            
-            const now = Date.now();
-            let activeCount = 0;
-            let totalPrayers = 0;
-            let reportedPosts = [];
-
-            prayersList.forEach(p => {
-                if(!p.expiry || p.expiry >= now) activeCount++;
-                totalPrayers += (p.prayCount || 0);
-                if(p.reportedBy && p.reportedBy.length > 0) reportedPosts.push(p);
-            });
-
-            document.getElementById('admin-stat-active').innerText = activeCount;
-            document.getElementById('admin-stat-prayers').innerText = totalPrayers;
-            document.getElementById('admin-stat-reported').innerText = reportedPosts.length;
-
-            // Render Reported Queue
-            const reportedContainer = document.getElementById('admin-reported-container');
-            reportedContainer.innerHTML = '';
-            if(reportedPosts.length === 0) {
-                reportedContainer.innerHTML = '<p class="text-sm text-slate-500 italic">No reported posts.</p>';
-            } else {
-                reportedPosts.forEach(p => {
-                    reportedContainer.innerHTML += `
-                        <div class="bg-rose-50/50 border border-rose-100 p-3 sm:p-4 rounded-xl flex justify-between items-start relative">
-                            <div class="pr-8">
-                                <p class="text-xs text-rose-600 font-bold mb-1"><i class="fa-solid fa-flag"></i> ${p.reportedBy.length} flags</p>
-                                <p class="text-sm font-medium text-slate-800 line-clamp-2">${escapeHTML(p.title)}</p>
-                                <p class="text-[10px] text-slate-500 mt-1">By: ${escapeHTML(p.nickname || 'Anon')}</p>
-                            </div>
-                            <button class="btn-admin-delete absolute top-3 right-3 text-rose-500 bg-white border border-rose-100 w-8 h-8 rounded-full hover:bg-rose-100 shadow-sm flex items-center justify-center transition-colors" data-id="${p.id}" title="Delete Post"><i class="fa-solid fa-trash pointer-events-none text-xs"></i></button>
-                        </div>
-                    `;
+        window.reportPost = async (id) => {
+            if(confirm("Report this post to admin?")) {
+                await updateDoc(doc(db, 'requests', id), {
+                    reportedBy: arrayUnion(auth.currentUser.uid)
                 });
             }
+        };
 
-            // Render Users Table
-            const usersTable = document.getElementById('admin-users-table');
-            try {
-                const snapshot = await getDocs(collection(db, getPublicCollectionPath('users')));
-                document.getElementById('admin-stat-users').innerText = snapshot.size;
-                usersTable.innerHTML = '';
-                
-                snapshot.forEach(docSnap => {
+        // --- TABS LOGIC ---
+        const tabs = ['communityFeed', 'addRequestSection', 'profileSection'];
+        const switchTab = (showId) => {
+            tabs.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(showId).classList.remove('hidden');
+            if(showId === 'profileSection') document.getElementById('botBanner').classList.add('hidden');
+            else document.getElementById('botBanner').classList.remove('hidden');
+        };
+
+        document.getElementById('tabFeed').addEventListener('click', () => switchTab('communityFeed'));
+        document.getElementById('tabAdd').addEventListener('click', () => switchTab('addRequestSection'));
+        document.getElementById('tabProfile').addEventListener('click', () => switchTab('profileSection'));
+
+        // --- ADMIN LOGIC ---
+        function loadAdminData() {
+            // Count Users
+            onSnapshot(collection(db, "users"), (snap) => {
+                document.getElementById('statUsers').innerText = snap.size;
+                const tbody = document.getElementById('adminUserTable');
+                tbody.innerHTML = '';
+                snap.forEach(docSnap => {
                     const u = docSnap.data();
-                    const profile = allProfilesCache[u.uid] || {};
-                    const score = profile.lifeScore || 0;
-                    
-                    const avatarHtml = profile.avatarBase64 
-                        ? `<img src="${profile.avatarBase64}" class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover shrink-0 border border-slate-200">`
-                        : `<div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-slate-200 text-slate-400 flex items-center justify-center text-[10px] shrink-0 border border-slate-300"><i class="fa-solid fa-user"></i></div>`;
-
-                    usersTable.innerHTML += `
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="py-2 sm:py-3 pr-2 flex items-center gap-2 sm:gap-3">
-                                ${avatarHtml}
-                                <div class="truncate max-w-[120px] sm:max-w-[200px]">
-                                    <p class="font-medium text-slate-800 text-xs sm:text-sm truncate">${escapeHTML(u.email || 'Unknown')}</p>
-                                    <p class="text-[9px] sm:text-[10px] text-slate-500 truncate">${u.uid}</p>
-                                </div>
-                            </td>
-                            <td class="py-2 sm:py-3 px-2 text-center">
-                                <span class="font-bold ${score > 0 ? 'text-sky-600' : score < 0 ? 'text-rose-500' : 'text-slate-600'} text-xs sm:text-sm">${score}</span>
-                            </td>
-                            <td class="py-2 sm:py-3 pl-2 text-right">
-                                <button class="btn-admin-edit text-sky-700 bg-sky-50/80 border border-sky-100 px-2 py-1 sm:px-3 sm:py-1.5 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-medium hover:bg-sky-100 transition-colors shadow-sm whitespace-nowrap" data-uid="${u.uid}">Manage</button>
-                            </td>
+                    tbody.innerHTML += `
+                        <tr class="border-b text-sm">
+                            <td class="p-2 truncate max-w-[150px]">${u.email}</td>
+                            <td class="p-2">${u.lifeScore}</td>
+                            <td class="p-2">${u.role}</td>
+                            <td class="p-2"><button class="text-indigo-600 underline text-xs">Edit</button></td>
                         </tr>
                     `;
                 });
-            } catch(e) {
-                usersTable.innerHTML = '<tr><td colspan="3" class="text-xs text-rose-500 text-center py-4">Error loading users.</td></tr>';
-            }
-        }
-
-        function simulateEditCredentials(uid) {
-            showToast("Admin simulated credential update for user.");
-        }
-
-        async function reportPrayer(prayerId) {
-            if (!currentUserId) return;
-            try {
-                await updateDoc(doc(db, getPublicDocPath('prayers', prayerId)), {
-                    reportedBy: arrayUnion(currentUserId)
-                });
-                showToast("Request reported and hidden.");
-            } catch (error) {
-                showToast("Failed to report request.", true);
-            }
-        }
-
-        async function adminDeleteFeedItem(prayerId) {
-            if(!isAdmin) return;
-            try { 
-                await deleteDoc(doc(db, getPublicDocPath('prayers', prayerId))); 
-                showToast("Deleted by Admin"); 
-                if(document.getElementById('tab-admin').classList.contains('hidden') === false) {
-                    renderAdminDashboard();
-                }
-            } 
-            catch(e) { showToast("Delete failed", true); }
-        }
-
-        function formatDate(timestamp) {
-            if(!timestamp) return '';
-            return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-
-        function getAvatarHtml(userId, fallbackInitial = 'A') {
-            const profile = allProfilesCache[userId];
-            if (profile && profile.avatarBase64) {
-                return `<img src="${profile.avatarBase64}" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover shrink-0 border border-white shadow-sm absolute -left-1">`;
-            } else {
-                return `<div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-[10px] shrink-0 border border-white shadow-sm absolute -left-1">${fallbackInitial}</div>`;
-            }
-        }
-
-        function renderFeed() {
-            const container = document.getElementById('feed-container');
-            const emptyState = document.getElementById('feed-empty');
-            container.innerHTML = '';
-            
-            const now = Date.now();
-            const feedItems = prayersList.filter(p => {
-                if (p.userId === currentUserId) return false;
-                if (p.expiry && p.expiry < now) return false;
-                if (!isAdmin && p.reportedBy && p.reportedBy.includes(currentUserId)) return false;
-                return true;
             });
 
-            if (feedItems.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-
-            feedItems.forEach(prayer => {
-                const hasPrayed = prayer.prayedBy && prayer.prayedBy.includes(currentUserId);
-                const isGoalReached = prayer.goal && (prayer.prayCount || 0) >= prayer.goal;
-                
-                const card = document.createElement('div');
-                card.className = "glass-card p-5 sm:p-6 rounded-3xl relative fade-in flex flex-col h-full";
-                
-                const nickname = prayer.nickname || 'Anonymous';
-                const initial = nickname.charAt(0).toUpperCase();
-                const avatarHtml = getAvatarHtml(prayer.userId, initial);
-
-                const goalStr = prayer.goal ? `/${prayer.goal}` : '';
-                const dateStr = prayer.expiry ? ` • Ends ${formatDate(prayer.expiry)}` : '';
-
-                card.innerHTML = `
-                    <div class="flex items-center mb-3 sm:mb-4 pl-8 sm:pl-9 relative h-8">
-                        ${avatarHtml}
-                        <div class="bg-gradient-to-r from-amber-50/80 to-sky-50/80 border border-white text-sky-800 text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg flex items-center shadow-sm backdrop-blur-sm truncate">
-                            ${escapeHTML(nickname)}
-                        </div>
-                    </div>
-                    <div class="pr-2 mb-4 flex-1">
-                        <p class="font-serif-custom text-slate-800 text-base sm:text-lg leading-relaxed whitespace-pre-wrap">${escapeHTML(prayer.title)}</p>
-                    </div>
-                    
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-auto pt-3 sm:pt-4 border-t border-slate-200/50 gap-3 sm:gap-0">
-                        <div class="flex items-center text-[10px] sm:text-xs text-slate-500 font-medium">
-                            <i class="fa-solid fa-hands-praying text-amber-500 mr-1.5"></i>
-                            <span class="${isGoalReached ? 'text-emerald-600 font-bold' : ''}">
-                                ${prayer.prayCount || 0}${goalStr} praying
-                            </span>
-                            <span class="opacity-70 ml-1.5">${dateStr}</span>
-                        </div>
-                        <div class="flex items-center justify-end">
-                            <button 
-                                class="btn-pray px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all shadow-sm ${
-                                    hasPrayed ? 'bg-emerald-50/80 border border-emerald-100 text-emerald-700' : 
-                                    isGoalReached ? 'bg-slate-100/50 border border-slate-200 text-slate-400' :
-                                    'bg-sky-700/90 text-white border border-sky-600 hover:bg-sky-800 hover:scale-105 active:scale-95 shadow-sky-700/20 backdrop-blur-sm'
-                                }"
-                                data-id="${prayer.id}"
-                                ${hasPrayed || isGoalReached ? 'disabled' : ''}>
-                                ${hasPrayed ? '<i class="fa-solid fa-check mr-1.5 pointer-events-none"></i> Prayed' : isGoalReached ? 'Goal Met' : 'Pray'}
-                            </button>
-                            <button class="btn-report ml-2 w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-slate-400 bg-white/50 border border-white/60 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-100 transition-colors shadow-sm" data-id="${prayer.id}" title="Report">
-                                🚩
-                            </button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
+            // Count Requests & Reports
+            onSnapshot(collection(db, "requests"), (snap) => {
+                document.getElementById('statRequests').innerText = snap.size;
+                let reports = 0;
+                snap.forEach(d => { if (d.data().reportedBy && d.data().reportedBy.length > 0) reports++; });
+                document.getElementById('statReports').innerText = reports;
             });
         }
-
-        function renderMyRequests() {
-            const container = document.getElementById('my-requests-container');
-            const emptyState = document.getElementById('my-requests-empty');
-            container.innerHTML = '';
-            
-            const myItems = prayersList.filter(p => p.userId === currentUserId);
-            if (myItems.length === 0) { emptyState.classList.remove('hidden'); return; } 
-            else emptyState.classList.add('hidden');
-
-            const now = Date.now();
-
-            myItems.forEach(prayer => {
-                const card = document.createElement('div');
-                card.className = "glass-card p-5 sm:p-6 rounded-3xl relative fade-in flex flex-col h-full";
-                
-                const isExpired = prayer.expiry && prayer.expiry < now;
-                const isGoalReached = prayer.goal && (prayer.prayCount || 0) >= prayer.goal;
-                
-                const statusBadge = isExpired ? `<span class="bg-rose-50/80 border border-rose-200/50 text-rose-700 text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider backdrop-blur-sm">Expired</span>` : 
-                                    isGoalReached ? `<span class="bg-emerald-50/80 border border-emerald-200/50 text-emerald-700 text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider backdrop-blur-sm">Goal Reached</span>` :
-                                    `<span class="bg-sky-50/80 border border-sky-200/50 text-sky-700 text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider backdrop-blur-sm">Active</span>`;
-
-                const prayCount = prayer.prayCount || 0;
-                const goal = prayer.goal || 0;
-                let progressText = `${prayCount} prayers logged`;
-                let progressBarHtml = '';
-
-                if (goal > 0) {
-                    progressText = `Progress: ${prayCount}/${goal} people`;
-                    const progressPercent = Math.min(100, Math.round((prayCount / goal) * 100));
-                    progressBarHtml = `
-                        <div class="w-full bg-slate-200/50 rounded-full h-1.5 sm:h-2 mt-2 sm:mt-3 overflow-hidden border border-white/30 pointer-events-none">
-                            <div class="bg-gradient-to-r from-sky-400 to-sky-600 h-full rounded-full transition-all duration-700" style="width: ${progressPercent}%"></div>
-                        </div>
-                    `;
-                }
-
-                const isPendingDelete = pendingDeleteId === prayer.id;
-                const editBtn = `<button class="btn-edit w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/60 border border-white text-slate-500 hover:text-sky-700 hover:bg-sky-50 flex items-center justify-center transition-colors shadow-sm" data-id="${prayer.id}"><i class="fa-solid fa-pen text-[10px] sm:text-xs pointer-events-none"></i></button>`;
-                const deleteBtn = isPendingDelete 
-                    ? `<button class="btn-delete-confirm px-2 sm:px-3 h-7 sm:h-9 rounded-xl bg-rose-600/90 border border-rose-500 text-white font-medium text-[10px] sm:text-xs flex items-center justify-center transition-colors ml-1.5 sm:ml-2 shadow-sm backdrop-blur-sm" data-id="${prayer.id}">Sure?</button>`
-                    : `<button class="btn-delete w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/60 border border-white text-slate-500 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition-colors ml-1.5 sm:ml-2 shadow-sm" data-id="${prayer.id}"><i class="fa-solid fa-trash text-[10px] sm:text-xs pointer-events-none"></i></button>`;
-
-                card.innerHTML = `
-                    <div class="absolute top-4 right-4 sm:top-5 sm:right-5 flex">
-                        ${editBtn}
-                        ${deleteBtn}
-                    </div>
-                    <div class="mb-3 sm:mb-4">${statusBadge}</div>
-                    <div class="pr-16 sm:pr-20 mb-4 sm:mb-5 flex-1"><p class="font-serif-custom text-slate-800 text-base sm:text-lg leading-relaxed whitespace-pre-wrap">${escapeHTML(prayer.title)}</p></div>
-                    
-                    <div class="text-[10px] sm:text-xs font-medium mt-auto pt-3 sm:pt-4 border-t border-slate-200/50 flex flex-col text-slate-500 pointer-events-none">
-                        <div class="flex justify-between items-center">
-                            <span><i class="fa-solid fa-hands-praying mr-1 sm:mr-1.5 text-amber-500"></i> ${progressText}</span>
-                            ${prayer.expiry ? `<span><i class="fa-regular fa-clock mr-1 sm:mr-1.5"></i> ${formatDate(prayer.expiry)}</span>` : ''}
-                        </div>
-                        ${progressBarHtml}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function updateProfileUI() {
-            const count = userStats.prayersDone || 0;
-            const score = userStats.lifeScore || 0;
-            
-            const countEl = document.getElementById('profile-pray-count');
-            if(countEl) countEl.innerText = count;
-            
-            const scoreEl = document.getElementById('profile-life-score');
-            if(scoreEl) scoreEl.innerText = score;
-            
-            document.getElementById('nav-prayer-count').innerText = `${count} prayers`;
-            
-            // Sync Avatars globally for current user
-            const headerAvatar = document.getElementById('header-avatar');
-            const profileAvatar = document.getElementById('profile-avatar-img');
-            
-            if (userStats.avatarBase64) {
-                headerAvatar.src = userStats.avatarBase64;
-                headerAvatar.classList.remove('hidden');
-                headerAvatar.nextElementSibling.classList.add('hidden'); // hide default icon
-                
-                if(profileAvatar) {
-                    profileAvatar.src = userStats.avatarBase64;
-                    profileAvatar.classList.remove('hidden');
-                    profileAvatar.nextElementSibling.classList.add('hidden');
-                }
-            }
-            
-            const promptEl = document.getElementById('life-score-prompt');
-            if (promptEl) {
-                if (score > 0) {
-                    promptEl.classList.remove('hidden');
-                    promptEl.classList.remove('border-l-rose-400');
-                    promptEl.classList.add('border-l-sky-400');
-                    promptEl.innerHTML = `
-                        <div class="text-sky-500 text-xl sm:text-2xl mt-0.5"><i class="fa-solid fa-leaf"></i></div>
-                        <div>
-                            <h4 class="text-xs sm:text-sm font-bold text-sky-900">Life Score: ${score}</h4>
-                            <p class="text-[10px] sm:text-xs text-sky-700/80 mt-0.5 sm:mt-1 font-medium">We gently encourage you to share a request if you need prayer today.</p>
-                        </div>
-                    `;
-                } else if (score < 0) {
-                    promptEl.classList.remove('hidden');
-                    promptEl.classList.remove('border-l-sky-400');
-                    promptEl.classList.add('border-l-rose-400');
-                    promptEl.innerHTML = `
-                        <div class="text-rose-500 text-xl sm:text-2xl mt-0.5"><i class="fa-solid fa-hand-holding-heart"></i></div>
-                        <div>
-                            <h4 class="text-xs sm:text-sm font-bold text-rose-900">Life Score: ${score}</h4>
-                            <p class="text-[10px] sm:text-xs text-rose-700/80 mt-0.5 sm:mt-1 font-medium">We invite you to pray for others to build your balance back up.</p>
-                        </div>
-                    `;
-                } else {
-                    promptEl.classList.add('hidden');
-                }
-            }
-
-            const container = document.getElementById('badges-container');
-            container.innerHTML = '';
-            BADGES.forEach(badge => {
-                const earned = count >= badge.threshold;
-                container.innerHTML += `
-                    <div class="glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl ${earned ? 'shadow-sm' : 'opacity-60 grayscale'} flex flex-col items-center text-center relative overflow-hidden">
-                        ${earned ? '<div class="absolute inset-0 bg-white/40 pointer-events-none"></div>' : ''}
-                        <div class="w-10 h-10 sm:w-14 sm:h-14 rounded-full ${earned ? badge.color : 'bg-slate-200/50 text-slate-400 border border-slate-300'} flex items-center justify-center text-xl sm:text-3xl mb-2 sm:mb-3 relative z-10">${badge.icon}</div>
-                        <h4 class="text-xs sm:text-sm font-bold ${earned ? 'text-slate-800' : 'text-slate-500'} leading-tight relative z-10 font-serif-custom">${badge.name}</h4>
-                        <p class="text-[9px] sm:text-[10px] ${earned ? 'text-slate-600 font-medium' : 'text-slate-400'} mt-1 sm:mt-1.5 relative z-10">${earned ? badge.desc : `Unlocks at ${badge.threshold}`}</p>
-                    </div>
-                `;
-            });
-        }
-
-        function checkBadges(count) {
-            let newBadge = null;
-            BADGES.forEach(b => {
-                if(count >= b.threshold && !knownBadges.has(b.id)) {
-                    if(knownBadges.size > 0) newBadge = b;
-                    knownBadges.add(b.id);
-                }
-            });
-        }
-
-        async function saveEdit(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const p = prayersList.find(x => x.id === id);
-            if (!p) return;
-
-            const title = document.getElementById('edit-title').value;
-            const nickname = document.getElementById('edit-nickname').value.trim() || 'Anonymous';
-            const goalInput = document.getElementById('edit-goal').value;
-            const goal = goalInput ? parseInt(goalInput) : 0;
-            const deadlineInput = document.getElementById('edit-deadline').value;
-
-            const errorDiv = document.getElementById('edit-error');
-            errorDiv.classList.add('hidden');
-
-            if (goal > 0 && goal < (p.prayCount || 0)) {
-                errorDiv.innerText = `Goal cannot be less than current prayers (${p.prayCount}).`;
-                errorDiv.classList.remove('hidden');
-                return;
-            }
-
-            let expiry = p.expiry;
-            if (deadlineInput) {
-                const d = new Date(deadlineInput);
-                d.setHours(23, 59, 59, 999);
-                expiry = d.getTime();
-            }
-
-            try {
-                await updateDoc(doc(db, getPublicDocPath('prayers', id)), { 
-                    title, nickname, goal, expiry 
-                });
-                closeEditModal();
-                showToast("Request updated successfully.");
-            } catch(err) { showToast("Save failed", true); }
-        }
-
-        async function deleteRequestFromCard(id) {
-            if (pendingDeleteId === id) {
-                try { 
-                    await deleteDoc(doc(db, getPublicDocPath('prayers', id))); 
-                    showToast("Request deleted."); 
-                    pendingDeleteId = null;
-                } catch(e) { showToast("Delete failed", true); }
-            } else {
-                pendingDeleteId = id;
-                renderMyRequests();
-                setTimeout(() => {
-                    if (pendingDeleteId === id) {
-                        pendingDeleteId = null;
-                        renderMyRequests();
-                    }
-                }, 3000);
-            }
-        }
-
-        function openEditModal(id) {
-            const p = prayersList.find(x => x.id === id);
-            if(!p) return;
-            document.getElementById('edit-id').value = p.id;
-            document.getElementById('edit-title').value = p.title;
-            document.getElementById('edit-nickname').value = p.nickname || '';
-            document.getElementById('edit-goal').value = p.goal || '';
-            
-            if (p.expiry) {
-                const d = new Date(p.expiry);
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
-                document.getElementById('edit-deadline').value = `${year}-${month}-${day}`;
-            } else {
-                document.getElementById('edit-deadline').value = '';
-            }
-            
-            document.getElementById('edit-error').classList.add('hidden');
-            document.getElementById('edit-modal').classList.remove('hidden');
-        }
-        
-        function closeEditModal() { document.getElementById('edit-modal').classList.add('hidden'); }
-        
-        function switchTab(tabId) {
-            // Prevent users from accessing admin, or admin from accessing normal views if desired.
-            if(isAdmin && tabId !== 'admin') { tabId = 'admin'; }
-            if(!isAdmin && tabId === 'admin') { tabId = 'feed'; }
-
-            if (tabId !== 'add' && tabId !== 'both') redirectAfterSubmit = false;
-            
-            if (tabId === 'both') { 
-                redirectAfterSubmit = true; 
-                tabId = 'add'; 
-                document.getElementById('add-form-title').innerText = "Step 1: Share Request"; 
-            }
-            else if (tabId === 'add') { 
-                document.getElementById('add-form-title').innerText = "Share a Request"; 
-            }
-
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.add('hidden');
-                el.classList.remove('flex');
-            });
-            document.querySelectorAll('.nav-btn').forEach(el => { 
-                el.classList.remove('text-sky-700', 'text-rose-600'); 
-                el.classList.add('text-slate-400'); 
-            });
-            
-            const targetTab = document.getElementById(`tab-${tabId}`);
-            targetTab.classList.remove('hidden');
-            if(tabId === 'add') targetTab.classList.add('flex');
-            
-            let btnId = redirectAfterSubmit ? 'nav-btn-both' : `nav-btn-${tabId}`;
-            const btn = document.getElementById(btnId);
-            if(btn && tabId !== 'add') { 
-                btn.classList.remove('text-slate-400'); 
-                if(tabId === 'admin') btn.classList.add('text-rose-600');
-                else btn.classList.add('text-sky-700'); 
-            }
-            
-            if(tabId === 'add') startBotFlow();
-            if(tabId === 'admin') renderAdminDashboard();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showToast(msg, err=false) {
-            const t = document.createElement('div');
-            t.className = `fixed top-24 sm:top-20 left-1/2 transform -translate-x-1/2 px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-lg z-[200] text-xs sm:text-sm font-medium fade-in border max-w-[90%] sm:max-w-md w-max text-center ${err ? 'bg-rose-600/95 border-rose-500 text-white' : 'glass-card bg-slate-800/90 border-slate-700 text-white'} backdrop-blur-md`;
-            t.innerText = msg; document.body.appendChild(t);
-            setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.4s ease'; setTimeout(() => t.remove(), 400); }, 3500);
-        }
-        
-        function escapeHTML(str) { return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t])); }
-
-        async function updateProfileAvatar(base64Str) {
-            if(!currentUserId) return;
-            try {
-                await setDoc(doc(db, getPublicDocPath('profiles', currentUserId)), {
-                    avatarBase64: base64Str
-                }, { merge: true });
-                showToast("Profile photo updated!");
-            } catch(e) {
-                showToast("Failed to update photo", true);
-            }
-        }
-
-        function setupDelegation() {
-            // Auth flow image capture
-            document.getElementById('auth-avatar').addEventListener('change', () => {
-                handleFileInput('auth-avatar', (res) => {
-                    pendingSignupAvatarBase64 = res;
-                });
-            });
-
-            // Profile image update
-            document.getElementById('profile-avatar-input').addEventListener('change', () => {
-                handleFileInput('profile-avatar-input', (res) => {
-                    updateProfileAvatar(res);
-                });
-            });
-
-            // Static elements
-            document.getElementById('auth-form').addEventListener('submit', handleAuth);
-            document.getElementById('auth-toggle-btn').addEventListener('click', toggleAuthMode);
-            document.getElementById('logout-btn').addEventListener('click', logout);
-
-            document.getElementById('nav-btn-feed').addEventListener('click', () => switchTab('feed'));
-            document.getElementById('nav-btn-my-requests').addEventListener('click', () => switchTab('my-requests'));
-            document.getElementById('nav-btn-add').addEventListener('click', () => switchTab('add'));
-            document.getElementById('nav-btn-both').addEventListener('click', () => switchTab('both'));
-            document.getElementById('nav-btn-profile').addEventListener('click', () => switchTab('profile'));
-            document.getElementById('nav-btn-admin').addEventListener('click', () => switchTab('admin'));
-
-            document.getElementById('user-mini-stats').addEventListener('click', () => switchTab('profile'));
-
-            document.getElementById('edit-close-btn').addEventListener('click', closeEditModal);
-            document.getElementById('edit-form').addEventListener('submit', saveEdit);
-
-            document.getElementById('pm-close-btn').addEventListener('click', closePrayerMode);
-            document.getElementById('pm-pray-btn').addEventListener('click', submitPrayer);
-            document.getElementById('pm-skip-btn').addEventListener('click', skipPrayer);
-            document.getElementById('pm-next-btn').addEventListener('click', nextPrayer);
-            document.getElementById('pm-close-btn-2').addEventListener('click', closePrayerMode);
-
-            document.getElementById('btn-empty-add').addEventListener('click', () => switchTab('add'));
-
-            // Dynamic - Feed
-            document.getElementById('feed-container').addEventListener('click', (e) => {
-                const prayBtn = e.target.closest('.btn-pray');
-                if (prayBtn && !prayBtn.disabled) openPrayerMode(prayBtn.dataset.id);
-
-                const reportBtn = e.target.closest('.btn-report');
-                if (reportBtn) reportPrayer(reportBtn.dataset.id);
-            });
-
-            // Dynamic - My Requests
-            document.getElementById('my-requests-container').addEventListener('click', (e) => {
-                const editBtn = e.target.closest('.btn-edit');
-                if (editBtn) openEditModal(editBtn.dataset.id);
-
-                const delBtn = e.target.closest('.btn-delete');
-                if (delBtn) deleteRequestFromCard(delBtn.dataset.id);
-
-                const delConfirmBtn = e.target.closest('.btn-delete-confirm');
-                if (delConfirmBtn) deleteRequestFromCard(delConfirmBtn.dataset.id);
-            });
-
-            // Dynamic - Admin Dashboard
-            document.getElementById('tab-admin').addEventListener('click', (e) => {
-                const delBtn = e.target.closest('.btn-admin-delete');
-                if(delBtn) adminDeleteFeedItem(delBtn.dataset.id);
-
-                const editBtn = e.target.closest('.btn-admin-edit');
-                if(editBtn) simulateEditCredentials(editBtn.dataset.uid);
-            });
-
-            // Dynamic - Bot Chat Interface
-            const botInputArea = document.getElementById('bot-input-area');
-            botInputArea.addEventListener('click', (e) => {
-                const goalBtn = e.target.closest('.btn-bot-goal');
-                if (goalBtn) advanceBotFlow(parseInt(goalBtn.dataset.val), goalBtn.innerText);
-
-                const deadlineBtn = e.target.closest('.btn-bot-deadline');
-                if (deadlineBtn) advanceBotFlow(deadlineBtn.dataset.val, deadlineBtn.innerText);
-
-                const customSetBtn = e.target.closest('.btn-bot-custom-date');
-                if (customSetBtn) handleCustomDate();
-            });
-
-            botInputArea.addEventListener('submit', (e) => {
-                if (e.target.id === 'bot-text-form') handleBotSubmit(e);
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setupDelegation();
-            initApp();
-        });
     </script>
 </body>
 </html>
