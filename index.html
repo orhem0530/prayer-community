@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faith Together: Every Request Matters</title>
     
-    <!-- Google AdSense Verification Script (Replace ca-pub-XXXXXXXXXXXXXXXX with your ID) -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <!-- Google AdSense Verification Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5183301052795233" crossorigin="anonymous"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -189,10 +189,10 @@
                     <p id="dailyVerseRef" class="text-xs text-indigo-900 font-semibold mt-2"></p>
                 </div>
 
-                <!-- Google AdSense Banner Slot -->
+                <!-- Google AdSense Banner Slot (Updated with actual ID) -->
                 <div class="glass-card p-3 text-center mb-4 bg-white/50 border border-dashed border-indigo-200">
                     <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Sponsored Content</p>
-                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5183301052795233" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
                     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                 </div>
 
@@ -453,7 +453,7 @@
             btn.innerText = "Save Profile Changes";
         });
 
-        // --- USER FEED & GOAL/DEADLINE FILTERING ---
+        // --- USER FEED LOGIC ---
         function loadUserData() {
             onSnapshot(doc(db, "users", auth.currentUser.uid), (docSnap) => {
                 const data = docSnap.data();
@@ -481,16 +481,14 @@
             onSnapshot(query(collection(db, "requests"), orderBy("createdAt", "desc")), (snapshot) => {
                 const feed = document.getElementById('communityFeed');
                 feed.innerHTML = '';
-                
                 const today = new Date().toISOString().split('T')[0];
 
                 snapshot.forEach((docSnap) => {
                     const req = docSnap.data();
                     
-                    // Logic to automatically close/hide requests based on user instructions
-                    if (req.reportedBy && req.reportedBy.length > 0) return; // Hide flagged
-                    if (req.currentPrayers >= req.goal) return; // Hide if target number of people reached
-                    if (req.deadline && req.deadline < today) return; // Hide if deadline passed
+                    if (req.reportedBy && req.reportedBy.length > 0) return; 
+                    if (req.currentPrayers >= req.goal) return; 
+                    if (req.deadline && req.deadline < today) return; 
 
                     const percent = Math.min((req.currentPrayers / req.goal) * 100, 100);
                     const deadlineStr = req.deadline ? ` • Closes: ${req.deadline}` : '';
@@ -510,7 +508,7 @@
             });
         }
 
-        // --- 4-STEP WIZARD LOGIC ---
+        // --- WIZARD LOGIC ---
         window.nextWizardStep = (step) => {
             [1, 2, 3, 4].forEach(i => {
                 document.getElementById(`wizardStep${i}`).classList.add('hidden');
@@ -538,7 +536,6 @@
             
             if (!desc) return alert("Please write a request description.");
             
-            // Deadline calculation
             let deadlineDate;
             const now = new Date();
             if (deadlineType === 'custom') {
@@ -557,19 +554,11 @@
             
             try {
                 await addDoc(collection(db, "requests"), { 
-                    userId: auth.currentUser.uid, 
-                    description: desc, 
-                    nickname: nick, 
-                    goal: goal, 
-                    deadline: deadlineDate, 
-                    currentPrayers: 0, 
-                    createdAt: new Date(), 
-                    reportedBy: [] 
+                    userId: auth.currentUser.uid, description: desc, nickname: nick, goal: goal, deadline: deadlineDate, currentPrayers: 0, createdAt: new Date(), reportedBy: [] 
                 });
                 await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore - 1 });
                 alert("Request posted successfully!");
                 
-                // Reset Form and return to step 1
                 document.getElementById('reqDesc').value = ''; 
                 document.getElementById('reqNickname').value = '';
                 document.getElementById('reqGoal').value = '1';
@@ -578,9 +567,7 @@
                 
                 window.nextWizardStep(1);
                 window.switchTab('communityTabWrapper', 'tabFeed');
-            } catch(e) {
-                alert("Error adding request: " + e.message);
-            }
+            } catch(e) { alert("Error adding request: " + e.message); }
         });
 
         // --- PRAYER MODAL LOGIC ---
@@ -619,7 +606,7 @@
             document.getElementById(showId).classList.remove('hidden');
             document.getElementById('botBanner').classList.toggle('hidden', showId === 'profileSection');
             
-            if(showId === 'addRequestSection') window.nextWizardStep(1); // Always open wizard on Step 1
+            if(showId === 'addRequestSection') window.nextWizardStep(1);
 
             Object.keys(navBtns).forEach(btnId => {
                 const btn = document.getElementById(btnId);
