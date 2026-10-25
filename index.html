@@ -34,21 +34,25 @@
             60% { transform: scale(1.15); opacity: 1; }
             100% { transform: scale(1); opacity: 0.8; }
         }
+        /* Custom scrollbar for mobile sleekness */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden">
 
     <!-- AUTHENTICATION VIEW -->
-    <div id="authView" class="flex-1 flex items-center justify-center p-4">
-        <div class="glass-card w-full max-w-md p-8 text-center">
-            <h1 class="text-3xl font-semibold mb-2 text-indigo-900">Faith Together</h1>
+    <div id="authView" class="flex-1 flex items-center justify-center p-4 relative z-10">
+        <div class="glass-card w-full max-w-md p-8 text-center shadow-xl">
+            <h1 class="text-3xl font-semibold mb-2 text-indigo-900 serif">Faith Together</h1>
             <p class="text-sm text-gray-600 mb-6">Every Request Matters. Every Prayer Counts.</p>
             
             <div class="space-y-4">
                 <input type="email" id="loginEmail" placeholder="Email (or 'admin')" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400">
                 <input type="password" id="loginPassword" placeholder="Password" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                <button id="loginBtn" class="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition">Enter Sanctuary</button>
-                <button id="registerBtn" class="w-full bg-white text-indigo-600 p-3 rounded-lg border border-indigo-600 hover:bg-indigo-50 transition">Register New Account</button>
+                <button id="loginBtn" class="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition font-medium">Enter Sanctuary</button>
+                <button id="registerBtn" class="w-full bg-white text-indigo-600 p-3 rounded-lg border border-indigo-600 hover:bg-indigo-50 transition font-medium">Register New Account</button>
             </div>
         </div>
     </div>
@@ -57,7 +61,7 @@
     <div id="userView" class="hidden flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40">
         <!-- Top Nav -->
         <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl sticky top-0 z-10">
-            <h2 class="text-xl font-semibold text-indigo-900">Faith Together</h2>
+            <h2 class="text-xl font-semibold text-indigo-900 serif">Faith Together</h2>
             <div class="flex items-center gap-3">
                 <div class="text-right">
                     <p class="text-xs text-gray-500">Life Score</p>
@@ -75,56 +79,74 @@
             
             <!-- Dynamic Bot Banner -->
             <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-indigo-500">
-                <p id="botMessage" class="italic text-gray-700">"Peace be with you. How can the community support you today?"</p>
+                <p id="botMessage" class="italic text-gray-700 text-sm">"Peace be with you. How can the community support you today?"</p>
             </div>
 
-            <!-- Profile Management Section (Hidden by default) -->
+            <!-- Profile Management Section -->
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold border-b pb-2">Your Profile</h3>
+                <h3 class="text-lg font-semibold border-b pb-2 serif text-indigo-900">Your Profile</h3>
                 <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border">
+                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300">
                         <span id="profileInitials" class="text-2xl text-gray-500">U</span>
                         <img id="profilePreview" src="" class="w-full h-full object-cover hidden">
                     </div>
                     <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Update Photo</label>
-                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 w-full">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Update Photo (Auto-Resizes)</label>
+                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 w-full">
                     </div>
                 </div>
-                <button id="saveProfileBtn" class="w-full bg-indigo-600 text-white py-2 rounded-lg mt-2 hidden">Save Photo</button>
-                <button id="logoutBtn" class="w-full bg-red-50 text-red-600 py-2 rounded-lg border border-red-200">Sign Out</button>
+                <button id="saveProfileBtn" class="w-full bg-indigo-600 text-white py-2 rounded-lg mt-2 hidden text-sm font-medium">Save Optimized Photo</button>
+                <button id="logoutBtn" class="w-full bg-red-50 text-red-600 py-2 rounded-lg border border-red-200 text-sm font-medium">Sign Out</button>
             </div>
 
-            <!-- Bot Wizard: Add Request (Hidden by default) -->
+            <!-- Bot Wizard: Add Request -->
             <div id="addRequestSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold text-indigo-900">Share Your Burden</h3>
-                <input type="text" id="reqDesc" placeholder="What are we praying for?" class="w-full p-2 border rounded">
-                <input type="text" id="reqNickname" placeholder="Your Nickname (e.g. Faithful_01)" class="w-full p-2 border rounded">
+                <h3 class="text-lg font-semibold text-indigo-900 serif">Share Your Burden</h3>
+                <p class="text-xs text-gray-500 mb-2">Adding a request uses 1 Life Score.</p>
+                <textarea id="reqDesc" placeholder="What are we praying for? (e.g. My mother's recovery)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm resize-none h-20"></textarea>
+                <input type="text" id="reqNickname" placeholder="Your Nickname (e.g. Faithful_01)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
                 <div class="flex gap-2">
-                    <input type="number" id="reqGoal" placeholder="Prayer Goal (e.g. 50)" class="w-1/2 p-2 border rounded">
-                    <input type="date" id="reqDate" class="w-1/2 p-2 border rounded">
+                    <div class="w-1/2">
+                        <label class="text-xs text-gray-500">Prayer Goal</label>
+                        <input type="number" id="reqGoal" placeholder="e.g. 50" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                    </div>
+                    <div class="w-1/2">
+                        <label class="text-xs text-gray-500">Deadline</label>
+                        <input type="date" id="reqDate" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                    </div>
                 </div>
-                <button id="submitRequestBtn" class="w-full bg-indigo-600 text-white py-2 rounded-lg">Submit Request (-1 Score)</button>
+                <button id="submitRequestBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">Submit Request</button>
             </div>
 
-            <!-- Community Feed -->
-            <div id="communityFeed" class="space-y-4">
-                <!-- Cards injected via JS -->
+            <!-- Community Tab Wrapper -->
+            <div id="communityTabWrapper" class="space-y-4">
+                
+                <!-- Daily Verse Card (Outsourced API) -->
+                <div id="dailyVerseCard" class="glass-card p-5 text-center mb-4 bg-gradient-to-br from-indigo-50 to-white shadow-sm border-indigo-100">
+                    <h3 class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2"><i class="fas fa-book-open mr-1"></i> Daily Bread</h3>
+                    <p id="dailyVerseText" class="text-sm text-gray-700 italic leading-relaxed">Gathering today's verse...</p>
+                    <p id="dailyVerseRef" class="text-xs text-indigo-900 font-semibold mt-2"></p>
+                </div>
+
+                <!-- Community Feed -->
+                <div id="communityFeed" class="space-y-4">
+                    <!-- Cards injected via JS -->
+                </div>
             </div>
 
             <!-- Copyright Footer -->
             <div class="w-full text-center py-6 mt-auto">
-                <p class="text-xs text-gray-500 opacity-70" style="font-family: 'Inter', sans-serif;">
+                <p class="text-xs text-gray-500 opacity-70">
                     &copy; 2026 Orhem Abasolo-CCPYAM2026. All rights reserved.
                 </p>
             </div>
         </main>
 
         <!-- Bottom Navigation -->
-        <nav class="glass-card absolute bottom-0 w-full p-4 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200">
-            <button id="tabFeed" class="text-indigo-600 flex flex-col items-center"><i class="fas fa-hands-praying text-xl"></i><span class="text-xs mt-1">Community</span></button>
-            <button id="tabAdd" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center"><i class="fas fa-pen text-xl"></i><span class="text-xs mt-1">Request</span></button>
-            <button id="tabProfile" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center"><i class="fas fa-user text-xl"></i><span class="text-xs mt-1">Profile</span></button>
+        <nav class="glass-card absolute bottom-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 z-10 bg-white/80">
+            <button id="tabFeed" class="text-indigo-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Community</span></button>
+            <button id="tabAdd" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Request</span></button>
+            <button id="tabProfile" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Profile</span></button>
         </nav>
 
         <!-- Prayer Modal (Overlay) -->
@@ -133,58 +155,58 @@
                 <i class="fas fa-spa text-4xl text-indigo-500"></i>
             </div>
             <h3 class="text-2xl serif mb-2 text-indigo-900">Focus & Breathe</h3>
-            <p id="prayerFocusText" class="text-gray-600 mb-8 italic">"Praying for peace and healing..."</p>
-            <button id="confirmPrayBtn" class="bg-indigo-300 text-white px-8 py-3 rounded-full font-semibold cursor-not-allowed transition" disabled>Wait 8s...</button>
+            <p id="prayerFocusText" class="text-gray-600 mb-8 italic text-sm">"Praying for peace and healing..."</p>
+            <button id="confirmPrayBtn" class="bg-indigo-300 text-white px-8 py-3 rounded-full font-semibold cursor-not-allowed transition w-full max-w-xs" disabled>Wait 8s...</button>
         </div>
     </div>
 
     <!-- ADMIN COMMAND CENTER VIEW -->
-    <div id="adminView" class="hidden flex-col h-full w-full max-w-4xl mx-auto p-4 space-y-6">
-        <header class="glass-card p-6 flex justify-between items-center rounded-2xl bg-indigo-900 text-white border-none">
+    <div id="adminView" class="hidden flex-col h-full w-full max-w-4xl mx-auto p-4 space-y-6 overflow-y-auto">
+        <header class="glass-card p-6 flex flex-col sm:flex-row justify-between items-center rounded-2xl bg-indigo-900 text-white border-none gap-4 text-center sm:text-left">
             <div>
-                <h1 class="text-2xl font-bold">Admin Command Center</h1>
+                <h1 class="text-2xl font-bold serif">Admin Command Center</h1>
                 <p class="text-indigo-200 text-sm">Faith Together Operations</p>
             </div>
-            <button id="adminLogoutBtn" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm font-semibold transition">Log Out</button>
+            <button id="adminLogoutBtn" class="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-lg text-sm font-semibold transition shadow-md">Log Out</button>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="glass-card p-6 text-center">
-                <p class="text-sm text-gray-500">Total Users</p>
-                <p id="statUsers" class="text-3xl font-bold text-indigo-900">0</p>
+                <p class="text-sm text-gray-500 font-medium">Total Users</p>
+                <p id="statUsers" class="text-4xl font-bold text-indigo-900 mt-2">0</p>
             </div>
             <div class="glass-card p-6 text-center">
-                <p class="text-sm text-gray-500">Active Requests</p>
-                <p id="statRequests" class="text-3xl font-bold text-indigo-900">0</p>
+                <p class="text-sm text-gray-500 font-medium">Active Requests</p>
+                <p id="statRequests" class="text-4xl font-bold text-indigo-900 mt-2">0</p>
             </div>
-            <div class="glass-card p-6 text-center border-b-4 border-red-500">
-                <p class="text-sm text-gray-500">Reported Posts</p>
-                <p id="statReports" class="text-3xl font-bold text-red-600">0</p>
+            <div class="glass-card p-6 text-center border-b-4 border-red-500 bg-red-50">
+                <p class="text-sm text-red-400 font-medium">Reported Posts</p>
+                <p id="statReports" class="text-4xl font-bold text-red-600 mt-2">0</p>
             </div>
         </div>
 
-        <div class="glass-card p-6 flex-1 overflow-y-auto">
-            <h3 class="text-lg font-bold mb-4">User Management</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
+        <div class="glass-card p-6 flex-1">
+            <h3 class="text-lg font-bold mb-4 text-indigo-900">User Management</h3>
+            <div class="overflow-x-auto rounded-lg border border-gray-100">
+                <table class="w-full text-left border-collapse min-w-[500px]">
+                    <thead class="bg-gray-50">
                         <tr class="border-b">
-                            <th class="p-2">User</th>
-                            <th class="p-2">Score</th>
-                            <th class="p-2">Role</th>
-                            <th class="p-2">Action</th>
+                            <th class="p-3 text-xs uppercase text-gray-500">User Email</th>
+                            <th class="p-3 text-xs uppercase text-gray-500 text-center">Score</th>
+                            <th class="p-3 text-xs uppercase text-gray-500 text-center">Role</th>
+                            <th class="p-3 text-xs uppercase text-gray-500 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="adminUserTable">
+                    <tbody id="adminUserTable" class="divide-y divide-gray-100">
                         <!-- Populated by JS -->
                     </tbody>
                 </table>
             </div>
         </div>
         
-        <!-- Copyright Footer -->
+        <!-- Copyright Footer (Admin) -->
         <div class="w-full text-center py-6 mt-auto">
-            <p class="text-xs text-gray-500 opacity-70" style="font-family: 'Inter', sans-serif;">
+            <p class="text-xs text-gray-500 opacity-70">
                 &copy; 2026 Orhem Abasolo-CCPYAM2026. All rights reserved.
             </p>
         </div>
@@ -194,9 +216,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, arrayUnion, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, arrayUnion, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Firebase Configuration (Specific to User Project)
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDuuj14B0MjgFdzBQ5hqhnEv854044O1uw",
             authDomain: "faith-together-9cdc5.firebaseapp.com",
@@ -214,11 +236,43 @@
         let currentUserDoc = null;
         let activePrayerId = null;
 
+        // --- EXTERNAL API: DAILY VERSE ---
+        async function fetchDailyVerse() {
+            try {
+                const themeReferences = [
+                    'Proverbs 3:5-6', 'Romans 12:10', 'Hebrews 10:24-25', 
+                    '1 Corinthians 16:14', 'Joshua 1:9', 'Philippians 4:13', 
+                    '1 Peter 2:17', 'Isaiah 41:10', 'John 13:34'
+                ];
+                
+                const now = new Date();
+                const start = new Date(now.getFullYear(), 0, 0);
+                const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+                const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+                
+                const ref = themeReferences[dayOfYear % themeReferences.length];
+                const response = await fetch(`https://bible-api.com/${ref}`);
+                if (!response.ok) throw new Error("Network response was not ok");
+                const data = await response.json();
+                
+                const text = data.text.replace(/\n/g, ' ').trim();
+                document.getElementById('dailyVerseText').innerText = `"${text}"`;
+                document.getElementById('dailyVerseRef').innerText = `- ${data.reference}`;
+            } catch (error) {
+                document.getElementById('dailyVerseText').innerText = `"Let all that you do be done in love."`;
+                document.getElementById('dailyVerseRef').innerText = "- 1 Corinthians 16:14";
+            }
+        }
+        fetchDailyVerse(); // Initialize Verse
+
         // --- AUTHENTICATION LOGIC ---
         document.getElementById('loginBtn').addEventListener('click', async () => {
             let email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const pass = document.getElementById('loginPassword').value;
             
+            if (!email || !pass) { alert("Please enter credentials."); return; }
+            
+            // Custom Admin Interceptor
             if (email === 'admin' && pass === 'iloveCOC') email = 'mherabasolo@gmail.com';
 
             try {
@@ -229,12 +283,15 @@
         document.getElementById('registerBtn').addEventListener('click', async () => {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value;
+            
+            if (!email || !pass) { alert("Please enter an email and password."); return; }
+            
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users", cred.user.uid), {
                     email: email,
                     role: 'user',
-                    lifeScore: 5,
+                    lifeScore: 5, // Starter score
                     photoURL: ""
                 });
             } catch (err) { alert("Registration failed: " + err.message); }
@@ -321,25 +378,29 @@
         document.getElementById('saveProfileBtn').addEventListener('click', async () => {
             const user = auth.currentUser;
             if (user && window.currentBase64Photo) {
-                await updateDoc(doc(db, 'users', user.uid), { photoURL: window.currentBase64Photo });
-                alert("Profile photo optimized and saved.");
-                document.getElementById('saveProfileBtn').classList.add('hidden');
+                try {
+                    await updateDoc(doc(db, 'users', user.uid), { photoURL: window.currentBase64Photo });
+                    alert("Profile photo optimized and saved.");
+                    document.getElementById('saveProfileBtn').classList.add('hidden');
+                } catch(e) {
+                    alert("Error saving photo: " + e.message);
+                }
             }
         });
 
         // --- USER FEED LOGIC ---
         function loadUserData() {
-            // Watch current user doc for score and avatar changes
             onSnapshot(doc(db, "users", auth.currentUser.uid), (doc) => {
                 const data = doc.data();
+                if(!data) return;
+                
                 document.getElementById('navLifeScore').innerText = data.lifeScore || 0;
                 
-                // Update Banners based on score
                 const botMsg = document.getElementById('botMessage');
                 if (data.lifeScore > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
                 else if (data.lifeScore <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
+                else botMsg.innerText = `"Peace be with you. How can the community support you today?"`;
                 
-                // Avatar sync
                 if (data.photoURL) {
                     document.getElementById('navAvatar').src = data.photoURL;
                     document.getElementById('navAvatar').classList.remove('hidden');
@@ -347,7 +408,6 @@
                 }
             });
 
-            // Watch requests collection
             const q = query(collection(db, "requests"), orderBy("createdAt", "desc"));
             onSnapshot(q, (snapshot) => {
                 const feed = document.getElementById('communityFeed');
@@ -356,26 +416,26 @@
                     const req = docSnap.data();
                     const reportedCount = req.reportedBy ? req.reportedBy.length : 0;
                     
-                    // Hide reported posts from the feed
-                    if (reportedCount > 0) return;
+                    if (reportedCount > 0) return; // Hide flagged posts
 
                     const percent = Math.min((req.currentPrayers / req.goal) * 100, 100);
+                    const deadlineStr = req.deadline ? ` • Due: ${req.deadline}` : '';
                     
                     const card = document.createElement('div');
-                    card.className = "glass-card p-4";
+                    card.className = "glass-card p-4 transition hover:shadow-md";
                     card.innerHTML = `
                         <div class="flex justify-between items-start mb-2">
                             <div>
                                 <h4 class="font-semibold text-indigo-900">${req.nickname}</h4>
-                                <p class="text-xs text-gray-500">Goal: ${req.currentPrayers} / ${req.goal}</p>
+                                <p class="text-xs text-gray-500">Goal: ${req.currentPrayers} / ${req.goal}${deadlineStr}</p>
                             </div>
-                            <button class="text-red-300 hover:text-red-500 text-xs" onclick="reportPost('${docSnap.id}')"><i class="fas fa-flag"></i></button>
+                            <button class="text-gray-300 hover:text-red-500 transition" onclick="reportPost('${docSnap.id}')" title="Report Post"><i class="fas fa-flag"></i></button>
                         </div>
-                        <p class="text-gray-700 text-sm mb-3">"${req.description}"</p>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5 mb-3">
-                            <div class="bg-indigo-500 h-1.5 rounded-full" style="width: ${percent}%"></div>
+                        <p class="text-gray-700 text-sm mb-4">"${req.description}"</p>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5 mb-4 overflow-hidden">
+                            <div class="bg-indigo-500 h-full rounded-full transition-all duration-1000" style="width: ${percent}%"></div>
                         </div>
-                        <button class="w-full bg-indigo-50 text-indigo-600 py-2 rounded-lg font-medium hover:bg-indigo-100" onclick="initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
+                        <button class="w-full bg-indigo-50 text-indigo-600 py-2.5 rounded-lg font-medium hover:bg-indigo-100 transition text-sm shadow-sm" onclick="initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
                     `;
                     feed.appendChild(card);
                 });
@@ -384,23 +444,30 @@
 
         // --- SUBMIT REQUEST ---
         document.getElementById('submitRequestBtn').addEventListener('click', async () => {
-            const desc = document.getElementById('reqDesc').value;
-            const nick = document.getElementById('reqNickname').value;
+            const desc = document.getElementById('reqDesc').value.trim();
+            const nick = document.getElementById('reqNickname').value.trim();
             const goal = parseInt(document.getElementById('reqGoal').value);
+            const date = document.getElementById('reqDate').value;
             const userRef = doc(db, 'users', auth.currentUser.uid);
             
-            const userSnap = await getDoc(userRef);
-            if (userSnap.data().lifeScore <= 0) {
-                alert("Your Life Score is too low to add a request. Please pray for others first.");
+            if (!desc || !nick || !goal) {
+                alert("Please fill in the description, nickname, and goal.");
                 return;
             }
 
-            if (desc && nick && goal) {
+            const userSnap = await getDoc(userRef);
+            if (userSnap.data().lifeScore <= 0) {
+                alert("Your Life Score is too low. Please pray for others to earn points first.");
+                return;
+            }
+
+            try {
                 await addDoc(collection(db, "requests"), {
                     userId: auth.currentUser.uid,
                     description: desc,
                     nickname: nick,
                     goal: goal,
+                    deadline: date || null,
                     currentPrayers: 0,
                     createdAt: new Date(),
                     reportedBy: []
@@ -408,12 +475,17 @@
                 
                 await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore - 1 });
                 alert("Request posted successfully!");
-                document.getElementById('addRequestSection').classList.add('hidden');
-                document.getElementById('communityFeed').classList.remove('hidden');
+                
+                // Reset form and switch view
+                document.getElementById('reqDesc').value = '';
+                document.getElementById('reqGoal').value = '';
+                switchTab('communityTabWrapper', 'tabFeed');
+            } catch(e) {
+                alert("Error adding request: " + e.message);
             }
         });
 
-        // --- PRAYER MODAL LOGIC (Global window functions for onclick access) ---
+        // --- PRAYER MODAL LOGIC (Attached to window for inline onclick) ---
         window.initiatePrayer = (id, desc) => {
             activePrayerId = id;
             document.getElementById('prayerFocusText').innerText = `"${desc}"`;
@@ -436,13 +508,15 @@
 
         document.getElementById('confirmPrayBtn').addEventListener('click', async () => {
             if (activePrayerId) {
-                const reqRef = doc(db, 'requests', activePrayerId);
-                const reqSnap = await getDoc(reqRef);
-                await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
-                
-                const userRef = doc(db, 'users', auth.currentUser.uid);
-                const userSnap = await getDoc(userRef);
-                await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore + 1 });
+                try {
+                    const reqRef = doc(db, 'requests', activePrayerId);
+                    const reqSnap = await getDoc(reqRef);
+                    await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
+                    
+                    const userRef = doc(db, 'users', auth.currentUser.uid);
+                    const userSnap = await getDoc(userRef);
+                    await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore + 1 });
+                } catch(e) { console.error(e); }
 
                 document.getElementById('prayerModal').classList.add('hidden');
                 document.getElementById('breathingCircle').classList.remove('breathe-animation');
@@ -451,29 +525,51 @@
         });
 
         window.reportPost = async (id) => {
-            if(confirm("Report this post to admin?")) {
-                await updateDoc(doc(db, 'requests', id), {
-                    reportedBy: arrayUnion(auth.currentUser.uid)
-                });
+            if(confirm("Report this post to admin for removal?")) {
+                try {
+                    await updateDoc(doc(db, 'requests', id), {
+                        reportedBy: arrayUnion(auth.currentUser.uid)
+                    });
+                } catch(e) { alert("Error reporting post."); }
             }
         };
 
         // --- TABS LOGIC ---
-        const tabs = ['communityFeed', 'addRequestSection', 'profileSection'];
-        const switchTab = (showId) => {
-            tabs.forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById(showId).classList.remove('hidden');
-            if(showId === 'profileSection') document.getElementById('botBanner').classList.add('hidden');
-            else document.getElementById('botBanner').classList.remove('hidden');
+        const tabs = ['communityTabWrapper', 'addRequestSection', 'profileSection'];
+        const navBtns = {
+            'tabFeed': 'communityTabWrapper',
+            'tabAdd': 'addRequestSection',
+            'tabProfile': 'profileSection'
         };
 
-        document.getElementById('tabFeed').addEventListener('click', () => switchTab('communityFeed'));
-        document.getElementById('tabAdd').addEventListener('click', () => switchTab('addRequestSection'));
-        document.getElementById('tabProfile').addEventListener('click', () => switchTab('profileSection'));
+        window.switchTab = (showId, activeBtnId) => {
+            // Hide all sections
+            tabs.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(showId).classList.remove('hidden');
+            
+            // Bot banner only visible outside of profile
+            if(showId === 'profileSection') document.getElementById('botBanner').classList.add('hidden');
+            else document.getElementById('botBanner').classList.remove('hidden');
+
+            // Update icon colors
+            Object.keys(navBtns).forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if(btnId === activeBtnId) {
+                    btn.classList.remove('text-gray-400');
+                    btn.classList.add('text-indigo-600');
+                } else {
+                    btn.classList.remove('text-indigo-600');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+        };
+
+        document.getElementById('tabFeed').addEventListener('click', () => switchTab('communityTabWrapper', 'tabFeed'));
+        document.getElementById('tabAdd').addEventListener('click', () => switchTab('addRequestSection', 'tabAdd'));
+        document.getElementById('tabProfile').addEventListener('click', () => switchTab('profileSection', 'tabProfile'));
 
         // --- ADMIN LOGIC ---
         function loadAdminData() {
-            // Count Users
             onSnapshot(collection(db, "users"), (snap) => {
                 document.getElementById('statUsers').innerText = snap.size;
                 const tbody = document.getElementById('adminUserTable');
@@ -482,16 +578,19 @@
                     const u = docSnap.data();
                     tbody.innerHTML += `
                         <tr class="border-b text-sm">
-                            <td class="p-2 truncate max-w-[150px]">${u.email}</td>
-                            <td class="p-2">${u.lifeScore}</td>
-                            <td class="p-2">${u.role}</td>
-                            <td class="p-2"><button class="text-indigo-600 underline text-xs">Edit</button></td>
+                            <td class="p-3 truncate max-w-[200px] text-gray-800 font-medium">${u.email}</td>
+                            <td class="p-3 text-center text-gray-600">${u.lifeScore}</td>
+                            <td class="p-3 text-center">
+                                <span class="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'}">${u.role || 'user'}</span>
+                            </td>
+                            <td class="p-3 text-right">
+                                <button class="text-indigo-500 hover:text-indigo-700 font-medium text-xs">Edit</button>
+                            </td>
                         </tr>
                     `;
                 });
             });
 
-            // Count Requests & Reports
             onSnapshot(collection(db, "requests"), (snap) => {
                 document.getElementById('statRequests').innerText = snap.size;
                 let reports = 0;
