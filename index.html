@@ -471,8 +471,15 @@
         let redirectAfterSubmit = false;
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfigStr = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-        const firebaseConfig = JSON.parse(firebaseConfigStr);
+        const firebaseConfig = {
+            apiKey: "AIzaSyDuuj14B0MjgFdzBQ5hqhnEv854044O1uw",
+            authDomain: "faith-together-9cdc5.firebaseapp.com",
+            projectId: "faith-together-9cdc5",
+            storageBucket: "faith-together-9cdc5.firebasestorage.app",
+            messagingSenderId: "271648318318",
+            appId: "1:271648318318:web:266242f0939b33c212977f",
+            measurementId: "G-1FH08EF823"
+        };
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         let knownBadges = new Set();
