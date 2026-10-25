@@ -9,18 +9,63 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5183301052795233" crossorigin="anonymous"></script>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Dynamic Tailwind Theme Configurator -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: 'var(--brand-50)', 100: 'var(--brand-100)', 200: 'var(--brand-200)',
+                            300: 'var(--brand-300)', 400: 'var(--brand-400)', 500: 'var(--brand-500)',
+                            600: 'var(--brand-600)', 700: 'var(--brand-700)', 800: 'var(--brand-800)',
+                            900: 'var(--brand-900)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* Global CSS Variables for Themes */
+        :root { /* Indigo (Default) */
+            --brand-50: #eef2ff; --brand-100: #e0e7ff; --brand-200: #c7d2fe;
+            --brand-300: #a5b4fc; --brand-400: #818cf8; --brand-500: #6366f1;
+            --brand-600: #4f46e5; --brand-700: #4338ca; --brand-800: #3730a3; --brand-900: #312e81;
+        }
+        [data-theme="rose"] {
+            --brand-50: #fff1f2; --brand-100: #ffe4e6; --brand-200: #fecdd3;
+            --brand-300: #fda4af; --brand-400: #fb7185; --brand-500: #f43f5e;
+            --brand-600: #e11d48; --brand-700: #be123c; --brand-800: #9f1239; --brand-900: #881337;
+        }
+        [data-theme="emerald"] {
+            --brand-50: #ecfdf5; --brand-100: #d1fae5; --brand-200: #a7f3d0;
+            --brand-300: #6ee7b7; --brand-400: #34d399; --brand-500: #10b981;
+            --brand-600: #059669; --brand-700: #047857; --brand-800: #065f46; --brand-900: #064e3b;
+        }
+        [data-theme="amber"] {
+            --brand-50: #fffbeb; --brand-100: #fef3c7; --brand-200: #fde68a;
+            --brand-300: #fcd34d; --brand-400: #fbbf24; --brand-500: #f59e0b;
+            --brand-600: #d97706; --brand-700: #b45309; --brand-800: #92400e; --brand-900: #78350f;
+        }
+        [data-theme="cyan"] {
+            --brand-50: #ecfeff; --brand-100: #cffafe; --brand-200: #a5f3fc;
+            --brand-300: #67e8f9; --brand-400: #22d3ee; --brand-500: #06b6d4;
+            --brand-600: #0891b2; --brand-700: #0e7490; --brand-800: #155e75; --brand-900: #164e63;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             color: #333;
             min-height: 100vh;
         }
-        h1, h2, h3, .serif {
-            font-family: 'Lora', serif;
-        }
+        h1, h2, h3, .serif { font-family: 'Lora', serif; }
         .glass-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -29,9 +74,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             border-radius: 1rem;
         }
-        .breathe-animation {
-            animation: breathe 8s ease-in-out forwards;
-        }
+        .breathe-animation { animation: breathe 8s ease-in-out forwards; }
         @keyframes breathe {
             0% { transform: scale(1); opacity: 0.8; }
             40% { transform: scale(1.15); opacity: 1; }
@@ -48,14 +91,14 @@
     <!-- AUTHENTICATION VIEW -->
     <div id="authView" class="flex-1 flex items-center justify-center p-4 relative z-10">
         <div class="glass-card w-full max-w-md p-8 text-center shadow-xl">
-            <h1 class="text-3xl font-semibold mb-2 text-indigo-900 serif">Faith Together</h1>
+            <h1 class="text-3xl font-semibold mb-2 text-brand-900 serif">Faith Together</h1>
             <p class="text-sm text-gray-600 mb-6">Every Request Matters. Every Prayer Counts.</p>
             
             <div class="space-y-4">
-                <input type="email" id="loginEmail" placeholder="Email (or 'admin')" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                <input type="password" id="loginPassword" placeholder="Password" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400">
-                <button id="loginBtn" class="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 transition font-medium">Enter Sanctuary</button>
-                <button id="registerBtn" class="w-full bg-white text-indigo-600 p-3 rounded-lg border border-indigo-600 hover:bg-indigo-50 transition font-medium">Register New Account</button>
+                <input type="email" id="loginEmail" placeholder="Email (or 'admin')" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400">
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full p-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-400">
+                <button id="loginBtn" class="w-full bg-brand-600 text-white p-3 rounded-lg hover:bg-brand-700 transition font-medium">Enter Sanctuary</button>
+                <button id="registerBtn" class="w-full bg-white text-brand-600 p-3 rounded-lg border border-brand-600 hover:bg-brand-50 transition font-medium">Register New Account</button>
             </div>
         </div>
     </div>
@@ -64,13 +107,13 @@
     <div id="userView" class="hidden flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40">
         <!-- Top Nav -->
         <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl sticky top-0 z-10">
-            <h2 class="text-xl font-semibold text-indigo-900 serif">Faith Together</h2>
+            <h2 class="text-xl font-semibold text-brand-900 serif">Faith Together</h2>
             <div class="flex items-center gap-3">
                 <div class="text-right">
                     <p class="text-xs text-gray-500">Life Score</p>
-                    <p id="navLifeScore" class="font-bold text-indigo-600">0</p>
+                    <p id="navLifeScore" class="font-bold text-brand-600">0</p>
                 </div>
-                <div id="navProfileIcon" class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-bold overflow-hidden border border-indigo-200 cursor-pointer">
+                <div id="navProfileIcon" class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-800 font-bold overflow-hidden border border-brand-200 cursor-pointer">
                     <span id="navInitials">U</span>
                     <img id="navAvatar" src="" alt="Profile" class="w-full h-full object-cover hidden">
                 </div>
@@ -81,13 +124,13 @@
         <main class="flex-1 overflow-y-auto px-4 pb-24 space-y-6">
             
             <!-- Dynamic Bot Banner -->
-            <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-indigo-500">
+            <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-brand-500">
                 <p id="botMessage" class="italic text-gray-700 text-sm">"Peace be with you. How can the community support you today?"</p>
             </div>
 
             <!-- Profile Management Section -->
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold border-b pb-2 serif text-indigo-900">Your Profile</h3>
+                <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900">Your Profile</h3>
                 
                 <div class="flex items-center gap-4">
                     <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300">
@@ -96,32 +139,31 @@
                     </div>
                     <div class="flex-1">
                         <label class="block text-xs font-medium text-gray-700 mb-1">Update Photo (Auto-Resizes)</label>
-                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 w-full">
+                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 w-full">
                     </div>
                 </div>
 
                 <div class="space-y-3 mt-4 border-t border-gray-200 pt-4">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Display Name</label>
-                        <input type="text" id="profileNameInput" placeholder="How should we call you?" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                        <input type="text" id="profileNameInput" placeholder="How should we call you?" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">About Me</label>
-                        <textarea id="profileBioInput" placeholder="Share a little bit about your faith journey..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm resize-none h-20"></textarea>
+                        <textarea id="profileBioInput" placeholder="Share a little bit about your faith journey..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm resize-none h-20"></textarea>
                     </div>
                 </div>
 
-                <button id="saveProfileBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg mt-4 text-sm font-medium transition">Save Profile Changes</button>
+                <button id="saveProfileBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg mt-4 text-sm font-medium transition">Save Profile Changes</button>
                 <button id="logoutBtn" class="w-full bg-red-50 text-red-600 py-2 rounded-lg border border-red-200 text-sm font-medium">Sign Out</button>
             </div>
 
             <!-- Bot Wizard: 4-Step Add Request -->
             <div id="addRequestSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold text-indigo-900 serif border-b pb-2 mb-4">Share Your Burden</h3>
+                <h3 class="text-lg font-semibold text-brand-900 serif border-b pb-2 mb-4">Share Your Burden</h3>
                 
-                <!-- Wizard Navigation Indicators -->
                 <div class="flex justify-between mb-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                    <span id="step1Ind" class="text-indigo-600">1. Write</span>
+                    <span id="step1Ind" class="text-brand-600">1. Write</span>
                     <span id="step2Ind">2. Name</span>
                     <span id="step3Ind">3. Goal</span>
                     <span id="step4Ind">4. Date</span>
@@ -130,18 +172,18 @@
                 <!-- Step 1: Write -->
                 <div id="wizardStep1" class="space-y-3">
                     <label class="block text-xs font-bold text-gray-700">Write your request:</label>
-                    <textarea id="reqDesc" placeholder="Type out what you would like prayer for..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm resize-none h-24"></textarea>
-                    <button onclick="window.nextWizardStep(2)" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition mt-2">Next Step</button>
+                    <textarea id="reqDesc" placeholder="Type out what you would like prayer for..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm resize-none h-24"></textarea>
+                    <button onclick="window.nextWizardStep(2)" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition mt-2">Next Step</button>
                 </div>
 
                 <!-- Step 2: Nickname -->
                 <div id="wizardStep2" class="hidden space-y-3">
                     <label class="block text-xs font-bold text-gray-700">Choose a nickname:</label>
-                    <input type="text" id="reqNickname" placeholder="Leave blank to remain Anonymous" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                    <input type="text" id="reqNickname" placeholder="Leave blank to remain Anonymous" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm">
                     <p class="text-[10px] text-gray-500 italic">Note: Your personal email and identity are NEVER revealed.</p>
                     <div class="flex gap-2 mt-2">
                         <button onclick="window.nextWizardStep(1)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
-                        <button onclick="window.nextWizardStep(3)" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
+                        <button onclick="window.nextWizardStep(3)" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
                     </div>
                 </div>
 
@@ -149,14 +191,14 @@
                 <div id="wizardStep3" class="hidden space-y-3">
                     <label class="block text-xs font-bold text-gray-700">Select prayer goal:</label>
                     <p class="text-[10px] text-gray-500 mb-2">How many people do you want to pray for your request?</p>
-                    <select id="reqGoal" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm bg-white">
+                    <select id="reqGoal" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white">
                         <option value="1">1 Person</option>
                         <option value="2">2 People</option>
                         <option value="5">5 People</option>
                     </select>
                     <div class="flex gap-2 mt-2">
                         <button onclick="window.nextWizardStep(2)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
-                        <button onclick="window.nextWizardStep(4)" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
+                        <button onclick="window.nextWizardStep(4)" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
                     </div>
                 </div>
 
@@ -164,17 +206,17 @@
                 <div id="wizardStep4" class="hidden space-y-3">
                     <label class="block text-xs font-bold text-gray-700">Set a deadline:</label>
                     <p class="text-[10px] text-gray-500 mb-2">Choose how long the request should stay active. It automatically closes once the goal or date is reached.</p>
-                    <select id="reqDeadlineType" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm bg-white mb-2" onchange="window.toggleCustomDate()">
+                    <select id="reqDeadlineType" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white mb-2" onchange="window.toggleCustomDate()">
                         <option value="1">1 Day</option>
                         <option value="7">7 Days</option>
                         <option value="30">30 Days</option>
                         <option value="custom">Specific Date (YYYY-MM-DD)</option>
                     </select>
-                    <input type="date" id="reqDate" class="hidden w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                    <input type="date" id="reqDate" class="hidden w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm">
                     
                     <div class="flex gap-2 mt-4">
                         <button onclick="window.nextWizardStep(3)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
-                        <button id="submitRequestBtn" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition shadow-md">Submit (-1 Score)</button>
+                        <button id="submitRequestBtn" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition shadow-md">Submit (-1 Score)</button>
                     </div>
                 </div>
             </div>
@@ -183,14 +225,14 @@
             <div id="communityTabWrapper" class="space-y-4">
                 
                 <!-- Daily Verse Card -->
-                <div id="dailyVerseCard" class="glass-card p-5 text-center mb-4 bg-gradient-to-br from-indigo-50 to-white shadow-sm border-indigo-100">
-                    <h3 class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-2"><i class="fas fa-book-open mr-1"></i> Daily Bread</h3>
+                <div id="dailyVerseCard" class="glass-card p-5 text-center mb-4 bg-gradient-to-br from-brand-50 to-white shadow-sm border-brand-100">
+                    <h3 class="text-xs font-bold text-brand-400 uppercase tracking-widest mb-2"><i class="fas fa-book-open mr-1"></i> Daily Bread</h3>
                     <p id="dailyVerseText" class="text-sm text-gray-700 italic leading-relaxed">Gathering today's verse...</p>
-                    <p id="dailyVerseRef" class="text-xs text-indigo-900 font-semibold mt-2"></p>
+                    <p id="dailyVerseRef" class="text-xs text-brand-900 font-semibold mt-2"></p>
                 </div>
 
-                <!-- Google AdSense Banner Slot (Updated with actual ID) -->
-                <div class="glass-card p-3 text-center mb-4 bg-white/50 border border-dashed border-indigo-200">
+                <!-- Google AdSense Banner Slot -->
+                <div class="glass-card p-3 text-center mb-4 bg-white/50 border border-dashed border-brand-200">
                     <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Sponsored Content</p>
                     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5183301052795233" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
                     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -210,40 +252,56 @@
 
         <!-- Bottom Navigation -->
         <nav class="glass-card absolute bottom-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 z-10 bg-white/80">
-            <button id="tabFeed" class="text-indigo-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Community</span></button>
-            <button id="tabAdd" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Request</span></button>
-            <button id="tabProfile" class="text-gray-400 hover:text-indigo-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Profile</span></button>
+            <button id="tabFeed" class="text-brand-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Community</span></button>
+            <button id="tabAdd" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Request</span></button>
+            <button id="tabProfile" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Profile</span></button>
         </nav>
 
         <!-- Prayer Modal (Overlay) -->
         <div id="prayerModal" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
-            <div id="breathingCircle" class="w-32 h-32 rounded-full bg-indigo-100 border-4 border-indigo-300 mb-8 flex items-center justify-center shadow-lg">
-                <i class="fas fa-spa text-4xl text-indigo-500"></i>
+            <div id="breathingCircle" class="w-32 h-32 rounded-full bg-brand-100 border-4 border-brand-300 mb-8 flex items-center justify-center shadow-lg">
+                <i class="fas fa-spa text-4xl text-brand-500"></i>
             </div>
-            <h3 class="text-2xl serif mb-2 text-indigo-900">Focus & Breathe</h3>
+            <h3 class="text-2xl serif mb-2 text-brand-900">Focus & Breathe</h3>
             <p id="prayerFocusText" class="text-gray-600 mb-8 italic text-sm">"Praying for peace and healing..."</p>
-            <button id="confirmPrayBtn" class="bg-indigo-300 text-white px-8 py-3 rounded-full font-semibold cursor-not-allowed transition w-full max-w-xs" disabled>Wait 8s...</button>
+            <button id="confirmPrayBtn" class="bg-brand-300 text-white px-8 py-3 rounded-full font-semibold cursor-not-allowed transition w-full max-w-xs" disabled>Wait 8s...</button>
         </div>
     </div>
 
     <!-- ADMIN COMMAND CENTER VIEW -->
     <div id="adminView" class="hidden flex-col h-full w-full max-w-5xl mx-auto p-4 space-y-6 overflow-y-auto">
-        <header class="glass-card p-6 flex flex-col sm:flex-row justify-between items-center rounded-2xl bg-indigo-900 text-white border-none gap-4 text-center sm:text-left">
+        <header class="glass-card p-6 flex flex-col sm:flex-row justify-between items-center rounded-2xl bg-brand-900 text-white border-none gap-4 text-center sm:text-left">
             <div>
                 <h1 class="text-2xl font-bold serif">Admin Command Center</h1>
-                <p class="text-indigo-200 text-sm">Superuser Access Granted</p>
+                <p class="text-brand-200 text-sm">Superuser Access Granted</p>
             </div>
             <button id="adminLogoutBtn" class="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-lg text-sm font-semibold transition shadow-md">Log Out</button>
         </header>
 
+        <!-- Admin Theme Controls -->
+        <div class="glass-card p-6 border-l-4 border-brand-500">
+            <h3 class="text-lg font-bold mb-2 text-brand-900"><i class="fas fa-paint-roller mr-2"></i>Global UI Theme</h3>
+            <p class="text-xs text-gray-500 mb-4">Change the color palette for all users in real-time.</p>
+            <div class="flex gap-4 items-center">
+                <select id="adminThemeSelect" class="p-2 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm w-48">
+                    <option value="indigo">Indigo (Default)</option>
+                    <option value="rose">Rose (Love)</option>
+                    <option value="emerald">Emerald (Growth)</option>
+                    <option value="amber">Amber (Warmth)</option>
+                    <option value="cyan">Cyan (Peace)</option>
+                </select>
+                <button onclick="window.saveGlobalTheme()" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm">Apply Theme</button>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="glass-card p-6 text-center">
                 <p class="text-sm text-gray-500 font-medium">Total Users</p>
-                <p id="statUsers" class="text-4xl font-bold text-indigo-900 mt-2">0</p>
+                <p id="statUsers" class="text-4xl font-bold text-brand-900 mt-2">0</p>
             </div>
             <div class="glass-card p-6 text-center">
                 <p class="text-sm text-gray-500 font-medium">Active Requests</p>
-                <p id="statRequests" class="text-4xl font-bold text-indigo-900 mt-2">0</p>
+                <p id="statRequests" class="text-4xl font-bold text-brand-900 mt-2">0</p>
             </div>
             <div class="glass-card p-6 text-center border-b-4 border-red-500 bg-red-50">
                 <p class="text-sm text-red-400 font-medium">Reported Posts</p>
@@ -252,7 +310,7 @@
         </div>
 
         <div class="glass-card p-6">
-            <h3 class="text-lg font-bold mb-4 text-indigo-900"><i class="fas fa-users mr-2"></i>User Management</h3>
+            <h3 class="text-lg font-bold mb-4 text-brand-900"><i class="fas fa-users mr-2"></i>User Management</h3>
             <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead class="bg-gray-50">
@@ -270,7 +328,7 @@
 
         <div class="glass-card p-6">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-indigo-900"><i class="fas fa-list-ul mr-2"></i>Content Moderation</h3>
+                <h3 class="text-lg font-bold text-brand-900"><i class="fas fa-list-ul mr-2"></i>Content Moderation</h3>
                 <button onclick="window.adminDeleteAllRequests()" class="bg-red-100 text-red-600 hover:bg-red-600 hover:text-white px-4 py-2 rounded text-xs font-bold uppercase transition"><i class="fas fa-trash-alt mr-1"></i> Reset All Posts</button>
             </div>
             <div class="overflow-x-auto rounded-lg border border-gray-100 h-64 overflow-y-auto">
@@ -298,7 +356,7 @@
     <!-- ADMIN EDIT USER MODAL (Hidden) -->
     <div id="adminEditModal" class="hidden absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
-            <h3 class="text-lg font-bold text-indigo-900 mb-4">Edit User</h3>
+            <h3 class="text-lg font-bold text-brand-900 mb-4">Edit User</h3>
             <p id="editUserEmail" class="text-xs text-gray-500 mb-4 truncate"></p>
             <input type="hidden" id="editUserId">
             <div class="space-y-4 mb-6">
@@ -316,7 +374,7 @@
             </div>
             <div class="flex justify-end gap-2">
                 <button onclick="document.getElementById('adminEditModal').classList.add('hidden')" class="px-4 py-2 text-gray-500 hover:bg-gray-100 rounded">Cancel</button>
-                <button onclick="window.saveUserEdit()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Save Changes</button>
+                <button onclick="window.saveUserEdit()" class="bg-brand-600 text-white px-4 py-2 rounded hover:bg-brand-700">Save Changes</button>
             </div>
         </div>
     </div>
@@ -344,6 +402,27 @@
         let currentUserDoc = null;
         let activePrayerId = null;
         window.currentBase64Photo = null;
+
+        // --- GLOBAL THEME LISTENER ---
+        onSnapshot(doc(db, "settings", "ui"), (docSnap) => {
+            if (docSnap.exists()) {
+                const theme = docSnap.data().theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                if (document.getElementById('adminThemeSelect')) {
+                    document.getElementById('adminThemeSelect').value = theme;
+                }
+            }
+        });
+
+        window.saveGlobalTheme = async () => {
+            const theme = document.getElementById('adminThemeSelect').value;
+            try {
+                await setDoc(doc(db, "settings", "ui"), { theme: theme }, { merge: true });
+                alert("Theme successfully updated globally!");
+            } catch(e) {
+                alert("Error updating theme: " + e.message);
+            }
+        };
 
         // --- EXTERNAL API: DAILY VERSE ---
         async function fetchDailyVerse() {
@@ -379,7 +458,7 @@
             if (!email || !pass) return alert("Please enter an email and password.");
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 5, photoURL: "", displayName: "", bio: "" });
+                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 5, photoURL: "", displayName: "", bio: "" }, { merge: true });
             } catch (err) { alert("Registration failed: " + err.message); }
         });
 
@@ -446,7 +525,8 @@
             if (window.currentBase64Photo) updateData.photoURL = window.currentBase64Photo;
 
             try {
-                await updateDoc(doc(db, 'users', user.uid), updateData);
+                // FIXED: Using setDoc with { merge: true } creates the document if missing.
+                await setDoc(doc(db, 'users', user.uid), updateData, { merge: true });
                 alert("Profile updated successfully!");
                 window.currentBase64Photo = null;
             } catch(e) { alert("Error updating profile: " + e.message); }
@@ -496,12 +576,12 @@
                     card.className = "glass-card p-4 transition hover:shadow-md";
                     card.innerHTML = `
                         <div class="flex justify-between items-start mb-2">
-                            <div><h4 class="font-semibold text-indigo-900">${req.nickname}</h4><p class="text-xs text-gray-500">Goal: ${req.currentPrayers} / ${req.goal}${deadlineStr}</p></div>
+                            <div><h4 class="font-semibold text-brand-900">${req.nickname}</h4><p class="text-xs text-gray-500">Goal: ${req.currentPrayers} / ${req.goal}${deadlineStr}</p></div>
                             <button class="text-gray-300 hover:text-red-500 transition" onclick="window.reportPost('${docSnap.id}')"><i class="fas fa-flag"></i></button>
                         </div>
                         <p class="text-gray-700 text-sm mb-4">"${req.description}"</p>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5 mb-4 overflow-hidden"><div class="bg-indigo-500 h-full rounded-full transition-all duration-1000" style="width: ${percent}%"></div></div>
-                        <button class="w-full bg-indigo-50 text-indigo-600 py-2.5 rounded-lg font-medium hover:bg-indigo-100 transition text-sm shadow-sm" onclick="window.initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
+                        <div class="w-full bg-gray-200 rounded-full h-1.5 mb-4 overflow-hidden"><div class="bg-brand-500 h-full rounded-full transition-all duration-1000" style="width: ${percent}%"></div></div>
+                        <button class="w-full bg-brand-50 text-brand-600 py-2.5 rounded-lg font-medium hover:bg-brand-100 transition text-sm shadow-sm" onclick="window.initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
                     `;
                     feed.appendChild(card);
                 });
@@ -512,11 +592,11 @@
         window.nextWizardStep = (step) => {
             [1, 2, 3, 4].forEach(i => {
                 document.getElementById(`wizardStep${i}`).classList.add('hidden');
-                document.getElementById(`step${i}Ind`).classList.remove('text-indigo-600');
+                document.getElementById(`step${i}Ind`).classList.remove('text-brand-600');
                 document.getElementById(`step${i}Ind`).classList.add('text-gray-400');
             });
             document.getElementById(`wizardStep${step}`).classList.remove('hidden');
-            document.getElementById(`step${step}Ind`).classList.add('text-indigo-600');
+            document.getElementById(`step${step}Ind`).classList.add('text-brand-600');
             document.getElementById(`step${step}Ind`).classList.remove('text-gray-400');
         };
 
@@ -578,8 +658,8 @@
             document.getElementById('breathingCircle').classList.add('breathe-animation');
             const btn = document.getElementById('confirmPrayBtn');
             btn.innerText = "Wait 8s..."; btn.disabled = true;
-            btn.classList.add('bg-indigo-300', 'cursor-not-allowed'); btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
-            setTimeout(() => { btn.innerText = "I Prayed"; btn.disabled = false; btn.classList.remove('bg-indigo-300', 'cursor-not-allowed'); btn.classList.add('bg-indigo-600', 'hover:bg-indigo-700'); }, 8000);
+            btn.classList.add('bg-brand-300', 'cursor-not-allowed'); btn.classList.remove('bg-brand-600', 'hover:bg-brand-700');
+            setTimeout(() => { btn.innerText = "I Prayed"; btn.disabled = false; btn.classList.remove('bg-brand-300', 'cursor-not-allowed'); btn.classList.add('bg-brand-600', 'hover:bg-brand-700'); }, 8000);
         };
 
         document.getElementById('confirmPrayBtn').addEventListener('click', async () => {
@@ -610,7 +690,7 @@
 
             Object.keys(navBtns).forEach(btnId => {
                 const btn = document.getElementById(btnId);
-                btn.classList.toggle('text-indigo-600', btnId === activeBtnId);
+                btn.classList.toggle('text-brand-600', btnId === activeBtnId);
                 btn.classList.toggle('text-gray-400', btnId !== activeBtnId);
             });
         };
@@ -634,10 +714,10 @@
                             </td>
                             <td class="p-3 text-center text-gray-600 font-bold">${u.lifeScore}</td>
                             <td class="p-3 text-center">
-                                <span class="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'}">${u.role || 'user'}</span>
+                                <span class="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${u.role === 'admin' ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-600'}">${u.role || 'user'}</span>
                             </td>
                             <td class="p-3 text-right space-x-2">
-                                <button onclick="window.openEditUser('${docSnap.id}', '${u.email}', ${u.lifeScore}, '${u.role}')" class="text-indigo-500 hover:text-indigo-700 font-medium text-xs"><i class="fas fa-edit"></i> Edit</button>
+                                <button onclick="window.openEditUser('${docSnap.id}', '${u.email}', ${u.lifeScore || 0}, '${u.role}')" class="text-brand-500 hover:text-brand-700 font-medium text-xs"><i class="fas fa-edit"></i> Edit</button>
                                 <button onclick="window.sendResetEmail('${u.email}')" class="text-orange-500 hover:text-orange-700 font-medium text-xs"><i class="fas fa-key"></i> Reset Pass</button>
                             </td>
                         </tr>
