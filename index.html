@@ -88,6 +88,7 @@
             <!-- Profile Management Section -->
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
                 <h3 class="text-lg font-semibold border-b pb-2 serif text-indigo-900">Your Profile</h3>
+                
                 <div class="flex items-center gap-4">
                     <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300">
                         <span id="profileInitials" class="text-2xl text-gray-500">U</span>
@@ -98,27 +99,84 @@
                         <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 w-full">
                     </div>
                 </div>
-                <button id="saveProfileBtn" class="w-full bg-indigo-600 text-white py-2 rounded-lg mt-2 hidden text-sm font-medium">Save Optimized Photo</button>
+
+                <div class="space-y-3 mt-4 border-t border-gray-200 pt-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Display Name</label>
+                        <input type="text" id="profileNameInput" placeholder="How should we call you?" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">About Me</label>
+                        <textarea id="profileBioInput" placeholder="Share a little bit about your faith journey..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm resize-none h-20"></textarea>
+                    </div>
+                </div>
+
+                <button id="saveProfileBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg mt-4 text-sm font-medium transition">Save Profile Changes</button>
                 <button id="logoutBtn" class="w-full bg-red-50 text-red-600 py-2 rounded-lg border border-red-200 text-sm font-medium">Sign Out</button>
             </div>
 
-            <!-- Bot Wizard: Add Request -->
+            <!-- Bot Wizard: 4-Step Add Request -->
             <div id="addRequestSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold text-indigo-900 serif">Share Your Burden</h3>
-                <p class="text-xs text-gray-500 mb-2">Adding a request uses 1 Life Score.</p>
-                <textarea id="reqDesc" placeholder="What are we praying for? (e.g. My mother's recovery)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm resize-none h-20"></textarea>
-                <input type="text" id="reqNickname" placeholder="Your Nickname (e.g. Faithful_01)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
-                <div class="flex gap-2">
-                    <div class="w-1/2">
-                        <label class="text-xs text-gray-500">Prayer Goal</label>
-                        <input type="number" id="reqGoal" placeholder="e.g. 50" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
-                    </div>
-                    <div class="w-1/2">
-                        <label class="text-xs text-gray-500">Deadline</label>
-                        <input type="date" id="reqDate" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                <h3 class="text-lg font-semibold text-indigo-900 serif border-b pb-2 mb-4">Share Your Burden</h3>
+                
+                <!-- Wizard Navigation Indicators -->
+                <div class="flex justify-between mb-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                    <span id="step1Ind" class="text-indigo-600">1. Write</span>
+                    <span id="step2Ind">2. Name</span>
+                    <span id="step3Ind">3. Goal</span>
+                    <span id="step4Ind">4. Date</span>
+                </div>
+
+                <!-- Step 1: Write -->
+                <div id="wizardStep1" class="space-y-3">
+                    <label class="block text-xs font-bold text-gray-700">Write your request:</label>
+                    <textarea id="reqDesc" placeholder="Type out what you would like prayer for..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm resize-none h-24"></textarea>
+                    <button onclick="window.nextWizardStep(2)" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition mt-2">Next Step</button>
+                </div>
+
+                <!-- Step 2: Nickname -->
+                <div id="wizardStep2" class="hidden space-y-3">
+                    <label class="block text-xs font-bold text-gray-700">Choose a nickname:</label>
+                    <input type="text" id="reqNickname" placeholder="Leave blank to remain Anonymous" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                    <p class="text-[10px] text-gray-500 italic">Note: Your personal email and identity are NEVER revealed.</p>
+                    <div class="flex gap-2 mt-2">
+                        <button onclick="window.nextWizardStep(1)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
+                        <button onclick="window.nextWizardStep(3)" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
                     </div>
                 </div>
-                <button id="submitRequestBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">Submit Request</button>
+
+                <!-- Step 3: Goal -->
+                <div id="wizardStep3" class="hidden space-y-3">
+                    <label class="block text-xs font-bold text-gray-700">Select prayer goal:</label>
+                    <p class="text-[10px] text-gray-500 mb-2">How many people do you want to pray for your request?</p>
+                    <select id="reqGoal" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm bg-white">
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="5">5 People</option>
+                    </select>
+                    <div class="flex gap-2 mt-2">
+                        <button onclick="window.nextWizardStep(2)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
+                        <button onclick="window.nextWizardStep(4)" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Deadline -->
+                <div id="wizardStep4" class="hidden space-y-3">
+                    <label class="block text-xs font-bold text-gray-700">Set a deadline:</label>
+                    <p class="text-[10px] text-gray-500 mb-2">Choose how long the request should stay active. It automatically closes once the goal or date is reached.</p>
+                    <select id="reqDeadlineType" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm bg-white mb-2" onchange="window.toggleCustomDate()">
+                        <option value="1">1 Day</option>
+                        <option value="7">7 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="custom">Specific Date (YYYY-MM-DD)</option>
+                    </select>
+                    <input type="date" id="reqDate" class="hidden w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+                    
+                    <div class="flex gap-2 mt-4">
+                        <button onclick="window.nextWizardStep(3)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
+                        <button id="submitRequestBtn" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-medium transition shadow-md">Submit (-1 Score)</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Community Tab Wrapper -->
@@ -193,14 +251,13 @@
             </div>
         </div>
 
-        <!-- Admin Users Table -->
         <div class="glass-card p-6">
             <h3 class="text-lg font-bold mb-4 text-indigo-900"><i class="fas fa-users mr-2"></i>User Management</h3>
             <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead class="bg-gray-50">
                         <tr class="border-b">
-                            <th class="p-3 text-xs uppercase text-gray-500">User Email</th>
+                            <th class="p-3 text-xs uppercase text-gray-500">User Email & Name</th>
                             <th class="p-3 text-xs uppercase text-gray-500 text-center">Score</th>
                             <th class="p-3 text-xs uppercase text-gray-500 text-center">Role</th>
                             <th class="p-3 text-xs uppercase text-gray-500 text-right">Actions</th>
@@ -211,7 +268,6 @@
             </div>
         </div>
 
-        <!-- Admin Requests Table -->
         <div class="glass-card p-6">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold text-indigo-900"><i class="fas fa-list-ul mr-2"></i>Content Moderation</h3>
@@ -232,7 +288,6 @@
             </div>
         </div>
         
-        <!-- Copyright Footer (Admin) -->
         <div class="w-full text-center py-6 mt-auto">
             <p class="text-xs text-gray-500 opacity-70">
                 &copy; 2026 Orhem Abasolo-CCPVYAM2026. All rights reserved.
@@ -272,7 +327,6 @@
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, arrayUnion, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDuuj14B0MjgFdzBQ5hqhnEv854044O1uw",
             authDomain: "faith-together-9cdc5.firebaseapp.com",
@@ -289,6 +343,7 @@
 
         let currentUserDoc = null;
         let activePrayerId = null;
+        window.currentBase64Photo = null;
 
         // --- EXTERNAL API: DAILY VERSE ---
         async function fetchDailyVerse() {
@@ -324,7 +379,7 @@
             if (!email || !pass) return alert("Please enter an email and password.");
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 5, photoURL: "" });
+                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 5, photoURL: "", displayName: "", bio: "" });
             } catch (err) { alert("Registration failed: " + err.message); }
         });
 
@@ -354,7 +409,7 @@
             }
         });
 
-        // --- USER PROFILE & IMAGE RESIZING ---
+        // --- USER PROFILE LOGIC ---
         document.getElementById('profilePhotoInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file || !file.type.match('image.*')) return;
@@ -373,7 +428,6 @@
                     document.getElementById('profilePreview').src = compressedBase64;
                     document.getElementById('profilePreview').classList.remove('hidden');
                     document.getElementById('profileInitials').classList.add('hidden');
-                    document.getElementById('saveProfileBtn').classList.remove('hidden');
                     window.currentBase64Photo = compressedBase64; 
                 };
                 img.src = e.target.result;
@@ -382,38 +436,64 @@
         });
 
         document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-            if (auth.currentUser && window.currentBase64Photo) {
-                await updateDoc(doc(db, 'users', auth.currentUser.uid), { photoURL: window.currentBase64Photo });
-                alert("Profile photo optimized and saved.");
-                document.getElementById('saveProfileBtn').classList.add('hidden');
-            }
+            const user = auth.currentUser;
+            if (!user) return;
+            const btn = document.getElementById('saveProfileBtn');
+            btn.innerText = "Saving...";
+            const newName = document.getElementById('profileNameInput').value.trim();
+            const newBio = document.getElementById('profileBioInput').value.trim();
+            const updateData = { displayName: newName, bio: newBio };
+            if (window.currentBase64Photo) updateData.photoURL = window.currentBase64Photo;
+
+            try {
+                await updateDoc(doc(db, 'users', user.uid), updateData);
+                alert("Profile updated successfully!");
+                window.currentBase64Photo = null;
+            } catch(e) { alert("Error updating profile: " + e.message); }
+            btn.innerText = "Save Profile Changes";
         });
 
-        // --- USER FEED & PRAYER LOGIC ---
+        // --- USER FEED & GOAL/DEADLINE FILTERING ---
         function loadUserData() {
-            onSnapshot(doc(db, "users", auth.currentUser.uid), (doc) => {
-                const data = doc.data();
+            onSnapshot(doc(db, "users", auth.currentUser.uid), (docSnap) => {
+                const data = docSnap.data();
                 if(!data) return;
                 document.getElementById('navLifeScore').innerText = data.lifeScore || 0;
+                
                 const botMsg = document.getElementById('botMessage');
                 if (data.lifeScore > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
                 else if (data.lifeScore <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
                 else botMsg.innerText = `"Peace be with you. How can the community support you today?"`;
+                
                 if (data.photoURL) {
                     document.getElementById('navAvatar').src = data.photoURL;
                     document.getElementById('navAvatar').classList.remove('hidden');
                     document.getElementById('navInitials').classList.add('hidden');
+                    document.getElementById('profilePreview').src = data.photoURL;
+                    document.getElementById('profilePreview').classList.remove('hidden');
+                    document.getElementById('profileInitials').classList.add('hidden');
                 }
+                
+                document.getElementById('profileNameInput').value = data.displayName || '';
+                document.getElementById('profileBioInput').value = data.bio || '';
             });
 
             onSnapshot(query(collection(db, "requests"), orderBy("createdAt", "desc")), (snapshot) => {
                 const feed = document.getElementById('communityFeed');
                 feed.innerHTML = '';
+                
+                const today = new Date().toISOString().split('T')[0];
+
                 snapshot.forEach((docSnap) => {
                     const req = docSnap.data();
-                    if (req.reportedBy && req.reportedBy.length > 0) return;
+                    
+                    // Logic to automatically close/hide requests based on user instructions
+                    if (req.reportedBy && req.reportedBy.length > 0) return; // Hide flagged
+                    if (req.currentPrayers >= req.goal) return; // Hide if target number of people reached
+                    if (req.deadline && req.deadline < today) return; // Hide if deadline passed
+
                     const percent = Math.min((req.currentPrayers / req.goal) * 100, 100);
-                    const deadlineStr = req.deadline ? ` • Due: ${req.deadline}` : '';
+                    const deadlineStr = req.deadline ? ` • Closes: ${req.deadline}` : '';
                     const card = document.createElement('div');
                     card.className = "glass-card p-4 transition hover:shadow-md";
                     card.innerHTML = `
@@ -430,21 +510,80 @@
             });
         }
 
+        // --- 4-STEP WIZARD LOGIC ---
+        window.nextWizardStep = (step) => {
+            [1, 2, 3, 4].forEach(i => {
+                document.getElementById(`wizardStep${i}`).classList.add('hidden');
+                document.getElementById(`step${i}Ind`).classList.remove('text-indigo-600');
+                document.getElementById(`step${i}Ind`).classList.add('text-gray-400');
+            });
+            document.getElementById(`wizardStep${step}`).classList.remove('hidden');
+            document.getElementById(`step${step}Ind`).classList.add('text-indigo-600');
+            document.getElementById(`step${step}Ind`).classList.remove('text-gray-400');
+        };
+
+        window.toggleCustomDate = () => {
+            const type = document.getElementById('reqDeadlineType').value;
+            const dateInput = document.getElementById('reqDate');
+            if (type === 'custom') dateInput.classList.remove('hidden');
+            else dateInput.classList.add('hidden');
+        };
+
         document.getElementById('submitRequestBtn').addEventListener('click', async () => {
             const desc = document.getElementById('reqDesc').value.trim();
-            const nick = document.getElementById('reqNickname').value.trim();
+            const rawNick = document.getElementById('reqNickname').value.trim();
+            const nick = rawNick === '' ? 'Anonymous' : rawNick;
             const goal = parseInt(document.getElementById('reqGoal').value);
+            const deadlineType = document.getElementById('reqDeadlineType').value;
+            
+            if (!desc) return alert("Please write a request description.");
+            
+            // Deadline calculation
+            let deadlineDate;
+            const now = new Date();
+            if (deadlineType === 'custom') {
+                const customVal = document.getElementById('reqDate').value;
+                if(!customVal) return alert("Please select a specific date.");
+                deadlineDate = customVal;
+            } else {
+                const days = parseInt(deadlineType);
+                now.setDate(now.getDate() + days);
+                deadlineDate = now.toISOString().split('T')[0];
+            }
+
             const userRef = doc(db, 'users', auth.currentUser.uid);
-            if (!desc || !nick || !goal) return alert("Please fill all fields.");
             const userSnap = await getDoc(userRef);
             if (userSnap.data().lifeScore <= 0) return alert("Your Life Score is too low. Please pray for others to earn points first.");
-            await addDoc(collection(db, "requests"), { userId: auth.currentUser.uid, description: desc, nickname: nick, goal: goal, deadline: document.getElementById('reqDate').value || null, currentPrayers: 0, createdAt: new Date(), reportedBy: [] });
-            await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore - 1 });
-            alert("Request posted!");
-            document.getElementById('reqDesc').value = ''; document.getElementById('reqGoal').value = '';
-            window.switchTab('communityTabWrapper', 'tabFeed');
+            
+            try {
+                await addDoc(collection(db, "requests"), { 
+                    userId: auth.currentUser.uid, 
+                    description: desc, 
+                    nickname: nick, 
+                    goal: goal, 
+                    deadline: deadlineDate, 
+                    currentPrayers: 0, 
+                    createdAt: new Date(), 
+                    reportedBy: [] 
+                });
+                await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore - 1 });
+                alert("Request posted successfully!");
+                
+                // Reset Form and return to step 1
+                document.getElementById('reqDesc').value = ''; 
+                document.getElementById('reqNickname').value = '';
+                document.getElementById('reqGoal').value = '1';
+                document.getElementById('reqDeadlineType').value = '1';
+                document.getElementById('reqDate').classList.add('hidden');
+                
+                window.nextWizardStep(1);
+                window.switchTab('communityTabWrapper', 'tabFeed');
+            } catch(e) {
+                alert("Error adding request: " + e.message);
+            }
         });
 
+        // --- PRAYER MODAL LOGIC ---
         window.initiatePrayer = (id, desc) => {
             activePrayerId = id;
             document.getElementById('prayerFocusText').innerText = `"${desc}"`;
@@ -479,6 +618,9 @@
             ['communityTabWrapper', 'addRequestSection', 'profileSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(showId).classList.remove('hidden');
             document.getElementById('botBanner').classList.toggle('hidden', showId === 'profileSection');
+            
+            if(showId === 'addRequestSection') window.nextWizardStep(1); // Always open wizard on Step 1
+
             Object.keys(navBtns).forEach(btnId => {
                 const btn = document.getElementById(btnId);
                 btn.classList.toggle('text-indigo-600', btnId === activeBtnId);
@@ -491,7 +633,6 @@
 
         // --- SUPERUSER ADMIN LOGIC ---
         function loadAdminData() {
-            // 1. Users Table Subscription
             onSnapshot(collection(db, "users"), (snap) => {
                 document.getElementById('statUsers').innerText = snap.size;
                 const tbody = document.getElementById('adminUserTable');
@@ -500,7 +641,10 @@
                     const u = docSnap.data();
                     tbody.innerHTML += `
                         <tr class="border-b text-sm hover:bg-gray-50 transition">
-                            <td class="p-3 truncate max-w-[200px] text-gray-800 font-medium">${u.email}</td>
+                            <td class="p-3 truncate max-w-[200px]">
+                                <span class="text-gray-800 font-medium block">${u.displayName || 'Unnamed User'}</span>
+                                <span class="text-gray-500 text-[10px] block">${u.email}</span>
+                            </td>
                             <td class="p-3 text-center text-gray-600 font-bold">${u.lifeScore}</td>
                             <td class="p-3 text-center">
                                 <span class="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-600'}">${u.role || 'user'}</span>
@@ -514,7 +658,6 @@
                 });
             });
 
-            // 2. Requests Table Subscription
             onSnapshot(collection(db, "requests"), (snap) => {
                 document.getElementById('statRequests').innerText = snap.size;
                 const tbody = document.getElementById('adminReqTable');
@@ -539,9 +682,6 @@
             });
         }
 
-        // --- ADMIN ACTION FUNCTIONS (Bound to Window) ---
-        
-        // Open Edit Modal
         window.openEditUser = (uid, email, score, role) => {
             document.getElementById('editUserId').value = uid;
             document.getElementById('editUserEmail').innerText = email;
@@ -550,7 +690,6 @@
             document.getElementById('adminEditModal').classList.remove('hidden');
         };
 
-        // Save Edit Modal
         window.saveUserEdit = async () => {
             const uid = document.getElementById('editUserId').value;
             const newScore = parseInt(document.getElementById('editUserScore').value);
@@ -562,7 +701,6 @@
             } catch(e) { alert("Error saving user: " + e.message); }
         };
 
-        // Send Password Reset
         window.sendResetEmail = async (email) => {
             if(confirm(`Send a secure password reset email to ${email}?`)) {
                 try {
@@ -572,7 +710,6 @@
             }
         };
 
-        // Delete Single Request
         window.adminDeleteRequest = async (id) => {
             if(confirm("Permanently delete this prayer request?")) {
                 try { await deleteDoc(doc(db, 'requests', id)); } 
@@ -580,7 +717,6 @@
             }
         };
 
-        // Delete/Reset ALL Requests
         window.adminDeleteAllRequests = async () => {
             const input = prompt("WARNING: This will wipe ALL prayer requests from the app. Type 'DELETE ALL' to confirm:");
             if (input === 'DELETE ALL') {
