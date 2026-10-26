@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "src": "/ads.txt",
+      "headers": { "content-type": "text/plain" },
+      "dest": "data:text/plain;charset=utf-8,google.com%2C%20pub-5183301052795233%2C%20DIRECT%2C%20f08c47fec0942fa0"
+    }
+  ]
+}
