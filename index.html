@@ -130,9 +130,13 @@
 
             <!-- Profile Management Section -->
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900">Your Profile</h3>
                 
-                <div class="flex flex-col gap-4">
+                <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                    <h3 class="text-lg font-semibold serif text-brand-900">Your Profile</h3>
+                    <button id="logoutBtn" class="text-[10px] font-bold uppercase tracking-wider text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md border border-red-100 transition shadow-sm">Sign Out</button>
+                </div>
+                
+                <div class="flex flex-col gap-4 mt-2">
                     <div class="flex items-center gap-4">
                         <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300 flex-shrink-0">
                             <span id="profileInitials" class="text-2xl text-gray-500">U</span>
@@ -165,8 +169,7 @@
                     </div>
                 </div>
 
-                <button id="saveProfileBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg mt-4 text-sm font-medium transition">Save Profile Changes</button>
-                <button id="logoutBtn" class="w-full bg-red-50 text-red-600 py-2 rounded-lg border border-red-200 text-sm font-medium">Sign Out</button>
+                <button id="saveProfileBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg mt-4 text-sm font-medium transition shadow-md">Save Profile Changes</button>
             </div>
 
             <!-- Bot Wizard: 4-Step Add Request -->
