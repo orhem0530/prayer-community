@@ -111,7 +111,7 @@
             <div class="flex items-center gap-3">
                 <div class="text-right">
                     <p class="text-xs text-gray-500">Life Score</p>
-                    <p id="navLifeScore" class="font-bold text-brand-600">0</p>
+                    <p class="font-bold text-brand-600"><span id="navLifeScore">0</span> <span id="navBadge" title="Your Badge" class="text-sm ml-1 cursor-help">🌱</span></p>
                 </div>
                 <div id="navProfileIcon" class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-800 font-bold overflow-hidden border border-brand-200 cursor-pointer">
                     <span id="navInitials">U</span>
@@ -132,14 +132,25 @@
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
                 <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900">Your Profile</h3>
                 
-                <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300">
-                        <span id="profileInitials" class="text-2xl text-gray-500">U</span>
-                        <img id="profilePreview" src="" class="w-full h-full object-cover hidden">
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300 flex-shrink-0">
+                            <span id="profileInitials" class="text-2xl text-gray-500">U</span>
+                            <img id="profilePreview" src="" class="w-full h-full object-cover hidden">
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Update Photo (Auto-Resizes)</label>
+                            <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 w-full">
+                        </div>
                     </div>
-                    <div class="flex-1">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Update Photo (Auto-Resizes)</label>
-                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 w-full">
+
+                    <!-- User Badge Display -->
+                    <div class="bg-brand-50 p-3 rounded-lg border border-brand-100 flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] text-brand-600 font-bold uppercase tracking-widest">Community Rank</p>
+                            <p class="text-sm font-semibold text-brand-900 mt-0.5"><span id="profileBadgeIcon" class="mr-1">🌱</span> <span id="profileBadgeText">Seeker</span></p>
+                        </div>
+                        <p class="text-[10px] text-gray-500 italic max-w-[120px] text-right">Earn points by praying for others to rank up.</p>
                     </div>
                 </div>
 
@@ -525,7 +536,6 @@
             if (window.currentBase64Photo) updateData.photoURL = window.currentBase64Photo;
 
             try {
-                // FIXED: Using setDoc with { merge: true } creates the document if missing.
                 await setDoc(doc(db, 'users', user.uid), updateData, { merge: true });
                 alert("Profile updated successfully!");
                 window.currentBase64Photo = null;
@@ -533,16 +543,29 @@
             btn.innerText = "Save Profile Changes";
         });
 
-        // --- USER FEED LOGIC ---
+        // --- USER FEED & BADGE LOGIC ---
         function loadUserData() {
             onSnapshot(doc(db, "users", auth.currentUser.uid), (docSnap) => {
                 const data = docSnap.data();
                 if(!data) return;
-                document.getElementById('navLifeScore').innerText = data.lifeScore || 0;
+                
+                const score = data.lifeScore || 0;
+                document.getElementById('navLifeScore').innerText = score;
+                
+                // Badge Tier Calculation
+                let badgeIcon = '🌱', badgeName = 'Seeker';
+                if (score >= 100) { badgeIcon = '👑'; badgeName = 'Sanctuary Pillar'; }
+                else if (score >= 50) { badgeIcon = '🕯️'; badgeName = 'Guide'; }
+                else if (score >= 10) { badgeIcon = '🕊️'; badgeName = 'Believer'; }
+                
+                document.getElementById('navBadge').innerText = badgeIcon;
+                document.getElementById('profileBadgeIcon').innerText = badgeIcon;
+                document.getElementById('profileBadgeText').innerText = badgeName;
                 
                 const botMsg = document.getElementById('botMessage');
-                if (data.lifeScore > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
-                else if (data.lifeScore <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
+                if (score >= 50) botMsg.innerText = `"Your dedication to others is a light in this sanctuary."`;
+                else if (score > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
+                else if (score <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
                 else botMsg.innerText = `"Peace be with you. How can the community support you today?"`;
                 
                 if (data.photoURL) {
