@@ -518,11 +518,18 @@
             } catch (err) { alert("Registration failed: " + err.message); }
         });
 
-        const handleLogout = () => signOut(auth);
+        const handleLogout = () => {
+            window.currentBase64Photo = null;
+            if(document.getElementById('profilePhotoInput')) document.getElementById('profilePhotoInput').value = '';
+            signOut(auth);
+        };
         document.getElementById('logoutBtn').addEventListener('click', handleLogout);
         document.getElementById('adminLogoutBtn').addEventListener('click', handleLogout);
 
         onAuthStateChanged(auth, async (user) => {
+            window.currentBase64Photo = null;
+            if(document.getElementById('profilePhotoInput')) document.getElementById('profilePhotoInput').value = '';
+
             if (user) {
                 const userSnap = await getDoc(doc(db, "users", user.uid));
                 currentUserDoc = userSnap.data();
@@ -584,6 +591,7 @@
                 await setDoc(doc(db, 'users', user.uid), updateData, { merge: true });
                 alert("Profile updated successfully!");
                 window.currentBase64Photo = null;
+                document.getElementById('profilePhotoInput').value = '';
             } catch(e) { alert("Error updating profile: " + e.message); }
             btn.innerText = "Save Profile Changes";
         });
@@ -611,14 +619,29 @@
                 else if (score > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
                 else if (score <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
                 else botMsg.innerText = `"Peace be with you. How can the community support you today?"`;
-                
-                if (data.photoURL) {
+
+                // Calculate initials dynamically
+                const initial = ((data.displayName && data.displayName.trim()) ? data.displayName.trim() : (data.email || 'U')).charAt(0).toUpperCase();
+                document.getElementById('navInitials').innerText = initial;
+                document.getElementById('profileInitials').innerText = initial;
+
+                // FIX: Explicitly handle photo URL exists vs does not exist
+                if (data.photoURL && data.photoURL.trim() !== "") {
                     document.getElementById('navAvatar').src = data.photoURL;
                     document.getElementById('navAvatar').classList.remove('hidden');
                     document.getElementById('navInitials').classList.add('hidden');
+                    
                     document.getElementById('profilePreview').src = data.photoURL;
                     document.getElementById('profilePreview').classList.remove('hidden');
                     document.getElementById('profileInitials').classList.add('hidden');
+                } else {
+                    document.getElementById('navAvatar').src = "";
+                    document.getElementById('navAvatar').classList.add('hidden');
+                    document.getElementById('navInitials').classList.remove('hidden');
+                    
+                    document.getElementById('profilePreview').src = "";
+                    document.getElementById('profilePreview').classList.add('hidden');
+                    document.getElementById('profileInitials').classList.remove('hidden');
                 }
                 
                 document.getElementById('profileNameInput').value = data.displayName || '';
