@@ -161,20 +161,30 @@
                     </div>
                 </div>
 
+                <!-- NEW: Lockable Personal Details Section -->
                 <div class="space-y-3 mt-4 border-t border-gray-200 pt-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-sm font-bold text-gray-800">Personal Details</h4>
+                        <button id="toggleEditModeBtn" class="text-[10px] uppercase font-bold tracking-wider text-brand-600 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded transition shadow-sm"><i class="fas fa-unlock mr-1"></i> Enable Editing</button>
+                    </div>
+
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Display Name</label>
-                        <input type="text" id="profileNameInput" placeholder="How should we call you?" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm">
+                        <input type="text" id="profileNameInput" placeholder="How should we call you?" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-gray-50 text-gray-500 cursor-default transition-colors" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Hobby</label>
+                        <input type="text" id="profileHobbyInput" placeholder="What do you love doing?" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-gray-50 text-gray-500 cursor-default transition-colors" readonly>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">About Me</label>
-                        <textarea id="profileBioInput" placeholder="Share a little bit about your faith journey..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm resize-none h-20"></textarea>
+                        <textarea id="profileBioInput" placeholder="Share a little bit about your faith journey..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm resize-none h-20 bg-gray-50 text-gray-500 cursor-default transition-colors" readonly></textarea>
                     </div>
                 </div>
 
-                <button id="saveProfileBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg mt-4 text-sm active:scale-95 font-medium transition-transform shadow-md">Save Profile Changes</button>
+                <button id="saveProfileBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg mt-4 text-sm active:scale-95 font-medium transition-transform shadow-md disabled:bg-brand-300 disabled:cursor-not-allowed">Save Profile Changes</button>
 
-                <!-- NEW: MY REQUESTS MANAGER -->
+                <!-- MY REQUESTS MANAGER -->
                 <div class="mt-8 pt-6 border-t border-gray-200">
                     <h3 class="text-lg font-semibold serif text-brand-900 mb-4"><i class="fas fa-list-check mr-2"></i>Manage My Requests</h3>
                     <div id="myRequestsContainer" class="space-y-4">
@@ -249,6 +259,15 @@
             <!-- Community Tab Wrapper -->
             <div id="communityTabWrapper" class="space-y-4">
                 
+                <!-- NEW: Global Unfulfilled Alerts Banner -->
+                <div id="unfulfilledGlobalAlert" class="hidden glass-card p-3 mb-4 bg-orange-50 border border-orange-200 flex items-start gap-3 shadow-sm rounded-lg">
+                    <i class="fas fa-bell text-orange-500 mt-0.5 text-lg"></i>
+                    <div>
+                        <p class="text-xs font-bold text-orange-800">Unanswered Prayers Alert</p>
+                        <p class="text-[10px] text-orange-700 mt-0.5 leading-tight">There are requests in the community that haven't received any prayers yet. Be the first to lift them up!</p>
+                    </div>
+                </div>
+
                 <!-- Daily Verse Card -->
                 <div id="dailyVerseCard" class="glass-card p-5 text-center mb-4 bg-gradient-to-br from-brand-50 to-white shadow-sm border-brand-100">
                     <h3 class="text-xs font-bold text-brand-400 uppercase tracking-widest mb-2"><i class="fas fa-book-open mr-1"></i> Daily Bread</h3>
@@ -292,7 +311,7 @@
             <button id="confirmPrayBtn" class="bg-brand-300 text-white px-8 py-3 rounded-full font-semibold cursor-not-allowed transition w-full max-w-xs active:scale-95" disabled>Wait 8s...</button>
         </div>
 
-        <!-- NEW: EDIT REQUEST MODAL (Hidden) -->
+        <!-- EDIT REQUEST MODAL (Hidden) -->
         <div id="editReqModal" class="hidden absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
             <div class="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
                 <h3 class="text-lg font-bold text-brand-900 mb-4">Edit Request</h3>
@@ -458,6 +477,7 @@
         let currentUserDoc = null;
         let activePrayerId = null;
         window.currentBase64Photo = null;
+        let isEditMode = false;
 
         // --- GLOBAL THEME LISTENER ---
         onSnapshot(doc(db, "settings", "ui"), (docSnap) => {
@@ -514,7 +534,7 @@
             if (!email || !pass) return alert("Please enter an email and password.");
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 5, photoURL: "", displayName: "", bio: "" }, { merge: true });
+                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 5, photoURL: "", displayName: "", hobby: "", bio: "" }, { merge: true });
             } catch (err) { alert("Registration failed: " + err.message); }
         });
 
@@ -551,7 +571,41 @@
             }
         });
 
-        // --- USER PROFILE LOGIC ---
+        // --- USER PROFILE EDIT TOGGLE LOGIC ---
+        function toggleProfileLock(lockState) {
+            isEditMode = !lockState;
+            const btn = document.getElementById('toggleEditModeBtn');
+            const saveBtn = document.getElementById('saveProfileBtn');
+            const inputs = ['profileNameInput', 'profileHobbyInput', 'profileBioInput'];
+            
+            if (isEditMode) {
+                btn.innerHTML = `<i class="fas fa-lock mr-1"></i> Lock Editing`;
+                btn.classList.replace('text-brand-600', 'text-gray-600');
+                btn.classList.replace('bg-brand-50', 'bg-gray-100');
+                saveBtn.disabled = false;
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    el.removeAttribute('readonly');
+                    el.classList.remove('bg-gray-50', 'text-gray-500', 'cursor-default');
+                    el.classList.add('bg-white', 'text-gray-900');
+                });
+            } else {
+                btn.innerHTML = `<i class="fas fa-unlock mr-1"></i> Enable Editing`;
+                btn.classList.replace('text-gray-600', 'text-brand-600');
+                btn.classList.replace('bg-gray-100', 'bg-brand-50');
+                saveBtn.disabled = true;
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    el.setAttribute('readonly', 'true');
+                    el.classList.add('bg-gray-50', 'text-gray-500', 'cursor-default');
+                    el.classList.remove('bg-white', 'text-gray-900');
+                });
+            }
+        }
+        
+        document.getElementById('toggleEditModeBtn').addEventListener('click', () => toggleProfileLock(isEditMode));
+
+        // --- USER PROFILE IMAGE & SAVE LOGIC ---
         document.getElementById('profilePhotoInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file || !file.type.match('image.*')) return;
@@ -571,6 +625,8 @@
                     document.getElementById('profilePreview').classList.remove('hidden');
                     document.getElementById('profileInitials').classList.add('hidden');
                     window.currentBase64Photo = compressedBase64; 
+                    
+                    document.getElementById('saveProfileBtn').disabled = false; // Enable save if photo changed
                 };
                 img.src = e.target.result;
             };
@@ -582,9 +638,12 @@
             if (!user) return;
             const btn = document.getElementById('saveProfileBtn');
             btn.innerText = "Saving...";
+            
             const newName = document.getElementById('profileNameInput').value.trim();
+            const newHobby = document.getElementById('profileHobbyInput').value.trim();
             const newBio = document.getElementById('profileBioInput').value.trim();
-            const updateData = { displayName: newName, bio: newBio };
+            
+            const updateData = { displayName: newName, hobby: newHobby, bio: newBio };
             if (window.currentBase64Photo) updateData.photoURL = window.currentBase64Photo;
 
             try {
@@ -592,6 +651,7 @@
                 alert("Profile updated successfully!");
                 window.currentBase64Photo = null;
                 document.getElementById('profilePhotoInput').value = '';
+                toggleProfileLock(true); // Auto-lock fields after saving
             } catch(e) { alert("Error updating profile: " + e.message); }
             btn.innerText = "Save Profile Changes";
         });
@@ -620,17 +680,14 @@
                 else if (score <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
                 else botMsg.innerText = `"Peace be with you. How can the community support you today?"`;
 
-                // Calculate initials dynamically
                 const initial = ((data.displayName && data.displayName.trim()) ? data.displayName.trim() : (data.email || 'U')).charAt(0).toUpperCase();
                 document.getElementById('navInitials').innerText = initial;
                 document.getElementById('profileInitials').innerText = initial;
 
-                // FIX: Explicitly handle photo URL exists vs does not exist
                 if (data.photoURL && data.photoURL.trim() !== "") {
                     document.getElementById('navAvatar').src = data.photoURL;
                     document.getElementById('navAvatar').classList.remove('hidden');
                     document.getElementById('navInitials').classList.add('hidden');
-                    
                     document.getElementById('profilePreview').src = data.photoURL;
                     document.getElementById('profilePreview').classList.remove('hidden');
                     document.getElementById('profileInitials').classList.add('hidden');
@@ -638,13 +695,13 @@
                     document.getElementById('navAvatar').src = "";
                     document.getElementById('navAvatar').classList.add('hidden');
                     document.getElementById('navInitials').classList.remove('hidden');
-                    
                     document.getElementById('profilePreview').src = "";
                     document.getElementById('profilePreview').classList.add('hidden');
                     document.getElementById('profileInitials').classList.remove('hidden');
                 }
                 
                 document.getElementById('profileNameInput').value = data.displayName || '';
+                document.getElementById('profileHobbyInput').value = data.hobby || '';
                 document.getElementById('profileBioInput').value = data.bio || '';
             });
 
@@ -657,6 +714,7 @@
                 const today = new Date().toISOString().split('T')[0];
                 const currentUserId = auth.currentUser.uid;
                 let myReqCount = 0;
+                let communityHasUnfulfilled = false;
 
                 snapshot.forEach((docSnap) => {
                     const req = docSnap.data();
@@ -670,6 +728,11 @@
                         const safeDesc = req.description.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                         const safeNick = req.nickname.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                         
+                        // NEW: Personal Alert Badge if 0 prayers
+                        const alertBadge = req.currentPrayers === 0 ? 
+                            `<div class="bg-orange-50 border border-orange-200 text-orange-700 text-[10px] p-2 rounded mb-3 flex items-center font-medium"><i class="fas fa-info-circle mr-1.5 text-orange-500"></i> Submitted: Waiting for the community's prayers.</div>` 
+                            : '';
+
                         const myCard = document.createElement('div');
                         myCard.className = "bg-white p-4 rounded-lg border border-gray-200 shadow-sm";
                         myCard.innerHTML = `
@@ -677,6 +740,7 @@
                                 <h4 class="font-semibold text-brand-900 text-sm">${req.nickname}</h4>
                                 <span class="text-[10px] bg-brand-100 text-brand-700 px-2 py-0.5 rounded font-bold">${req.currentPrayers} / ${req.goal} Prayed</span>
                             </div>
+                            ${alertBadge}
                             <p class="text-gray-600 text-xs mb-3 line-clamp-2">"${req.description}"</p>
                             <div class="w-full bg-gray-200 rounded-full h-1.5 mb-3 overflow-hidden">
                                 <div class="bg-brand-500 h-full rounded-full transition-all duration-1000" style="width: ${percent}%"></div>
@@ -696,6 +760,9 @@
                     if (req.reportedBy && req.reportedBy.length > 0) return; 
                     if (req.currentPrayers >= req.goal) return; 
                     if (req.deadline && req.deadline < today) return; 
+
+                    // Check for Unfulfilled Community Alert
+                    if (req.currentPrayers === 0 && !isOwnRequest) communityHasUnfulfilled = true;
 
                     const hasPrayed = req.prayedBy && req.prayedBy.includes(currentUserId);
                     let actionBtn = '';
@@ -728,6 +795,9 @@
                 if (myReqCount === 0) {
                     myReqs.innerHTML = `<p class="text-sm text-gray-500 italic text-center py-4">You have no active requests.</p>`;
                 }
+                
+                // Toggle Global Alert Banner
+                document.getElementById('unfulfilledGlobalAlert').classList.toggle('hidden', !communityHasUnfulfilled);
             });
         }
 
