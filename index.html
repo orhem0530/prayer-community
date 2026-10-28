@@ -122,8 +122,8 @@
     <!-- MAIN USER VIEW -->
     <div id="userView" class="hidden flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40 dark:bg-gray-900/40">
         
-        <!-- Top Nav -->
-        <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl sticky top-0 z-10">
+        <!-- Top Nav (SCROLL FIX: shrink-0, absolute positioning removed for flex flow) -->
+        <header class="glass-card shrink-0 mx-4 mt-4 mb-2 p-4 flex justify-between items-center rounded-2xl relative z-20">
             <div>
                 <h2 class="text-xl font-semibold text-brand-900 dark:text-brand-300 serif">Faith Together</h2>
                 <p class="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5" data-i18n="subtitle">“Every Request Matters. Every Prayer Counts.”</p>
@@ -154,8 +154,8 @@
             </div>
         </header>
 
-        <!-- Scrollable Content -->
-        <main class="flex-1 overflow-y-auto px-4 pb-24 space-y-6 scroll-smooth overscroll-y-contain" style="-webkit-overflow-scrolling: touch;">
+        <!-- Scrollable Content (SCROLL FIX: removed scroll-smooth, adjusted padding) -->
+        <main class="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-2 pb-32 space-y-6" style="-webkit-overflow-scrolling: touch;">
             
             <!-- Dynamic Bot Banner -->
             <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-brand-500">
@@ -344,8 +344,8 @@
             </div>
         </main>
 
-        <!-- Bottom Navigation -->
-        <nav class="glass-card absolute bottom-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 dark:border-gray-700 z-10 bg-white/80 dark:bg-gray-900/80">
+        <!-- Bottom Navigation (SCROLL FIX: z-index increased, blur added) -->
+        <nav class="glass-card absolute bottom-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 dark:border-gray-700 z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
             <button id="tabFeed" class="text-brand-600 dark:text-brand-400 flex flex-col items-center p-2 active:scale-90 transition-transform"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider" data-i18n="nav_comm">Community</span></button>
             <button id="tabAdd" class="text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 flex flex-col items-center p-2 active:scale-90 transition-transform"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider" data-i18n="nav_req">Request</span></button>
             <button id="tabProfile" class="text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 flex flex-col items-center p-2 active:scale-90 transition-transform"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider" data-i18n="nav_prof">Profile</span></button>
@@ -401,7 +401,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        // CRITICAL BUG FIX: Added 'onSnapshot' back to the import list below!
         import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, addDoc, getDocs, limit, startAfter, query, orderBy, doc, updateDoc, deleteDoc, arrayUnion, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
