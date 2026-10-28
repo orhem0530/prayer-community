@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Faith Together: Every Request Matters</title>
     
     <!-- Google AdSense Verification Script -->
@@ -63,7 +63,6 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             color: #333;
-            min-height: 100vh;
         }
         h1, h2, h3, .serif { font-family: 'Lora', serif; }
         .glass-card {
@@ -86,7 +85,7 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden">
+<body class="flex flex-col h-[100dvh] overflow-hidden select-none">
 
     <!-- AUTHENTICATION VIEW -->
     <div id="authView" class="flex-1 flex items-center justify-center p-4 relative z-10">
@@ -128,18 +127,18 @@
                 <p id="botMessage" class="italic text-gray-700 text-sm">"Peace be with you. How can the community support you today?"</p>
             </div>
 
-            <!-- Profile Management Section -->
+            <!-- Profile Management & Notification Section -->
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
                 <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900">Your Profile</h3>
                 
                 <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300">
+                    <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300 shrink-0">
                         <span id="profileInitials" class="text-2xl text-gray-500">U</span>
                         <img id="profilePreview" src="" class="w-full h-full object-cover hidden">
                     </div>
-                    <div class="flex-1">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Update Photo (Auto-Resizes)</label>
-                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 w-full">
+                    <div class="flex-1 min-w-0">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Update Photo</label>
+                        <input type="file" id="profilePhotoInput" accept="image/*" class="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 w-full">
                     </div>
                 </div>
 
@@ -154,8 +153,18 @@
                     </div>
                 </div>
 
-                <button id="saveProfileBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg mt-4 text-sm font-medium transition">Save Profile Changes</button>
+                <button id="saveProfileBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg mt-2 text-sm font-medium transition">Save Profile Changes</button>
                 <button id="logoutBtn" class="w-full bg-red-50 text-red-600 py-2 rounded-lg border border-red-200 text-sm font-medium">Sign Out</button>
+
+                <!-- Prayer Notifications / Support Activity Feed -->
+                <div class="mt-6 border-t border-gray-200 pt-4 space-y-3">
+                    <h4 class="text-sm font-bold text-brand-900 flex items-center gap-2">
+                        <i class="fas fa-bell text-brand-500"></i> Your Requests & Support Received
+                    </h4>
+                    <div id="userNotificationsList" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                        <p class="text-xs text-gray-400 italic">No requests posted yet.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Bot Wizard: 4-Step Add Request -->
@@ -245,7 +254,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-brand-900 serif">Someone Needs You</h3>
                     <p class="text-sm text-gray-600 mb-4">There are <span id="activeReqCount" class="font-bold text-brand-600">0</span> anonymous requests waiting for support.</p>
-                    <button onclick="window.prayRandomRequest()" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform hover:scale-105">
+                    <button onclick="window.prayRandomRequest()" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95">
                         Pray for them
                     </button>
                 </div>
@@ -260,19 +269,19 @@
         </main>
 
         <!-- Bottom Navigation -->
-        <nav class="glass-card absolute bottom-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 z-10 bg-white/80">
+        <nav class="glass-card absolute bottom-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 z-10 bg-white/90 backdrop-blur-md">
             <button id="tabFeed" class="text-brand-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Community</span></button>
             <button id="tabAdd" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Request</span></button>
             <button id="tabProfile" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Profile</span></button>
         </nav>
 
-        <!-- Prayer Modal (Overlay) -->
-        <div id="prayerModal" class="hidden absolute inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+        <!-- Prayer Modal Overlay (Mobile Optimized: fixed inset-0) -->
+        <div id="prayerModal" class="hidden fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
             <div id="breathingCircle" class="w-32 h-32 rounded-full bg-brand-100 border-4 border-brand-300 mb-8 flex items-center justify-center shadow-lg">
                 <i class="fas fa-spa text-4xl text-brand-500"></i>
             </div>
             <h3 class="text-2xl serif mb-2 text-brand-900">Focus & Breathe</h3>
-            <p id="prayerFocusText" class="text-gray-600 mb-8 italic text-sm">"Praying for peace and healing..."</p>
+            <p id="prayerFocusText" class="text-gray-600 mb-8 italic text-sm max-w-xs leading-relaxed">"Praying for peace and healing..."</p>
             
             <!-- Pre-Prayer Timer Controls -->
             <div id="prePrayControls" class="w-full max-w-xs flex gap-2">
@@ -377,8 +386,8 @@
         </div>
     </div>
 
-    <!-- ADMIN EDIT USER MODAL (Hidden) -->
-    <div id="adminEditModal" class="hidden absolute inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <!-- ADMIN EDIT USER MODAL (Hidden, fixed inset-0) -->
+    <div id="adminEditModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
             <h3 class="text-lg font-bold text-brand-900 mb-4">Edit User</h3>
             <p id="editUserEmail" class="text-xs text-gray-500 mb-4 truncate"></p>
@@ -407,7 +416,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, arrayUnion, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, updateDoc, deleteDoc, arrayUnion, setDoc, getDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDuuj14B0MjgFdzBQ5hqhnEv854044O1uw",
@@ -557,8 +566,9 @@
             btn.innerText = "Save Profile Changes";
         });
 
-        // --- USER FEED LOGIC (RANDOM GENERATOR) ---
+        // --- USER FEED & PROFILE NOTIFICATIONS LISTENER ---
         function loadUserData() {
+            // 1. User Profile snapshot
             onSnapshot(doc(db, "users", auth.currentUser.uid), (docSnap) => {
                 const data = docSnap.data();
                 if(!data) return;
@@ -582,6 +592,7 @@
                 document.getElementById('profileBioInput').value = data.bio || '';
             });
 
+            // 2. Global Requests pool for Random Prayer Generator
             onSnapshot(query(collection(db, "requests"), orderBy("createdAt", "desc")), (snapshot) => {
                 window.activeRequestsPool = [];
                 const today = new Date().toISOString().split('T')[0];
@@ -598,6 +609,39 @@
                 });
 
                 document.getElementById('activeReqCount').innerText = window.activeRequestsPool.length;
+            });
+
+            // 3. User's Own Requests Notification Listener in Profile Tab
+            onSnapshot(query(collection(db, "requests"), where("userId", "==", auth.currentUser.uid)), (myReqSnap) => {
+                const container = document.getElementById('userNotificationsList');
+                if (!container) return;
+                container.innerHTML = '';
+
+                if (myReqSnap.empty) {
+                    container.innerHTML = '<p class="text-xs text-gray-400 italic">No requests posted yet.</p>';
+                    return;
+                }
+
+                myReqSnap.forEach((docSnap) => {
+                    const req = docSnap.data();
+                    const count = req.currentPrayers || 0;
+                    const card = document.createElement('div');
+                    card.className = "bg-white/80 p-3 rounded-lg border border-brand-100 shadow-sm text-xs space-y-1.5";
+                    
+                    const isCompleted = count >= req.goal;
+                    card.innerHTML = `
+                        <p class="font-medium text-gray-800 truncate">"${req.description}"</p>
+                        <div class="flex justify-between items-center text-[10px]">
+                            <span class="${count > 0 ? 'text-brand-600 font-bold' : 'text-gray-400'}">
+                                <i class="fas fa-heart text-red-400 mr-1"></i> ${count} ${count === 1 ? 'person has' : 'people have'} prayed
+                            </span>
+                            <span class="${isCompleted ? 'text-green-600 font-bold' : 'text-gray-400'}">
+                                ${isCompleted ? '✓ Goal Reached' : `Goal: ${req.goal}`}
+                            </span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
             });
         }
 
