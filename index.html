@@ -569,18 +569,14 @@
                     if (req.currentPrayers >= req.goal) return; 
                     if (req.deadline && req.deadline < today) return; 
 
-                    const percent = Math.min((req.currentPrayers / req.goal) * 100, 100);
-                    const deadlineStr = req.deadline ? ` • Closes: ${req.deadline}` : '';
                     const card = document.createElement('div');
                     card.className = "glass-card p-4 transition hover:shadow-md";
                     card.innerHTML = `
                         <div class="flex justify-between items-start mb-2">
-                            <div><h4 class="font-semibold text-brand-900">${req.nickname}</h4><p class="text-xs text-gray-500">Goal: ${req.currentPrayers} / ${req.goal}${deadlineStr}</p></div>
-                            <button class="text-gray-300 hover:text-red-500 transition" onclick="window.reportPost('${docSnap.id}')"><i class="fas fa-flag"></i></button>
+                            <p class="text-gray-700 text-sm font-medium">"${req.description}"</p>
+                            <button class="text-gray-300 hover:text-red-500 transition ml-2" onclick="window.reportPost('${docSnap.id}')"><i class="fas fa-flag"></i></button>
                         </div>
-                        <p class="text-gray-700 text-sm mb-4">"${req.description}"</p>
-                        <div class="w-full bg-gray-200 rounded-full h-1.5 mb-4 overflow-hidden"><div class="bg-brand-500 h-full rounded-full transition-all duration-1000" style="width: ${percent}%"></div></div>
-                        <button class="w-full bg-brand-50 text-brand-600 py-2.5 rounded-lg font-medium hover:bg-brand-100 transition text-sm shadow-sm" onclick="window.initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
+                        <button class="w-full bg-brand-50 text-brand-600 py-2.5 rounded-lg font-medium hover:bg-brand-100 transition text-sm shadow-sm mt-2" onclick="window.initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
                     `;
                     feed.appendChild(card);
                 });
@@ -635,168 +631,4 @@
                 await addDoc(collection(db, "requests"), { 
                     userId: auth.currentUser.uid, description: desc, nickname: nick, goal: goal, deadline: deadlineDate, currentPrayers: 0, createdAt: new Date(), reportedBy: [] 
                 });
-                await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore - 1 });
-                alert("Request posted successfully!");
-                
-                document.getElementById('reqDesc').value = ''; 
-                document.getElementById('reqNickname').value = '';
-                document.getElementById('reqGoal').value = '1';
-                document.getElementById('reqDeadlineType').value = '1';
-                document.getElementById('reqDate').classList.add('hidden');
-                
-                window.nextWizardStep(1);
-                window.switchTab('communityTabWrapper', 'tabFeed');
-            } catch(e) { alert("Error adding request: " + e.message); }
-        });
-
-        // --- PRAYER MODAL LOGIC ---
-        window.initiatePrayer = (id, desc) => {
-            activePrayerId = id;
-            document.getElementById('prayerFocusText').innerText = `"${desc}"`;
-            document.getElementById('prayerModal').classList.remove('hidden');
-            document.getElementById('breathingCircle').classList.add('breathe-animation');
-            const btn = document.getElementById('confirmPrayBtn');
-            btn.innerText = "Wait 8s..."; btn.disabled = true;
-            btn.classList.add('bg-brand-300', 'cursor-not-allowed'); btn.classList.remove('bg-brand-600', 'hover:bg-brand-700');
-            setTimeout(() => { btn.innerText = "I Prayed"; btn.disabled = false; btn.classList.remove('bg-brand-300', 'cursor-not-allowed'); btn.classList.add('bg-brand-600', 'hover:bg-brand-700'); }, 8000);
-        };
-
-        document.getElementById('confirmPrayBtn').addEventListener('click', async () => {
-            if (activePrayerId) {
-                const reqRef = doc(db, 'requests', activePrayerId);
-                const reqSnap = await getDoc(reqRef);
-                await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
-                const userRef = doc(db, 'users', auth.currentUser.uid);
-                const userSnap = await getDoc(userRef);
-                await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore + 1 });
-                document.getElementById('prayerModal').classList.add('hidden');
-                document.getElementById('breathingCircle').classList.remove('breathe-animation');
-                activePrayerId = null;
-            }
-        });
-
-        window.reportPost = async (id) => {
-            if(confirm("Report this post?")) await updateDoc(doc(db, 'requests', id), { reportedBy: arrayUnion(auth.currentUser.uid) });
-        };
-
-        const navBtns = { 'tabFeed': 'communityTabWrapper', 'tabAdd': 'addRequestSection', 'tabProfile': 'profileSection' };
-        window.switchTab = (showId, activeBtnId) => {
-            ['communityTabWrapper', 'addRequestSection', 'profileSection'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById(showId).classList.remove('hidden');
-            document.getElementById('botBanner').classList.toggle('hidden', showId === 'profileSection');
-            
-            if(showId === 'addRequestSection') window.nextWizardStep(1);
-
-            Object.keys(navBtns).forEach(btnId => {
-                const btn = document.getElementById(btnId);
-                btn.classList.toggle('text-brand-600', btnId === activeBtnId);
-                btn.classList.toggle('text-gray-400', btnId !== activeBtnId);
-            });
-        };
-        document.getElementById('tabFeed').addEventListener('click', () => window.switchTab('communityTabWrapper', 'tabFeed'));
-        document.getElementById('tabAdd').addEventListener('click', () => window.switchTab('addRequestSection', 'tabAdd'));
-        document.getElementById('tabProfile').addEventListener('click', () => window.switchTab('profileSection', 'tabProfile'));
-
-        // --- SUPERUSER ADMIN LOGIC ---
-        function loadAdminData() {
-            onSnapshot(collection(db, "users"), (snap) => {
-                document.getElementById('statUsers').innerText = snap.size;
-                const tbody = document.getElementById('adminUserTable');
-                tbody.innerHTML = '';
-                snap.forEach(docSnap => {
-                    const u = docSnap.data();
-                    tbody.innerHTML += `
-                        <tr class="border-b text-sm hover:bg-gray-50 transition">
-                            <td class="p-3 truncate max-w-[200px]">
-                                <span class="text-gray-800 font-medium block">${u.displayName || 'Unnamed User'}</span>
-                                <span class="text-gray-500 text-[10px] block">${u.email}</span>
-                            </td>
-                            <td class="p-3 text-center text-gray-600 font-bold">${u.lifeScore}</td>
-                            <td class="p-3 text-center">
-                                <span class="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider ${u.role === 'admin' ? 'bg-brand-100 text-brand-700' : 'bg-gray-100 text-gray-600'}">${u.role || 'user'}</span>
-                            </td>
-                            <td class="p-3 text-right space-x-2">
-                                <button onclick="window.openEditUser('${docSnap.id}', '${u.email}', ${u.lifeScore || 0}, '${u.role}')" class="text-brand-500 hover:text-brand-700 font-medium text-xs"><i class="fas fa-edit"></i> Edit</button>
-                                <button onclick="window.sendResetEmail('${u.email}')" class="text-orange-500 hover:text-orange-700 font-medium text-xs"><i class="fas fa-key"></i> Reset Pass</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-            });
-
-            onSnapshot(collection(db, "requests"), (snap) => {
-                document.getElementById('statRequests').innerText = snap.size;
-                const tbody = document.getElementById('adminReqTable');
-                tbody.innerHTML = '';
-                let reports = 0;
-                snap.forEach(docSnap => {
-                    const r = docSnap.data();
-                    const reportCount = r.reportedBy ? r.reportedBy.length : 0;
-                    if(reportCount > 0) reports++;
-                    tbody.innerHTML += `
-                        <tr class="border-b text-sm ${reportCount > 0 ? 'bg-red-50' : 'hover:bg-gray-50'}">
-                            <td class="p-3 font-semibold text-gray-800">${r.nickname}</td>
-                            <td class="p-3 text-gray-600 truncate max-w-[250px]" title="${r.description}">"${r.description}"</td>
-                            <td class="p-3 text-center font-bold ${reportCount > 0 ? 'text-red-600' : 'text-gray-400'}">${reportCount}</td>
-                            <td class="p-3 text-right">
-                                <button onclick="window.adminDeleteRequest('${docSnap.id}')" class="text-red-500 hover:text-red-700 font-medium text-xs"><i class="fas fa-trash"></i> Delete</button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                document.getElementById('statReports').innerText = reports;
-            });
-        }
-
-        window.openEditUser = (uid, email, score, role) => {
-            document.getElementById('editUserId').value = uid;
-            document.getElementById('editUserEmail').innerText = email;
-            document.getElementById('editUserScore').value = score;
-            document.getElementById('editUserRole').value = role || 'user';
-            document.getElementById('adminEditModal').classList.remove('hidden');
-        };
-
-        window.saveUserEdit = async () => {
-            const uid = document.getElementById('editUserId').value;
-            const newScore = parseInt(document.getElementById('editUserScore').value);
-            const newRole = document.getElementById('editUserRole').value;
-            try {
-                await updateDoc(doc(db, 'users', uid), { lifeScore: newScore, role: newRole });
-                document.getElementById('adminEditModal').classList.add('hidden');
-                alert("User info updated successfully.");
-            } catch(e) { alert("Error saving user: " + e.message); }
-        };
-
-        window.sendResetEmail = async (email) => {
-            if(confirm(`Send a secure password reset email to ${email}?`)) {
-                try {
-                    await sendPasswordResetEmail(auth, email);
-                    alert(`Reset link sent to ${email}`);
-                } catch(e) { alert("Error sending email: " + e.message); }
-            }
-        };
-
-        window.adminDeleteRequest = async (id) => {
-            if(confirm("Permanently delete this prayer request?")) {
-                try { await deleteDoc(doc(db, 'requests', id)); } 
-                catch(e) { alert("Error deleting: " + e.message); }
-            }
-        };
-
-        window.adminDeleteAllRequests = async () => {
-            const input = prompt("WARNING: This will wipe ALL prayer requests from the app. Type 'DELETE ALL' to confirm:");
-            if (input === 'DELETE ALL') {
-                try {
-                    const snap = await getDocs(collection(db, 'requests'));
-                    const batchDeletePromises = [];
-                    snap.forEach(d => batchDeletePromises.push(deleteDoc(doc(db, 'requests', d.id))));
-                    await Promise.all(batchDeletePromises);
-                    alert("All prayer requests have been reset.");
-                } catch(e) { alert("Error deleting posts: " + e.message); }
-            } else if (input !== null) {
-                alert("Confirmation failed. Posts were not deleted.");
-            }
-        };
-    </script>
-</body>
-</html>
+                await update
