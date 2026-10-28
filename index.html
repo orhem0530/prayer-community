@@ -120,9 +120,9 @@
     </div>
 
     <!-- MAIN USER VIEW -->
-    <div id="userView" class="hidden flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40 dark:bg-gray-900/40">
+    <div id="userView" class="hidden flex-col h-[100dvh] w-full max-w-md mx-auto shadow-2xl bg-white/40 dark:bg-gray-900/40">
         
-        <!-- Top Nav (SCROLL FIX: shrink-0, absolute positioning removed for flex flow) -->
+        <!-- Top Nav (Fixed height at top via shrink-0) -->
         <header class="glass-card shrink-0 mx-4 mt-4 mb-2 p-4 flex justify-between items-center rounded-2xl relative z-20">
             <div>
                 <h2 class="text-xl font-semibold text-brand-900 dark:text-brand-300 serif">Faith Together</h2>
@@ -154,8 +154,8 @@
             </div>
         </header>
 
-        <!-- Scrollable Content (SCROLL FIX: removed scroll-smooth, adjusted padding) -->
-        <main class="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-2 pb-32 space-y-6" style="-webkit-overflow-scrolling: touch;">
+        <!-- Scrollable Content (Takes up remaining middle space) -->
+        <main class="flex-1 overflow-y-auto overflow-x-hidden overscroll-y-contain px-4 pt-2 pb-6 space-y-6" style="-webkit-overflow-scrolling: touch;">
             
             <!-- Dynamic Bot Banner -->
             <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-brand-500">
@@ -320,6 +320,15 @@
                     <p id="dailyVerseRef" class="text-xs text-brand-900 dark:text-brand-400 font-semibold mt-2"></p>
                 </div>
 
+                <!-- Daily Short Card -->
+                <div id="dailyShortCard" class="glass-card p-5 text-center mb-4 bg-gradient-to-br from-brand-50 to-white dark:from-gray-800 dark:to-gray-900 shadow-sm border-brand-100 dark:border-gray-700">
+                    <h3 class="text-xs font-bold text-brand-400 dark:text-brand-300 uppercase tracking-widest mb-3"><i class="fab fa-youtube text-red-500 mr-1"></i> <span data-i18n="daily_short">Daily Short</span></h3>
+                    <div class="flex justify-center w-full">
+                        <iframe id="dailyShortIframe" class="w-full max-w-[280px] aspect-[9/16] rounded-xl shadow-md border border-gray-200 dark:border-gray-700" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wide mt-3">@ChurchofChristatPeaceValley</p>
+                </div>
+
                 <!-- Google AdSense Banner Slot -->
                 <div class="glass-card p-3 text-center mb-4 bg-white/50 dark:bg-gray-800/50 border border-dashed border-brand-200 dark:border-gray-700">
                     <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-1" data-i18n="spon_content">Sponsored Content</p>
@@ -344,8 +353,8 @@
             </div>
         </main>
 
-        <!-- Bottom Navigation (SCROLL FIX: z-index increased, blur added) -->
-        <nav class="glass-card absolute bottom-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 dark:border-gray-700 z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+        <!-- Bottom Navigation (Fixed height at bottom via shrink-0) -->
+        <nav class="glass-card shrink-0 w-full p-3 flex justify-around rounded-t-2xl border-t border-gray-200 dark:border-gray-700 z-20 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
             <button id="tabFeed" class="text-brand-600 dark:text-brand-400 flex flex-col items-center p-2 active:scale-90 transition-transform"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider" data-i18n="nav_comm">Community</span></button>
             <button id="tabAdd" class="text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 flex flex-col items-center p-2 active:scale-90 transition-transform"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider" data-i18n="nav_req">Request</span></button>
             <button id="tabProfile" class="text-gray-400 dark:text-gray-500 hover:text-brand-600 dark:hover:text-brand-400 flex flex-col items-center p-2 active:scale-90 transition-transform"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider" data-i18n="nav_prof">Profile</span></button>
@@ -424,6 +433,26 @@
         let allRequestsData = []; 
         let lastVisibleDoc = null; 
 
+        // --- DAILY SHORT ENGINE ---
+        const channelShorts = [
+            "VIDEO_ID_1", 
+            "VIDEO_ID_2",
+            "VIDEO_ID_3"
+        ];
+        
+        function loadDailyShort() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+            
+            const videoId = channelShorts[0] === "VIDEO_ID_1" ? "b960sjydjds" : channelShorts[dayOfYear % channelShorts.length];
+            
+            document.getElementById('dailyShortIframe').src = `https://www.youtube.com/embed/${videoId}?rel=0`;
+        }
+        loadDailyShort();
+
         // --- DARK MODE ENGINE ---
         const isDarkStored = localStorage.getItem('darkMode') === 'true';
         if (isDarkStored) {
@@ -470,6 +499,7 @@
                 set_deadline: "Set a deadline:",
                 submit_req: "Submit (-1 Score)",
                 daily_bread: "Daily Bread",
+                daily_short: "Daily Short",
                 spon_content: "Sponsored Content",
                 nav_comm: "Community", nav_req: "Request", nav_prof: "Profile",
                 focus_breathe: "Focus & Breathe",
@@ -526,6 +556,7 @@
                 set_deadline: "Magtakda ng petsa:",
                 submit_req: "Ipadala (-1 Puntos)",
                 daily_bread: "Salita ng Diyos",
+                daily_short: "Araw-araw na Short",
                 spon_content: "Sponsored Content",
                 nav_comm: "Komunidad", nav_req: "Hiling", nav_prof: "Profile",
                 focus_breathe: "Mag-focus at Huminga",
@@ -582,6 +613,7 @@
                 set_deadline: "Pagtakda og petsa:",
                 submit_req: "Ipadala (-1 Puntos)",
                 daily_bread: "Inadlaw nga Pulong",
+                daily_short: "Adlaw-adlaw nga Short",
                 spon_content: "Sponsored Content",
                 nav_comm: "Komunidad", nav_req: "Pangamuyo", nav_prof: "Profile",
                 focus_breathe: "Pag-focus ug Ginhawa",
