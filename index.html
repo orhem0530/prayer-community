@@ -238,8 +238,17 @@
                     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
                 </div>
 
-                <!-- Community Feed -->
-                <div id="communityFeed" class="space-y-4"></div>
+                <!-- Random Prayer Generator Feed -->
+                <div class="glass-card p-8 text-center flex flex-col items-center justify-center space-y-4">
+                    <div class="w-16 h-16 rounded-full bg-brand-100 flex items-center justify-center mb-2 shadow-sm border border-brand-200">
+                        <i class="fas fa-hand-holding-heart text-2xl text-brand-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-900 serif">Someone Needs You</h3>
+                    <p class="text-sm text-gray-600 mb-4">There are <span id="activeReqCount" class="font-bold text-brand-600">0</span> anonymous requests waiting for support.</p>
+                    <button onclick="window.prayRandomRequest()" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform hover:scale-105">
+                        Pray for them
+                    </button>
+                </div>
             </div>
 
             <!-- Copyright Footer -->
@@ -264,7 +273,10 @@
             </div>
             <h3 class="text-2xl serif mb-2 text-brand-900">Focus & Breathe</h3>
             <p id="prayerFocusText" class="text-gray-600 mb-8 italic text-sm">"Praying for peace and healing..."</p>
-            <button id="confirmPrayBtn" class="bg-brand-300 text-white px-8 py-3 rounded-full font-semibold cursor-not-allowed transition w-full max-w-xs" disabled>Wait 8s...</button>
+            <div class="w-full max-w-xs flex gap-2">
+                <button onclick="window.reportActivePrayer()" id="reportPrayerBtn" class="bg-red-50 hover:bg-red-100 text-red-500 px-4 py-3 rounded-xl transition shadow-sm hidden"><i class="fas fa-flag"></i></button>
+                <button id="confirmPrayBtn" class="flex-1 bg-brand-300 text-white px-8 py-3 rounded-xl font-semibold cursor-not-allowed transition" disabled>Wait 8s...</button>
+            </div>
         </div>
     </div>
 
@@ -402,6 +414,7 @@
         let currentUserDoc = null;
         let activePrayerId = null;
         window.currentBase64Photo = null;
+        window.activeRequestsPool = [];
 
         // --- GLOBAL THEME LISTENER ---
         onSnapshot(doc(db, "settings", "ui"), (docSnap) => {
@@ -532,7 +545,7 @@
             btn.innerText = "Save Profile Changes";
         });
 
-        // --- USER FEED LOGIC ---
+        // --- USER FEED LOGIC (RANDOM GENERATOR) ---
         function loadUserData() {
             onSnapshot(doc(db, "users", auth.currentUser.uid), (docSnap) => {
                 const data = docSnap.data();
@@ -558,8 +571,7 @@
             });
 
             onSnapshot(query(collection(db, "requests"), orderBy("createdAt", "desc")), (snapshot) => {
-                const feed = document.getElementById('communityFeed');
-                feed.innerHTML = '';
+                window.activeRequestsPool = [];
                 const today = new Date().toISOString().split('T')[0];
 
                 snapshot.forEach((docSnap) => {
@@ -568,20 +580,26 @@
                     if (req.reportedBy && req.reportedBy.length > 0) return; 
                     if (req.currentPrayers >= req.goal) return; 
                     if (req.deadline && req.deadline < today) return; 
+                    if (req.userId === auth.currentUser.uid) return; // Users cannot pray for their own requests
 
-                    const card = document.createElement('div');
-                    card.className = "glass-card p-4 transition hover:shadow-md";
-                    card.innerHTML = `
-                        <div class="flex justify-between items-start mb-2">
-                            <p class="text-gray-700 text-sm font-medium">"${req.description}"</p>
-                            <button class="text-gray-300 hover:text-red-500 transition ml-2" onclick="window.reportPost('${docSnap.id}')"><i class="fas fa-flag"></i></button>
-                        </div>
-                        <button class="w-full bg-brand-50 text-brand-600 py-2.5 rounded-lg font-medium hover:bg-brand-100 transition text-sm shadow-sm mt-2" onclick="window.initiatePrayer('${docSnap.id}', '${req.description.replace(/'/g, "\\'")}')">Pray for them</button>
-                    `;
-                    feed.appendChild(card);
+                    window.activeRequestsPool.push({ id: docSnap.id, desc: req.description });
                 });
+
+                document.getElementById('activeReqCount').innerText = window.activeRequestsPool.length;
             });
         }
+
+        window.prayRandomRequest = () => {
+            if (window.activeRequestsPool.length === 0) {
+                alert("There are no active requests from other users right now. Check back later!");
+                return;
+            }
+            // Pick a random request from the pool
+            const randomIndex = Math.floor(Math.random() * window.activeRequestsPool.length);
+            const selectedRequest = window.activeRequestsPool[randomIndex];
+            
+            window.initiatePrayer(selectedRequest.id, selectedRequest.desc.replace(/'/g, "\\'"));
+        };
 
         // --- WIZARD LOGIC ---
         window.nextWizardStep = (step) => {
@@ -651,10 +669,18 @@
             document.getElementById('prayerFocusText').innerText = `"${desc}"`;
             document.getElementById('prayerModal').classList.remove('hidden');
             document.getElementById('breathingCircle').classList.add('breathe-animation');
+            
             const btn = document.getElementById('confirmPrayBtn');
+            const flagBtn = document.getElementById('reportPrayerBtn');
+            
+            flagBtn.classList.remove('hidden');
             btn.innerText = "Wait 8s..."; btn.disabled = true;
             btn.classList.add('bg-brand-300', 'cursor-not-allowed'); btn.classList.remove('bg-brand-600', 'hover:bg-brand-700');
-            setTimeout(() => { btn.innerText = "I Prayed"; btn.disabled = false; btn.classList.remove('bg-brand-300', 'cursor-not-allowed'); btn.classList.add('bg-brand-600', 'hover:bg-brand-700'); }, 8000);
+            
+            setTimeout(() => { 
+                btn.innerText = "I Prayed"; btn.disabled = false; 
+                btn.classList.remove('bg-brand-300', 'cursor-not-allowed'); btn.classList.add('bg-brand-600', 'hover:bg-brand-700'); 
+            }, 8000);
         };
 
         document.getElementById('confirmPrayBtn').addEventListener('click', async () => {
@@ -662,17 +688,25 @@
                 const reqRef = doc(db, 'requests', activePrayerId);
                 const reqSnap = await getDoc(reqRef);
                 await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
+                
                 const userRef = doc(db, 'users', auth.currentUser.uid);
                 const userSnap = await getDoc(userRef);
                 await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore + 1 });
+                
                 document.getElementById('prayerModal').classList.add('hidden');
                 document.getElementById('breathingCircle').classList.remove('breathe-animation');
                 activePrayerId = null;
             }
         });
 
-        window.reportPost = async (id) => {
-            if(confirm("Report this post?")) await updateDoc(doc(db, 'requests', id), { reportedBy: arrayUnion(auth.currentUser.uid) });
+        window.reportActivePrayer = async () => {
+            if (activePrayerId && confirm("Report this post for inappropriate content?")) {
+                await updateDoc(doc(db, 'requests', activePrayerId), { reportedBy: arrayUnion(auth.currentUser.uid) });
+                document.getElementById('prayerModal').classList.add('hidden');
+                document.getElementById('breathingCircle').classList.remove('breathe-animation');
+                activePrayerId = null;
+                alert("Post reported and hidden.");
+            }
         };
 
         const navBtns = { 'tabFeed': 'communityTabWrapper', 'tabAdd': 'addRequestSection', 'tabProfile': 'profileSection' };
