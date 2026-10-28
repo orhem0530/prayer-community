@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Pinch-to-zoom is now enabled by removing maximum-scale and user-scalable=no -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faith Together: Every Request Matters</title>
     
@@ -104,7 +103,7 @@
     </div>
 
     <!-- MAIN USER VIEW -->
-    <div id="userView" class="hidden flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40 overflow-hidden">
+    <div id="userView" class="hidden flex flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40 overflow-hidden">
         <!-- Top Nav Header -->
         <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl shrink-0 z-10">
             <h2 class="text-xl font-semibold text-brand-900 serif">Faith Together</h2>
@@ -121,7 +120,7 @@
         </header>
 
         <!-- Scrollable Main Content Area for ALL Tabs -->
-        <main class="flex-1 overflow-y-auto px-4 pb-4 space-y-6">
+        <main class="flex-1 overflow-y-auto px-4 pb-6 space-y-6">
             
             <!-- Dynamic Bot Banner -->
             <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-brand-500">
@@ -262,7 +261,7 @@
             </div>
         </main>
 
-        <!-- Fixed Bottom Section: Toolbar + Copyright -->
+        <!-- Fixed Bottom Section: Toolbar + Copyright Footer -->
         <div class="shrink-0 w-full z-30 bg-white/95 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-200">
             <!-- Navigation Toolbar -->
             <nav class="flex justify-around p-3">
@@ -272,7 +271,7 @@
             </nav>
             
             <!-- Copyright Footer -->
-            <div class="w-full text-center pb-4 pt-1">
+            <div class="w-full text-center pb-3 pt-1">
                 <p class="text-[10px] text-gray-500 opacity-70">
                     &copy; 2026 Orhem Abasolo-CCPVYAM2026. All rights reserved.
                 </p>
@@ -306,7 +305,7 @@
     </div>
 
     <!-- ADMIN COMMAND CENTER VIEW -->
-    <div id="adminView" class="hidden flex-col h-full w-full max-w-5xl mx-auto p-4 space-y-6 overflow-y-auto">
+    <div id="adminView" class="hidden flex flex-col h-full w-full max-w-5xl mx-auto p-4 space-y-6 overflow-y-auto">
         <header class="glass-card p-6 flex flex-col sm:flex-row justify-between items-center rounded-2xl bg-brand-900 text-white border-none gap-4 text-center sm:text-left">
             <div>
                 <h1 class="text-2xl font-bold serif">Admin Command Center</h1>
