@@ -273,9 +273,21 @@
             </div>
             <h3 class="text-2xl serif mb-2 text-brand-900">Focus & Breathe</h3>
             <p id="prayerFocusText" class="text-gray-600 mb-8 italic text-sm">"Praying for peace and healing..."</p>
-            <div class="w-full max-w-xs flex gap-2">
-                <button onclick="window.reportActivePrayer()" id="reportPrayerBtn" class="bg-red-50 hover:bg-red-100 text-red-500 px-4 py-3 rounded-xl transition shadow-sm hidden"><i class="fas fa-flag"></i></button>
+            
+            <!-- Pre-Prayer Timer Controls -->
+            <div id="prePrayControls" class="w-full max-w-xs flex gap-2">
+                <button onclick="window.reportActivePrayer()" id="reportPrayerBtn" class="bg-red-50 hover:bg-red-100 text-red-500 px-4 py-3 rounded-xl transition shadow-sm"><i class="fas fa-flag"></i></button>
                 <button id="confirmPrayBtn" class="flex-1 bg-brand-300 text-white px-8 py-3 rounded-xl font-semibold cursor-not-allowed transition" disabled>Wait 8s...</button>
+            </div>
+
+            <!-- Post-Prayer Navigation (Shown after clicking 'I Prayed') -->
+            <div id="postPrayControls" class="hidden w-full max-w-xs flex justify-between gap-3">
+                <button onclick="window.closePrayerModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold transition">
+                    <i class="fas fa-arrow-left mr-1"></i> Back
+                </button>
+                <button onclick="window.prayRandomRequest()" class="w-1/2 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-semibold transition shadow-md">
+                    Next <i class="fas fa-arrow-right ml-1"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -590,13 +602,17 @@
         }
 
         window.prayRandomRequest = () => {
-            if (window.activeRequestsPool.length === 0) {
+            const availablePool = window.activeRequestsPool.filter(r => r.id !== activePrayerId);
+            
+            if (availablePool.length === 0 && window.activeRequestsPool.length === 0) {
                 alert("There are no active requests from other users right now. Check back later!");
+                window.closePrayerModal();
                 return;
             }
-            // Pick a random request from the pool
-            const randomIndex = Math.floor(Math.random() * window.activeRequestsPool.length);
-            const selectedRequest = window.activeRequestsPool[randomIndex];
+
+            const poolToUse = availablePool.length > 0 ? availablePool : window.activeRequestsPool;
+            const randomIndex = Math.floor(Math.random() * poolToUse.length);
+            const selectedRequest = poolToUse[randomIndex];
             
             window.initiatePrayer(selectedRequest.id, selectedRequest.desc.replace(/'/g, "\\'"));
         };
@@ -663,12 +679,16 @@
             } catch(e) { alert("Error adding request: " + e.message); }
         });
 
-        // --- PRAYER MODAL LOGIC ---
+        // --- PRAYER MODAL LOGIC & NAVIGATION ---
         window.initiatePrayer = (id, desc) => {
             activePrayerId = id;
             document.getElementById('prayerFocusText').innerText = `"${desc}"`;
             document.getElementById('prayerModal').classList.remove('hidden');
             document.getElementById('breathingCircle').classList.add('breathe-animation');
+            
+            // Reset control sections
+            document.getElementById('prePrayControls').classList.remove('hidden');
+            document.getElementById('postPrayControls').classList.add('hidden');
             
             const btn = document.getElementById('confirmPrayBtn');
             const flagBtn = document.getElementById('reportPrayerBtn');
@@ -687,24 +707,32 @@
             if (activePrayerId) {
                 const reqRef = doc(db, 'requests', activePrayerId);
                 const reqSnap = await getDoc(reqRef);
-                await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
+                if (reqSnap.exists()) {
+                    await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
+                }
                 
                 const userRef = doc(db, 'users', auth.currentUser.uid);
                 const userSnap = await getDoc(userRef);
-                await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore + 1 });
+                if (userSnap.exists()) {
+                    await updateDoc(userRef, { lifeScore: (userSnap.data().lifeScore || 0) + 1 });
+                }
                 
-                document.getElementById('prayerModal').classList.add('hidden');
-                document.getElementById('breathingCircle').classList.remove('breathe-animation');
-                activePrayerId = null;
+                // Switch to Back / Next buttons after praying
+                document.getElementById('prePrayControls').classList.add('hidden');
+                document.getElementById('postPrayControls').classList.remove('hidden');
             }
         });
+
+        window.closePrayerModal = () => {
+            document.getElementById('prayerModal').classList.add('hidden');
+            document.getElementById('breathingCircle').classList.remove('breathe-animation');
+            activePrayerId = null;
+        };
 
         window.reportActivePrayer = async () => {
             if (activePrayerId && confirm("Report this post for inappropriate content?")) {
                 await updateDoc(doc(db, 'requests', activePrayerId), { reportedBy: arrayUnion(auth.currentUser.uid) });
-                document.getElementById('prayerModal').classList.add('hidden');
-                document.getElementById('breathingCircle').classList.remove('breathe-animation');
-                activePrayerId = null;
+                window.closePrayerModal();
                 alert("Post reported and hidden.");
             }
         };
