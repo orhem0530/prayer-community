@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Pinch-to-zoom is now enabled by removing maximum-scale and user-scalable=no -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faith Together: Every Request Matters</title>
     
     <!-- Google AdSense Verification Script -->
@@ -85,7 +86,7 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="flex flex-col h-[100dvh] overflow-hidden select-none">
+<body class="flex flex-col h-[100dvh] overflow-hidden">
 
     <!-- AUTHENTICATION VIEW -->
     <div id="authView" class="flex-1 flex items-center justify-center p-4 relative z-10">
@@ -104,7 +105,7 @@
 
     <!-- MAIN USER VIEW -->
     <div id="userView" class="hidden flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40 overflow-hidden">
-        <!-- Top Nav -->
+        <!-- Top Nav Header -->
         <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl shrink-0 z-10">
             <h2 class="text-xl font-semibold text-brand-900 serif">Faith Together</h2>
             <div class="flex items-center gap-3">
@@ -119,15 +120,15 @@
             </div>
         </header>
 
-        <!-- Scrollable Main Content -->
-        <main class="flex-1 overflow-y-auto px-4 pb-6 space-y-6">
+        <!-- Scrollable Main Content Area for ALL Tabs -->
+        <main class="flex-1 overflow-y-auto px-4 pb-4 space-y-6">
             
             <!-- Dynamic Bot Banner -->
             <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-brand-500">
                 <p id="botMessage" class="italic text-gray-700 text-sm">"Peace be with you. How can the community support you today?"</p>
             </div>
 
-            <!-- Profile Management & Notification Section -->
+            <!-- TAB 1: Profile Management & Notification Section -->
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
                 <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900">Your Profile</h3>
                 
@@ -167,7 +168,7 @@
                 </div>
             </div>
 
-            <!-- Bot Wizard: 4-Step Add Request -->
+            <!-- TAB 2: Bot Wizard 4-Step Add Request -->
             <div id="addRequestSection" class="hidden glass-card p-6 space-y-4">
                 <h3 class="text-lg font-semibold text-brand-900 serif border-b pb-2 mb-4">Share Your Burden</h3>
                 
@@ -230,7 +231,7 @@
                 </div>
             </div>
 
-            <!-- Community Tab Wrapper -->
+            <!-- TAB 3: Community Tab Wrapper -->
             <div id="communityTabWrapper" class="space-y-4">
                 
                 <!-- Daily Verse Card -->
@@ -259,21 +260,24 @@
                     </button>
                 </div>
             </div>
+        </main>
 
+        <!-- Fixed Bottom Section: Toolbar + Copyright -->
+        <div class="shrink-0 w-full z-30 bg-white/95 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-200">
+            <!-- Navigation Toolbar -->
+            <nav class="flex justify-around p-3">
+                <button id="tabFeed" class="text-brand-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Community</span></button>
+                <button id="tabAdd" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Request</span></button>
+                <button id="tabProfile" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Profile</span></button>
+            </nav>
+            
             <!-- Copyright Footer -->
-            <div class="w-full text-center py-6 mt-auto">
-                <p class="text-xs text-gray-500 opacity-70">
+            <div class="w-full text-center pb-4 pt-1">
+                <p class="text-[10px] text-gray-500 opacity-70">
                     &copy; 2026 Orhem Abasolo-CCPVYAM2026. All rights reserved.
                 </p>
             </div>
-        </main>
-
-        <!-- Fixed Bottom Navigation Toolbar -->
-        <nav class="glass-card shrink-0 w-full p-3 flex justify-around rounded-t-2xl rounded-b-none border-t border-gray-200 z-30 bg-white/95 backdrop-blur-md shadow-lg sticky bottom-0">
-            <button id="tabFeed" class="text-brand-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Community</span></button>
-            <button id="tabAdd" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Request</span></button>
-            <button id="tabProfile" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider">Profile</span></button>
-        </nav>
+        </div>
 
         <!-- Prayer Modal Overlay -->
         <div id="prayerModal" class="hidden fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
