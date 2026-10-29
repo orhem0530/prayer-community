@@ -114,7 +114,6 @@
                 <div class="text-right flex flex-col items-end">
                     <p class="text-xs text-gray-500">Life Score</p>
                     <div class="flex items-center gap-1">
-                        <!-- Nav Badge Icon -->
                         <i id="navBadgeIcon" class="fas fa-leaf text-[10px] text-gray-500"></i>
                         <p id="navLifeScore" class="font-bold text-brand-600">0</p>
                     </div>
@@ -126,7 +125,7 @@
             </div>
         </header>
 
-        <!-- Scrollable Main Content Area for ALL Tabs -->
+        <!-- Scrollable Main Content Area -->
         <main class="flex-1 overflow-y-auto px-4 pb-6 space-y-6">
             
             <!-- Dynamic Bot Banner -->
@@ -146,7 +145,6 @@
                         <img id="profilePreview" src="" class="w-full h-full object-cover hidden">
                     </div>
                     <div class="flex-1 min-w-0">
-                        <!-- Profile Dynamic Badge Display -->
                         <div id="profileBadgeDisplay" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-[10px] font-bold uppercase tracking-wider mb-2 text-gray-600 border border-gray-200">
                             <i class="fas fa-leaf"></i> <span>Seeker</span>
                         </div>
@@ -274,16 +272,14 @@
             </div>
         </main>
 
-        <!-- Fixed Bottom Section: Toolbar + Copyright Footer -->
+        <!-- Fixed Bottom Navigation Toolbar -->
         <div class="shrink-0 w-full z-30 bg-white/95 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-200">
-            <!-- Navigation Toolbar -->
             <nav class="flex justify-around p-3">
                 <button id="tabFeed" class="text-brand-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Community</span></button>
                 <button id="tabAdd" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Request</span></button>
                 <button id="tabProfile" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Profile</span></button>
             </nav>
             
-            <!-- Copyright Footer -->
             <div class="w-full text-center pb-3 pt-1">
                 <p class="text-[10px] text-gray-500 opacity-70">
                     &copy; 2026 Orhem Abasolo-CCPVYAM2026. All rights reserved.
@@ -293,8 +289,6 @@
 
         <!-- Prayer Modal Overlay -->
         <div id="prayerModal" class="hidden fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
-            
-            <!-- Close 'X' Button to allow manual exit at any time -->
             <button onclick="window.closePrayerModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-3xl transition">
                 <i class="fas fa-times"></i>
             </button>
@@ -311,7 +305,7 @@
                 <button id="confirmPrayBtn" class="flex-1 bg-brand-300 text-white px-8 py-3 rounded-xl font-semibold cursor-not-allowed transition" disabled>Wait 8s...</button>
             </div>
 
-            <!-- Post-Prayer Navigation (RESTORED - Shown after clicking 'I Prayed') -->
+            <!-- Post-Prayer Controls -->
             <div id="postPrayControls" class="hidden w-full max-w-xs flex justify-between gap-3">
                 <button onclick="window.closePrayerModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold transition">
                     <i class="fas fa-arrow-left mr-1"></i> Back
@@ -494,10 +488,9 @@
         window.currentBase64Photo = null;
         window.activeRequestsPool = [];
         
-        // Tracking array to prevent duplicates in the same session
         window.prayedInSession = [];
 
-        // --- GLOBAL THEME LISTENER ---
+        // Global UI Theme Listener
         onSnapshot(doc(db, "settings", "ui"), (docSnap) => {
             if (docSnap.exists()) {
                 const theme = docSnap.data().theme;
@@ -518,7 +511,7 @@
             }
         };
 
-        // --- EXTERNAL API: DAILY VERSE ---
+        // Fetch Daily Verse
         async function fetchDailyVerse() {
             try {
                 const themeReferences = ['Proverbs 3:5-6', 'Romans 12:10', 'Hebrews 10:24-25', '1 Corinthians 16:14', 'Joshua 1:9', 'Philippians 4:13', '1 Peter 2:17', 'Isaiah 41:10', 'John 13:34'];
@@ -537,7 +530,7 @@
         }
         fetchDailyVerse();
 
-        // --- AUTHENTICATION LOGIC ---
+        // Authentication Logic
         document.getElementById('loginBtn').addEventListener('click', async () => {
             let email = document.getElementById('loginEmail').value.trim().toLowerCase();
             const pass = document.getElementById('loginPassword').value;
@@ -556,7 +549,10 @@
             } catch (err) { alert("Registration failed: " + err.message); }
         });
 
-        const handleLogout = () => signOut(auth);
+        const handleLogout = () => {
+            window.prayedInSession = [];
+            signOut(auth);
+        };
         document.getElementById('logoutBtn').addEventListener('click', handleLogout);
         document.getElementById('adminLogoutBtn').addEventListener('click', handleLogout);
 
@@ -582,7 +578,7 @@
             }
         });
 
-        // --- BADGE SYSTEM LOGIC ---
+        // Badge System Logic
         function getBadge(score) {
             if (score >= 100) return { title: "Beacon of Light", icon: "fas fa-star", css: "bg-amber-100 text-amber-600 border-amber-200" };
             if (score >= 50) return { title: "Sanctuary Pillar", icon: "fas fa-landmark", css: "bg-brand-100 text-brand-600 border-brand-200" };
@@ -591,7 +587,7 @@
             return { title: "Seeker", icon: "fas fa-leaf", css: "bg-gray-100 text-gray-600 border-gray-200" };
         }
 
-        // --- USER PROFILE LOGIC ---
+        // Profile Photo Processing
         document.getElementById('profilePhotoInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file || !file.type.match('image.*')) return;
@@ -635,7 +631,7 @@
             btn.innerText = "Save Profile Changes";
         });
 
-        // --- USER FEED & PROFILE NOTIFICATIONS LISTENER ---
+        // User Data and Pool Feed Listener
         function loadUserData() {
             onSnapshot(doc(db, "users", auth.currentUser.uid), (docSnap) => {
                 const data = docSnap.data();
@@ -644,18 +640,13 @@
                 const score = data.lifeScore || 0;
                 document.getElementById('navLifeScore').innerText = score;
                 
-                // --- APPLY DYNAMIC BADGES ---
                 const badge = getBadge(score);
-                
-                // Update Nav Badge
                 const navBadgeIcon = document.getElementById('navBadgeIcon');
                 navBadgeIcon.className = `${badge.icon} text-[10px] ${badge.css.split(' ')[1]}`;
                 
-                // Update Profile Badge
                 const profileBadgeDisplay = document.getElementById('profileBadgeDisplay');
                 profileBadgeDisplay.className = `inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2 border ${badge.css}`;
                 profileBadgeDisplay.innerHTML = `<i class="${badge.icon}"></i> <span>${badge.title}</span>`;
-                // ----------------------------
 
                 const botMsg = document.getElementById('botMessage');
                 if (score > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
@@ -678,6 +669,7 @@
             onSnapshot(query(collection(db, "requests"), orderBy("createdAt", "desc")), (snapshot) => {
                 window.activeRequestsPool = [];
                 const today = new Date().toISOString().split('T')[0];
+                const uid = auth.currentUser ? auth.currentUser.uid : null;
 
                 snapshot.forEach((docSnap) => {
                     const req = docSnap.data();
@@ -685,7 +677,8 @@
                     if (req.reportedBy && req.reportedBy.length > 0) return; 
                     if (req.currentPrayers >= req.goal) return; 
                     if (req.deadline && req.deadline < today) return; 
-                    if (req.userId === auth.currentUser.uid) return; 
+                    if (uid && req.userId === uid) return; 
+                    if (uid && req.prayedBy && Array.isArray(req.prayedBy) && req.prayedBy.includes(uid)) return; // Strict Database Lock
 
                     window.activeRequestsPool.push({ id: docSnap.id, desc: req.description });
                 });
@@ -727,7 +720,7 @@
             });
         }
 
-        // --- NEW CUSTOM MODAL EDIT PRAYER REQUEST FUNCTIONALITY ---
+        // Edit Request Modal
         window.openEditRequestModal = (id, desc, goal, deadline) => {
             document.getElementById('editReqId').value = id;
             document.getElementById('editReqDesc').value = desc;
@@ -770,14 +763,12 @@
             }
         };
 
-        // --- RANDOM PRAYER GENERATOR ---
+        // Random Prayer Generator
         window.prayRandomRequest = () => {
-            // Filter out anything they just prayed for in this active session
             const availablePool = window.activeRequestsPool.filter(r => 
                 r.id !== activePrayerId && !window.prayedInSession.includes(r.id)
             );
             
-            // If they have gone through all available requests
             if (availablePool.length === 0) {
                 if (window.prayedInSession.length > 0) {
                     alert("Thank you! You have prayed for all available requests for now.");
@@ -794,7 +785,7 @@
             window.initiatePrayer(selectedRequest.id, selectedRequest.desc.replace(/'/g, "\\'"));
         };
 
-        // --- WIZARD LOGIC ---
+        // Wizard Navigation
         window.nextWizardStep = (step) => {
             [1, 2, 3, 4].forEach(i => {
                 document.getElementById(`wizardStep${i}`).classList.add('hidden');
@@ -840,7 +831,7 @@
             
             try {
                 await addDoc(collection(db, "requests"), { 
-                    userId: auth.currentUser.uid, description: desc, nickname: nick, goal: goal, deadline: deadlineDate, currentPrayers: 0, createdAt: new Date(), reportedBy: [] 
+                    userId: auth.currentUser.uid, description: desc, nickname: nick, goal: goal, deadline: deadlineDate, currentPrayers: 0, createdAt: new Date(), reportedBy: [], prayedBy: [] 
                 });
                 await updateDoc(userRef, { lifeScore: userSnap.data().lifeScore - 1 });
                 alert("Request posted successfully!");
@@ -856,14 +847,13 @@
             } catch(e) { alert("Error adding request: " + e.message); }
         });
 
-        // --- PRAYER MODAL LOGIC & NAVIGATION ---
+        // Prayer Timer and Confirmation Logic
         window.initiatePrayer = (id, desc) => {
             activePrayerId = id;
             document.getElementById('prayerFocusText').innerText = `"${desc}"`;
             document.getElementById('prayerModal').classList.remove('hidden');
             document.getElementById('breathingCircle').classList.add('breathe-animation');
             
-            // RESET VIEWS: Show Pre-Pray, Hide Post-Pray
             document.getElementById('prePrayControls').classList.remove('hidden');
             document.getElementById('postPrayControls').classList.add('hidden');
             
@@ -887,15 +877,16 @@
 
             if (activePrayerId) {
                 const currentId = activePrayerId;
-                
-                // Track immediately in local memory so it doesn't show up again this session
                 window.prayedInSession.push(currentId);
                 
                 try {
                     const reqRef = doc(db, 'requests', currentId);
                     const reqSnap = await getDoc(reqRef);
                     if (reqSnap.exists()) {
-                        await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
+                        await updateDoc(reqRef, { 
+                            currentPrayers: reqSnap.data().currentPrayers + 1,
+                            prayedBy: arrayUnion(auth.currentUser.uid)
+                        });
                     }
                     
                     const userRef = doc(db, 'users', auth.currentUser.uid);
@@ -905,9 +896,9 @@
                     }
                 } catch(e) {
                     console.error("Error updating prayer records:", e);
+                    alert("Unable to store prayer record to database: " + e.message);
                 }
                 
-                // SWAP UI: Hide the "I Prayed" button, Show "Next" / "Back"
                 document.getElementById('prePrayControls').classList.add('hidden');
                 document.getElementById('postPrayControls').classList.remove('hidden');
             }
@@ -945,7 +936,7 @@
         document.getElementById('tabAdd').addEventListener('click', () => window.switchTab('addRequestSection', 'tabAdd'));
         document.getElementById('tabProfile').addEventListener('click', () => window.switchTab('profileSection', 'tabProfile'));
 
-        // --- SUPERUSER ADMIN LOGIC ---
+        // Admin Section
         function loadAdminData() {
             onSnapshot(collection(db, "users"), (snap) => {
                 document.getElementById('statUsers').innerText = snap.size;
