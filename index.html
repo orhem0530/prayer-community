@@ -545,7 +545,8 @@
             if (!email || !pass) return alert("Please enter an email and password.");
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 5, photoURL: "", displayName: "", bio: "" }, { merge: true });
+                // SET DEFAULT SCORE TO 1
+                await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 1, photoURL: "", displayName: "", bio: "" }, { merge: true });
             } catch (err) { alert("Registration failed: " + err.message); }
         });
 
@@ -678,7 +679,7 @@
                     if (req.currentPrayers >= req.goal) return; 
                     if (req.deadline && req.deadline < today) return; 
                     if (uid && req.userId === uid) return; 
-                    if (uid && req.prayedBy && Array.isArray(req.prayedBy) && req.prayedBy.includes(uid)) return; // Strict Database Lock
+                    if (uid && req.prayedBy && Array.isArray(req.prayedBy) && req.prayedBy.includes(uid)) return;
 
                     window.activeRequestsPool.push({ id: docSnap.id, desc: req.description });
                 });
