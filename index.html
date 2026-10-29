@@ -111,9 +111,13 @@
                 <p class="text-[10px] text-gray-500 mt-0.5 font-medium">Every Request Matters. Every Prayer Counts.</p>
             </div>
             <div class="flex items-center gap-3">
-                <div class="text-right">
+                <div class="text-right flex flex-col items-end">
                     <p class="text-xs text-gray-500">Life Score</p>
-                    <p id="navLifeScore" class="font-bold text-brand-600">0</p>
+                    <div class="flex items-center gap-1">
+                        <!-- Nav Badge Icon -->
+                        <i id="navBadgeIcon" class="fas fa-leaf text-[10px] text-gray-500"></i>
+                        <p id="navLifeScore" class="font-bold text-brand-600">0</p>
+                    </div>
                 </div>
                 <div id="navProfileIcon" class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-800 font-bold overflow-hidden border border-brand-200 cursor-pointer">
                     <span id="navInitials">U</span>
@@ -132,7 +136,9 @@
 
             <!-- TAB 1: Profile Management & Notification Section -->
             <div id="profileSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900">Your Profile</h3>
+                <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900 flex justify-between items-center">
+                    Your Profile
+                </h3>
                 
                 <div class="flex items-center gap-4">
                     <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300 shrink-0">
@@ -140,6 +146,10 @@
                         <img id="profilePreview" src="" class="w-full h-full object-cover hidden">
                     </div>
                     <div class="flex-1 min-w-0">
+                        <!-- Profile Dynamic Badge Display -->
+                        <div id="profileBadgeDisplay" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 text-[10px] font-bold uppercase tracking-wider mb-2 text-gray-600 border border-gray-200">
+                            <i class="fas fa-leaf"></i> <span>Seeker</span>
+                        </div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Update Photo</label>
                         <input type="file" id="profilePhotoInput" accept="image/*" class="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 w-full">
                     </div>
@@ -301,7 +311,7 @@
                 <button id="confirmPrayBtn" class="flex-1 bg-brand-300 text-white px-8 py-3 rounded-xl font-semibold cursor-not-allowed transition" disabled>Wait 8s...</button>
             </div>
 
-            <!-- Post-Prayer Navigation -->
+            <!-- Post-Prayer Navigation (RESTORED - Shown after clicking 'I Prayed') -->
             <div id="postPrayControls" class="hidden w-full max-w-xs flex justify-between gap-3">
                 <button onclick="window.closePrayerModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold transition">
                     <i class="fas fa-arrow-left mr-1"></i> Back
@@ -572,6 +582,15 @@
             }
         });
 
+        // --- BADGE SYSTEM LOGIC ---
+        function getBadge(score) {
+            if (score >= 100) return { title: "Beacon of Light", icon: "fas fa-star", css: "bg-amber-100 text-amber-600 border-amber-200" };
+            if (score >= 50) return { title: "Sanctuary Pillar", icon: "fas fa-landmark", css: "bg-brand-100 text-brand-600 border-brand-200" };
+            if (score >= 20) return { title: "Prayer Warrior", icon: "fas fa-shield-alt", css: "bg-emerald-100 text-emerald-600 border-emerald-200" };
+            if (score >= 5) return { title: "Seed of Faith", icon: "fas fa-seedling", css: "bg-green-100 text-green-600 border-green-200" };
+            return { title: "Seeker", icon: "fas fa-leaf", css: "bg-gray-100 text-gray-600 border-gray-200" };
+        }
+
         // --- USER PROFILE LOGIC ---
         document.getElementById('profilePhotoInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
@@ -621,11 +640,26 @@
             onSnapshot(doc(db, "users", auth.currentUser.uid), (docSnap) => {
                 const data = docSnap.data();
                 if(!data) return;
-                document.getElementById('navLifeScore').innerText = data.lifeScore || 0;
                 
+                const score = data.lifeScore || 0;
+                document.getElementById('navLifeScore').innerText = score;
+                
+                // --- APPLY DYNAMIC BADGES ---
+                const badge = getBadge(score);
+                
+                // Update Nav Badge
+                const navBadgeIcon = document.getElementById('navBadgeIcon');
+                navBadgeIcon.className = `${badge.icon} text-[10px] ${badge.css.split(' ')[1]}`;
+                
+                // Update Profile Badge
+                const profileBadgeDisplay = document.getElementById('profileBadgeDisplay');
+                profileBadgeDisplay.className = `inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-2 border ${badge.css}`;
+                profileBadgeDisplay.innerHTML = `<i class="${badge.icon}"></i> <span>${badge.title}</span>`;
+                // ----------------------------
+
                 const botMsg = document.getElementById('botMessage');
-                if (data.lifeScore > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
-                else if (data.lifeScore <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
+                if (score > 10) botMsg.innerText = `"Your spirit is strong. Is there a burden we can carry for you?"`;
+                else if (score <= 0) botMsg.innerText = `"Take a moment to pray for others to restore your balance."`;
                 else botMsg.innerText = `"Peace be with you. How can the community support you today?"`;
                 
                 if (data.photoURL) {
