@@ -105,7 +105,6 @@
     <!-- MAIN USER VIEW -->
     <div id="userView" class="hidden flex flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40 overflow-hidden">
         <!-- Top Nav Header -->
-        <!-- Top Nav Header -->
         <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl shrink-0 z-10">
             <div>
                 <h2 class="text-xl font-semibold text-brand-900 serif">Faith Together</h2>
@@ -284,6 +283,12 @@
 
         <!-- Prayer Modal Overlay -->
         <div id="prayerModal" class="hidden fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+            
+            <!-- Close 'X' Button to allow manual exit at any time -->
+            <button onclick="window.closePrayerModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-3xl transition">
+                <i class="fas fa-times"></i>
+            </button>
+
             <div id="breathingCircle" class="w-32 h-32 rounded-full bg-brand-100 border-4 border-brand-300 mb-8 flex items-center justify-center shadow-lg">
                 <i class="fas fa-spa text-4xl text-brand-500"></i>
             </div>
@@ -296,7 +301,7 @@
                 <button id="confirmPrayBtn" class="flex-1 bg-brand-300 text-white px-8 py-3 rounded-xl font-semibold cursor-not-allowed transition" disabled>Wait 8s...</button>
             </div>
 
-            <!-- Post-Prayer Navigation (Shown after clicking 'I Prayed') -->
+            <!-- Post-Prayer Navigation -->
             <div id="postPrayControls" class="hidden w-full max-w-xs flex justify-between gap-3">
                 <button onclick="window.closePrayerModal()" class="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-xl font-semibold transition">
                     <i class="fas fa-arrow-left mr-1"></i> Back
@@ -304,6 +309,41 @@
                 <button onclick="window.prayRandomRequest()" class="w-1/2 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-semibold transition shadow-md">
                     Next <i class="fas fa-arrow-right ml-1"></i>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER EDIT REQUEST MODAL -->
+    <div id="editRequestModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 class="text-lg font-bold text-brand-900 mb-4">Edit Prayer Request</h3>
+            <input type="hidden" id="editReqId">
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Description</label>
+                    <textarea id="editReqDesc" class="w-full p-3 border rounded-lg text-sm resize-none h-24 outline-none focus:ring-2 focus:ring-brand-400"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Goal (People)</label>
+                        <select id="editReqGoal" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-400 bg-white">
+                            <option value="1">1 Person</option>
+                            <option value="2">2 People</option>
+                            <option value="5">5 People</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Deadline Date</label>
+                        <input type="date" id="editReqDate" class="w-full p-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-brand-400 bg-white">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end gap-2">
+                <button onclick="window.closeEditRequestModal()" class="px-4 py-2 text-gray-500 hover:bg-gray-100 rounded-lg text-sm font-medium transition">Cancel</button>
+                <button onclick="window.savePrayerRequestEdit()" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700 transition">Save Changes</button>
             </div>
         </div>
     </div>
@@ -443,6 +483,9 @@
         let activePrayerId = null;
         window.currentBase64Photo = null;
         window.activeRequestsPool = [];
+        
+        // Tracking array to prevent duplicates in the same session
+        window.prayedInSession = [];
 
         // --- GLOBAL THEME LISTENER ---
         onSnapshot(doc(db, "settings", "ui"), (docSnap) => {
@@ -640,7 +683,7 @@
                             <span class="${count > 0 ? 'text-brand-600 font-bold' : 'text-gray-400'}">
                                 <i class="fas fa-heart text-red-400 mr-1"></i> ${count} ${count === 1 ? 'person has' : 'people have'} prayed (${isCompleted ? '✓ Goal Reached' : `Goal: ${req.goal}`})
                             </span>
-                            <button onclick="window.editPrayerRequest('${reqId}', '${req.description.replace(/'/g, "\\'")}')" class="text-brand-600 hover:text-brand-800 font-semibold px-2 py-1 rounded bg-brand-50 hover:bg-brand-100 transition">
+                            <button onclick="window.openEditRequestModal('${reqId}', '${req.description.replace(/'/g, "\\'")}', ${req.goal}, '${req.deadline || ''}')" class="text-brand-600 hover:text-brand-800 font-semibold px-2 py-1 rounded bg-brand-50 hover:bg-brand-100 transition">
                                 <i class="fas fa-edit mr-1"></i> Edit
                             </button>
                         </div>
@@ -650,33 +693,69 @@
             });
         }
 
-        // --- EDIT PRAYER REQUEST FUNCTIONALITY ---
-        window.editPrayerRequest = async (id, currentDesc) => {
-            const newDesc = prompt("Edit your prayer request:", currentDesc);
-            if (newDesc !== null) {
-                const trimmed = newDesc.trim();
-                if (!trimmed) return alert("Request description cannot be empty.");
-                try {
-                    await updateDoc(doc(db, "requests", id), { description: trimmed });
-                    alert("Prayer request updated successfully!");
-                } catch (e) {
-                    alert("Error updating request: " + e.message);
-                }
+        // --- NEW CUSTOM MODAL EDIT PRAYER REQUEST FUNCTIONALITY ---
+        window.openEditRequestModal = (id, desc, goal, deadline) => {
+            document.getElementById('editReqId').value = id;
+            document.getElementById('editReqDesc').value = desc;
+            document.getElementById('editReqGoal').value = goal || 1;
+            document.getElementById('editReqDate').value = deadline || '';
+            document.getElementById('editRequestModal').classList.remove('hidden');
+        };
+
+        window.closeEditRequestModal = () => {
+            document.getElementById('editRequestModal').classList.add('hidden');
+        };
+
+        window.savePrayerRequestEdit = async () => {
+            const id = document.getElementById('editReqId').value;
+            const desc = document.getElementById('editReqDesc').value.trim();
+            const goal = parseInt(document.getElementById('editReqGoal').value);
+            const deadline = document.getElementById('editReqDate').value;
+
+            if (!desc) return alert("Request description cannot be empty.");
+            if (!deadline) return alert("Please select a valid deadline date.");
+
+            const btn = document.querySelector('#editRequestModal button.bg-brand-600');
+            const origText = btn.innerText;
+            btn.innerText = "Saving...";
+            btn.disabled = true;
+
+            try {
+                await updateDoc(doc(db, "requests", id), { 
+                    description: desc,
+                    goal: goal,
+                    deadline: deadline
+                });
+                alert("Prayer request updated successfully!");
+                window.closeEditRequestModal();
+            } catch (e) {
+                alert("Error updating request: " + e.message);
+            } finally {
+                btn.innerText = origText;
+                btn.disabled = false;
             }
         };
 
+        // --- RANDOM PRAYER GENERATOR ---
         window.prayRandomRequest = () => {
-            const availablePool = window.activeRequestsPool.filter(r => r.id !== activePrayerId);
+            // Filter out anything they just prayed for in this active session
+            const availablePool = window.activeRequestsPool.filter(r => 
+                r.id !== activePrayerId && !window.prayedInSession.includes(r.id)
+            );
             
-            if (availablePool.length === 0 && window.activeRequestsPool.length === 0) {
-                alert("There are no active requests from other users right now. Check back later!");
+            // If they have gone through all available requests
+            if (availablePool.length === 0) {
+                if (window.prayedInSession.length > 0) {
+                    alert("Thank you! You have prayed for all available requests for now.");
+                } else {
+                    alert("There are no active requests from other users right now. Check back later!");
+                }
                 window.closePrayerModal();
                 return;
             }
 
-            const poolToUse = availablePool.length > 0 ? availablePool : window.activeRequestsPool;
-            const randomIndex = Math.floor(Math.random() * poolToUse.length);
-            const selectedRequest = poolToUse[randomIndex];
+            const randomIndex = Math.floor(Math.random() * availablePool.length);
+            const selectedRequest = availablePool[randomIndex];
             
             window.initiatePrayer(selectedRequest.id, selectedRequest.desc.replace(/'/g, "\\'"));
         };
@@ -750,6 +829,7 @@
             document.getElementById('prayerModal').classList.remove('hidden');
             document.getElementById('breathingCircle').classList.add('breathe-animation');
             
+            // RESET VIEWS: Show Pre-Pray, Hide Post-Pray
             document.getElementById('prePrayControls').classList.remove('hidden');
             document.getElementById('postPrayControls').classList.add('hidden');
             
@@ -767,19 +847,33 @@
         };
 
         document.getElementById('confirmPrayBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('confirmPrayBtn');
+            btn.innerText = "Sending...";
+            btn.disabled = true;
+
             if (activePrayerId) {
-                const reqRef = doc(db, 'requests', activePrayerId);
-                const reqSnap = await getDoc(reqRef);
-                if (reqSnap.exists()) {
-                    await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
+                const currentId = activePrayerId;
+                
+                // Track immediately in local memory so it doesn't show up again this session
+                window.prayedInSession.push(currentId);
+                
+                try {
+                    const reqRef = doc(db, 'requests', currentId);
+                    const reqSnap = await getDoc(reqRef);
+                    if (reqSnap.exists()) {
+                        await updateDoc(reqRef, { currentPrayers: reqSnap.data().currentPrayers + 1 });
+                    }
+                    
+                    const userRef = doc(db, 'users', auth.currentUser.uid);
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        await updateDoc(userRef, { lifeScore: (userSnap.data().lifeScore || 0) + 1 });
+                    }
+                } catch(e) {
+                    console.error("Error updating prayer records:", e);
                 }
                 
-                const userRef = doc(db, 'users', auth.currentUser.uid);
-                const userSnap = await getDoc(userRef);
-                if (userSnap.exists()) {
-                    await updateDoc(userRef, { lifeScore: (userSnap.data().lifeScore || 0) + 1 });
-                }
-                
+                // SWAP UI: Hide the "I Prayed" button, Show "Next" / "Back"
                 document.getElementById('prePrayControls').classList.add('hidden');
                 document.getElementById('postPrayControls').classList.remove('hidden');
             }
