@@ -66,10 +66,10 @@
         }
         h1, h2, h3, .serif { font-family: 'Lora', serif; }
         .glass-card {
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.78);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             border-radius: 1rem;
         }
@@ -79,6 +79,21 @@
             40% { transform: scale(1.15); opacity: 1; }
             60% { transform: scale(1.15); opacity: 1; }
             100% { transform: scale(1); opacity: 0.8; }
+        }
+        @keyframes prayBlink {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            }
+            50% {
+                opacity: 0.75;
+                transform: scale(1.02);
+                box-shadow: 0 0 22px var(--brand-400);
+            }
+        }
+        .pray-blink {
+            animation: prayBlink 1.5s ease-in-out infinite;
         }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -104,37 +119,38 @@
 
     <!-- MAIN USER VIEW -->
     <div id="userView" class="hidden flex flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white/40 overflow-hidden">
-        <!-- Top Nav Header -->
-        <header class="glass-card m-4 p-4 flex justify-between items-center rounded-2xl shrink-0 z-10">
+        
+        <!-- TIER 1: Top Nav Header -->
+        <header class="glass-card mx-3 mt-3 mb-2 p-3.5 flex justify-between items-center rounded-2xl shrink-0 z-10">
             <div>
-                <h2 class="text-xl font-semibold text-brand-900 serif">Faith Together</h2>
+                <h2 class="text-xl font-semibold text-brand-900 serif leading-tight">Faith Together</h2>
                 <p class="text-[10px] text-gray-500 mt-0.5 font-medium">Every Request Matters. Every Prayer Counts.</p>
             </div>
             <div class="flex items-center gap-3">
                 <div class="text-right flex flex-col items-end">
-                    <p class="text-xs text-gray-500">Life Score</p>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-wider">Life Score</p>
                     <div class="flex items-center gap-1">
                         <i id="navBadgeIcon" class="fas fa-leaf text-[10px] text-gray-500"></i>
-                        <p id="navLifeScore" class="font-bold text-brand-600">0</p>
+                        <p id="navLifeScore" class="font-bold text-brand-600 text-sm">0</p>
                     </div>
                 </div>
-                <div id="navProfileIcon" class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-800 font-bold overflow-hidden border border-brand-200 cursor-pointer">
+                <div id="navProfileIcon" onclick="window.switchTab('profileSection', 'tabProfile')" class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-800 font-bold overflow-hidden border border-brand-200 cursor-pointer shrink-0">
                     <span id="navInitials">U</span>
                     <img id="navAvatar" src="" alt="Profile" class="w-full h-full object-cover hidden">
                 </div>
             </div>
         </header>
 
-        <!-- Scrollable Main Content Area -->
-        <main class="flex-1 overflow-y-auto px-4 pb-6 space-y-6">
+        <!-- Scrollable Main Content Container -->
+        <main class="flex-1 overflow-y-auto px-3 pb-3 flex flex-col gap-2.5">
             
-            <!-- Dynamic Bot Banner -->
-            <div id="botBanner" class="glass-card p-4 text-center border-l-4 border-brand-500">
-                <p id="botMessage" class="italic text-gray-700 text-sm">"Peace be with you. How can the community support you today?"</p>
+            <!-- TIER 2: Slim Dynamic Bot Banner -->
+            <div id="botBanner" class="glass-card px-4 py-2.5 text-center border-l-4 border-brand-500 shrink-0">
+                <p id="botMessage" class="italic text-gray-700 text-xs">"Peace be with you. How can the community support you today?"</p>
             </div>
 
             <!-- TAB 1: Profile Management & Notification Section -->
-            <div id="profileSection" class="hidden glass-card p-6 space-y-4">
+            <div id="profileSection" class="hidden glass-card p-5 space-y-4">
                 <h3 class="text-lg font-semibold border-b pb-2 serif text-brand-900 flex justify-between items-center">
                     Your Profile
                 </h3>
@@ -178,109 +194,146 @@
                 </div>
             </div>
 
-            <!-- TAB 2: Bot Wizard 4-Step Add Request -->
-            <div id="addRequestSection" class="hidden glass-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold text-brand-900 serif border-b pb-2 mb-4">Share Your Burden</h3>
+            <!-- TAB 2: Request Tab Wrapper (Asymmetric Two-Column Bottom Split) -->
+            <div id="addRequestSection" class="hidden flex-1 flex flex-col gap-2.5 min-h-0">
                 
-                <div class="flex justify-between mb-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                    <span id="step1Ind" class="text-brand-600">1. Write</span>
-                    <span id="step2Ind">2. Name</span>
-                    <span id="step3Ind">3. Goal</span>
-                    <span id="step4Ind">4. Date</span>
-                </div>
+                <!-- Large Central Request Wizard Card -->
+                <div class="flex-1 glass-card p-5 flex flex-col justify-between min-h-[230px] overflow-y-auto">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-gray-200/80 pb-2 mb-3">
+                            <h3 class="text-lg font-semibold text-brand-900 serif">Share Your Burden</h3>
+                            <div class="flex gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                                <span id="step1Ind" class="text-brand-600">1. Write</span>
+                                <span id="step2Ind">2. Name</span>
+                                <span id="step3Ind">3. Goal</span>
+                                <span id="step4Ind">4. Date</span>
+                            </div>
+                        </div>
 
-                <!-- Step 1: Write -->
-                <div id="wizardStep1" class="space-y-3">
-                    <label class="block text-xs font-bold text-gray-700">Write your request:</label>
-                    <textarea id="reqDesc" placeholder="Type out what you would like prayer for..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm resize-none h-24"></textarea>
-                    <button onclick="window.nextWizardStep(2)" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition mt-2">Next Step</button>
-                </div>
+                        <!-- Step 1: Write -->
+                        <div id="wizardStep1" class="space-y-3">
+                            <label class="block text-xs font-bold text-gray-700">Write your request:</label>
+                            <textarea id="reqDesc" placeholder="Type out what you would like prayer for..." class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-400 outline-none text-sm resize-none h-24 bg-white/90"></textarea>
+                            <button onclick="window.nextWizardStep(2)" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-semibold text-sm transition shadow-sm">Next Step</button>
+                        </div>
 
-                <!-- Step 2: Nickname -->
-                <div id="wizardStep2" class="hidden space-y-3">
-                    <label class="block text-xs font-bold text-gray-700">Choose a nickname:</label>
-                    <input type="text" id="reqNickname" placeholder="Leave blank to remain Anonymous" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm">
-                    <p class="text-[10px] text-gray-500 italic">Note: Your personal email and identity are NEVER revealed.</p>
-                    <div class="flex gap-2 mt-2">
-                        <button onclick="window.nextWizardStep(1)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
-                        <button onclick="window.nextWizardStep(3)" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
+                        <!-- Step 2: Nickname -->
+                        <div id="wizardStep2" class="hidden space-y-3">
+                            <label class="block text-xs font-bold text-gray-700">Choose a nickname:</label>
+                            <input type="text" id="reqNickname" placeholder="Leave blank to remain Anonymous" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white/90">
+                            <p class="text-[10px] text-gray-500 italic">Note: Your personal email and identity are NEVER revealed.</p>
+                            <div class="flex gap-2 pt-1">
+                                <button onclick="window.nextWizardStep(1)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-xl font-medium text-sm hover:bg-gray-300 transition">Back</button>
+                                <button onclick="window.nextWizardStep(3)" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-semibold text-sm transition shadow-sm">Next Step</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Goal -->
+                        <div id="wizardStep3" class="hidden space-y-3">
+                            <label class="block text-xs font-bold text-gray-700">Select prayer goal:</label>
+                            <p class="text-[10px] text-gray-500">How many people do you want to pray for your request?</p>
+                            <select id="reqGoal" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white">
+                                <option value="1">1 Person</option>
+                                <option value="2">2 People</option>
+                                <option value="5">5 People</option>
+                            </select>
+                            <div class="flex gap-2 pt-1">
+                                <button onclick="window.nextWizardStep(2)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-xl font-medium text-sm hover:bg-gray-300 transition">Back</button>
+                                <button onclick="window.nextWizardStep(4)" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-semibold text-sm transition shadow-sm">Next Step</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Deadline -->
+                        <div id="wizardStep4" class="hidden space-y-2.5">
+                            <label class="block text-xs font-bold text-gray-700">Set a deadline:</label>
+                            <p class="text-[10px] text-gray-500">Automatically closes once the goal or date is reached.</p>
+                            <select id="reqDeadlineType" class="w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white" onchange="window.toggleCustomDate()">
+                                <option value="1">1 Day</option>
+                                <option value="7">7 Days</option>
+                                <option value="30">30 Days</option>
+                                <option value="custom">Specific Date (YYYY-MM-DD)</option>
+                            </select>
+                            <input type="date" id="reqDate" class="hidden w-full p-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white">
+                            
+                            <div class="flex gap-2 pt-1">
+                                <button onclick="window.nextWizardStep(3)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-xl font-medium text-sm hover:bg-gray-300 transition">Back</button>
+                                <button id="submitRequestBtn" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-semibold text-sm transition shadow-md">Submit (-1 Score)</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Step 3: Goal -->
-                <div id="wizardStep3" class="hidden space-y-3">
-                    <label class="block text-xs font-bold text-gray-700">Select prayer goal:</label>
-                    <p class="text-[10px] text-gray-500 mb-2">How many people do you want to pray for your request?</p>
-                    <select id="reqGoal" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white">
-                        <option value="1">1 Person</option>
-                        <option value="2">2 People</option>
-                        <option value="5">5 People</option>
-                    </select>
-                    <div class="flex gap-2 mt-2">
-                        <button onclick="window.nextWizardStep(2)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
-                        <button onclick="window.nextWizardStep(4)" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition">Next Step</button>
-                    </div>
-                </div>
-
-                <!-- Step 4: Deadline -->
-                <div id="wizardStep4" class="hidden space-y-3">
-                    <label class="block text-xs font-bold text-gray-700">Set a deadline:</label>
-                    <p class="text-[10px] text-gray-500 mb-2">Choose how long the request should stay active. It automatically closes once the goal or date is reached.</p>
-                    <select id="reqDeadlineType" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm bg-white mb-2" onchange="window.toggleCustomDate()">
-                        <option value="1">1 Day</option>
-                        <option value="7">7 Days</option>
-                        <option value="30">30 Days</option>
-                        <option value="custom">Specific Date (YYYY-MM-DD)</option>
-                    </select>
-                    <input type="date" id="reqDate" class="hidden w-full p-3 border rounded-lg focus:ring-2 focus:ring-brand-400 outline-none text-sm">
+                <!-- Bottom Asymmetric Two-Column Split -->
+                <div class="grid grid-cols-[1.65fr_1fr] gap-2.5 shrink-0">
                     
-                    <div class="flex gap-2 mt-4">
-                        <button onclick="window.nextWizardStep(3)" class="w-1/3 bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition">Back</button>
-                        <button id="submitRequestBtn" class="w-2/3 bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-lg font-medium transition shadow-md">Submit (-1 Score)</button>
+                    <!-- Left Box (Wider): Daily Bread Card -->
+                    <div id="reqDailyVerseCard" class="glass-card p-3.5 flex flex-col justify-between bg-gradient-to-br from-brand-50 to-white shadow-sm border-brand-100 h-36 overflow-y-auto">
+                        <h3 class="text-[10px] font-bold text-brand-600 uppercase tracking-wider mb-1 text-center">
+                            DAILY BREAD
+                        </h3>
+                        <p id="reqDailyVerseText" class="daily-verse-text text-[11px] text-gray-700 italic leading-snug my-auto text-center">Gathering today's verse...</p>
+                        <p id="reqDailyVerseRef" class="daily-verse-ref text-[10px] text-brand-900 font-semibold mt-1.5 text-center"></p>
                     </div>
+
+                    <!-- Right Box (Narrower): Sponsored Content / AdSense Slot -->
+                    <div class="glass-card p-3 flex flex-col justify-between bg-white/65 border border-dashed border-brand-200 h-36 overflow-hidden text-center">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">SPONSORED</p>
+                        <div class="flex-1 flex items-center justify-center overflow-hidden w-full">
+                            <ins class="adsbygoogle" style="display:block; width:100%; height:100%;" data-ad-client="ca-pub-5183301052795233" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- TAB 3: Community Tab Wrapper -->
-            <div id="communityTabWrapper" class="space-y-4">
+            <!-- TAB 3: Community Tab Wrapper (FULL-WIDTH VERTICAL STACKED WIREFRAME) -->
+            <div id="communityTabWrapper" class="flex-1 flex flex-col gap-2.5 min-h-0">
                 
-                <!-- Daily Verse Card -->
-                <div id="dailyVerseCard" class="glass-card p-5 text-center mb-4 bg-gradient-to-br from-brand-50 to-white shadow-sm border-brand-100">
-                    <h3 class="text-xs font-bold text-brand-400 uppercase tracking-widest mb-2"><i class="fas fa-book-open mr-1"></i> Daily Bread</h3>
-                    <p id="dailyVerseText" class="text-sm text-gray-700 italic leading-relaxed">Gathering today's verse...</p>
-                    <p id="dailyVerseRef" class="text-xs text-brand-900 font-semibold mt-2"></p>
-                </div>
-
-                <!-- Google AdSense Banner Slot -->
-                <div class="glass-card p-3 text-center mb-4 bg-white/50 border border-dashed border-brand-200">
-                    <p class="text-[9px] text-gray-400 uppercase tracking-widest mb-1">Sponsored Content</p>
-                    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5183301052795233" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                </div>
-
-                <!-- Random Prayer Generator Feed -->
-                <div class="glass-card p-8 text-center flex flex-col items-center justify-center space-y-4">
-                    <div class="w-16 h-16 rounded-full bg-brand-100 flex items-center justify-center mb-2 shadow-sm border border-brand-200">
+                <!-- TIER 3: Large Central Primary Action Box -->
+                <div class="flex-1 glass-card p-5 text-center flex flex-col items-center justify-center space-y-2.5 min-h-[185px]">
+                    <div class="w-14 h-14 rounded-full bg-brand-100 flex items-center justify-center shadow-sm border border-brand-200">
                         <i class="fas fa-hand-holding-heart text-2xl text-brand-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-brand-900 serif">Someone Needs You</h3>
-                    <p class="text-sm text-gray-600 mb-4">There are <span id="activeReqCount" class="font-bold text-brand-600">0</span> anonymous requests waiting for support.</p>
-                    <button onclick="window.prayRandomRequest()" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg transition transform active:scale-95">
-                        Pray for them
-                    </button>
+                    <h3 class="text-2xl font-bold text-brand-900 serif">Someone Needs You</h3>
+                    <p class="text-sm text-gray-600 max-w-xs">There are <span id="activeReqCount" class="font-bold text-brand-600">0</span> anonymous requests waiting for support.</p>
+                    <div class="w-full pt-1.5">
+                        <button id="prayForThemBtn" onclick="window.prayRandomRequest()" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 rounded-xl font-bold text-base shadow-lg transition transform active:scale-95">
+                            Pray for them
+                        </button>
+                    </div>
                 </div>
+
+                <!-- TIER 4: Full-Width Daily Bread Card -->
+                <div id="dailyVerseCard" class="glass-card p-4 text-center flex flex-col justify-center bg-gradient-to-br from-brand-50 to-white shadow-sm border-brand-100 shrink-0 min-h-[115px]">
+                    <h3 class="text-[11px] font-bold text-brand-600 uppercase tracking-widest mb-1.5">
+                        DAILY BREAD
+                    </h3>
+                    <p id="dailyVerseText" class="daily-verse-text text-xs text-gray-700 italic leading-relaxed">Gathering today's verse...</p>
+                    <p id="dailyVerseRef" class="daily-verse-ref text-[11px] text-brand-900 font-semibold mt-1.5"></p>
+                </div>
+
+                <!-- TIER 5: Full-Width Sponsored Content / AdSense Slot -->
+                <div class="glass-card px-3 py-2.5 text-center bg-white/65 border border-dashed border-brand-200 shrink-0 min-h-[76px] flex flex-col justify-center">
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">SPONSORED</p>
+                    <div class="w-full overflow-hidden flex items-center justify-center">
+                        <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-client="ca-pub-5183301052795233" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
+                </div>
+
             </div>
         </main>
 
         <!-- Fixed Bottom Navigation Toolbar -->
         <div class="shrink-0 w-full z-30 bg-white/95 backdrop-blur-md shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-gray-200">
-            <nav class="flex justify-around p-3">
-                <button id="tabFeed" class="text-brand-600 flex flex-col items-center p-2"><i class="fas fa-hands-praying text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Community</span></button>
-                <button id="tabAdd" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-pen text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Request</span></button>
-                <button id="tabProfile" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-2 transition"><i class="fas fa-user text-xl mb-1"></i><span class="text-[10px] uppercase font-bold tracking-wider mt-1">Profile</span></button>
+            <nav class="flex justify-around py-2 px-3">
+                <button id="tabFeed" class="text-brand-600 flex flex-col items-center p-1.5"><i class="fas fa-hands-praying text-lg mb-0.5"></i><span class="text-[10px] uppercase font-bold tracking-wider">Community</span></button>
+                <button id="tabAdd" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-1.5 transition"><i class="fas fa-pen text-lg mb-0.5"></i><span class="text-[10px] uppercase font-bold tracking-wider">Request</span></button>
+                <button id="tabProfile" class="text-gray-400 hover:text-brand-600 flex flex-col items-center p-1.5 transition"><i class="fas fa-user text-lg mb-0.5"></i><span class="text-[10px] uppercase font-bold tracking-wider">Profile</span></button>
             </nav>
             
-            <div class="w-full text-center pb-3 pt-1">
+            <div class="w-full text-center pb-2.5 pt-0.5">
                 <p class="text-[10px] text-gray-500 opacity-70">
                     &copy; 2026 Orhem Abasolo-CCPVYAM2026. All rights reserved.
                 </p>
@@ -289,6 +342,12 @@
 
         <!-- Prayer Modal Overlay -->
         <div id="prayerModal" class="hidden fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+            <!-- Top-Left Chime Mute Toggle -->
+            <button onclick="window.togglePrayerChime()" id="toggleChimeBtn" title="Toggle completion chime" class="absolute top-6 left-6 text-brand-500 hover:text-brand-700 text-xl transition p-1">
+                <i id="chimeIcon" class="fas fa-volume-up"></i>
+            </button>
+
+            <!-- Top-Right Close Button -->
             <button onclick="window.closePrayerModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-3xl transition">
                 <i class="fas fa-times"></i>
             </button>
@@ -485,10 +544,81 @@
 
         let currentUserDoc = null;
         let activePrayerId = null;
+        let prayerTimerId = null;
+        let prayerAudioCtx = null;
+        window.chimeEnabled = true;
         window.currentBase64Photo = null;
         window.activeRequestsPool = [];
         
         window.prayedInSession = [];
+
+        // Soothing Web Audio Meditation Chime & Haptic Feedback
+        window.unlockAudioContext = () => {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                if (!prayerAudioCtx) {
+                    prayerAudioCtx = new AudioCtx();
+                }
+                if (prayerAudioCtx.state === 'suspended') {
+                    prayerAudioCtx.resume();
+                }
+            } catch (e) {}
+        };
+
+        window.togglePrayerChime = () => {
+            window.chimeEnabled = !window.chimeEnabled;
+            const icon = document.getElementById('chimeIcon');
+            const btn = document.getElementById('toggleChimeBtn');
+            if (icon && btn) {
+                icon.className = window.chimeEnabled ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+                btn.classList.toggle('text-brand-500', window.chimeEnabled);
+                btn.classList.toggle('text-gray-400', !window.chimeEnabled);
+            }
+            if (window.chimeEnabled) {
+                window.unlockAudioContext();
+                window.playPrayerChime();
+            }
+        };
+
+        window.playPrayerChime = () => {
+            if (!window.chimeEnabled) return;
+            try {
+                window.unlockAudioContext();
+                if (!prayerAudioCtx) return;
+
+                const now = prayerAudioCtx.currentTime;
+                const frequencies = [528, 792]; // Calm harmonic fifth (C5 + G5)
+
+                frequencies.forEach((freq, idx) => {
+                    const osc = prayerAudioCtx.createOscillator();
+                    const gain = prayerAudioCtx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+
+                    const peakGain = idx === 0 ? 0.14 : 0.05;
+                    gain.gain.setValueAtTime(0.0001, now);
+                    gain.gain.exponentialRampToValueAtTime(peakGain, now + 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+
+                    osc.connect(gain);
+                    gain.connect(prayerAudioCtx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 2.25);
+                });
+            } catch (e) {}
+        };
+
+        window.triggerCompletionFeedback = () => {
+            window.playPrayerChime();
+            try {
+                if (navigator.vibrate) {
+                    navigator.vibrate([60, 80, 100]);
+                }
+            } catch (e) {}
+        };
 
         // Global UI Theme Listener
         onSnapshot(doc(db, "settings", "ui"), (docSnap) => {
@@ -511,8 +641,10 @@
             }
         };
 
-        // Fetch Daily Verse
+        // Fetch Daily Verse & Populate All Active Tabs
         async function fetchDailyVerse() {
+            let verseText = `"Let all that you do be done in love."`;
+            let verseRef = `- 1 Corinthians 16:14`;
             try {
                 const themeReferences = ['Proverbs 3:5-6', 'Romans 12:10', 'Hebrews 10:24-25', '1 Corinthians 16:14', 'Joshua 1:9', 'Philippians 4:13', '1 Peter 2:17', 'Isaiah 41:10', 'John 13:34'];
                 const now = new Date();
@@ -521,12 +653,13 @@
                 const ref = themeReferences[dayOfYear % themeReferences.length];
                 const response = await fetch(`https://bible-api.com/${ref}`);
                 const data = await response.json();
-                document.getElementById('dailyVerseText').innerText = `"${data.text.replace(/\n/g, ' ').trim()}"`;
-                document.getElementById('dailyVerseRef').innerText = `- ${data.reference}`;
+                verseText = `"${data.text.replace(/\n/g, ' ').trim()}"`;
+                verseRef = `- ${data.reference}`;
             } catch (error) {
-                document.getElementById('dailyVerseText').innerText = `"Let all that you do be done in love."`;
-                document.getElementById('dailyVerseRef').innerText = "- 1 Corinthians 16:14";
+                // Uses fallback verse above
             }
+            document.querySelectorAll('.daily-verse-text').forEach(el => el.innerText = verseText);
+            document.querySelectorAll('.daily-verse-ref').forEach(el => el.innerText = verseRef);
         }
         fetchDailyVerse();
 
@@ -545,7 +678,6 @@
             if (!email || !pass) return alert("Please enter an email and password.");
             try {
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                // SET DEFAULT SCORE TO 1
                 await setDoc(doc(db, "users", cred.user.uid), { email: email, role: 'user', lifeScore: 1, photoURL: "", displayName: "", bio: "" }, { merge: true });
             } catch (err) { alert("Registration failed: " + err.message); }
         });
@@ -684,7 +816,13 @@
                     window.activeRequestsPool.push({ id: docSnap.id, desc: req.description });
                 });
 
-                document.getElementById('activeReqCount').innerText = window.activeRequestsPool.length;
+                const activeCount = window.activeRequestsPool.length;
+                document.getElementById('activeReqCount').innerText = activeCount;
+                
+                const prayBtn = document.getElementById('prayForThemBtn');
+                if (prayBtn) {
+                    prayBtn.classList.toggle('pray-blink', activeCount > 0);
+                }
             });
 
             onSnapshot(query(collection(db, "requests"), where("userId", "==", auth.currentUser.uid)), (myReqSnap) => {
@@ -766,6 +904,7 @@
 
         // Random Prayer Generator
         window.prayRandomRequest = () => {
+            window.unlockAudioContext();
             const availablePool = window.activeRequestsPool.filter(r => 
                 r.id !== activePrayerId && !window.prayedInSession.includes(r.id)
             );
@@ -850,10 +989,20 @@
 
         // Prayer Timer and Confirmation Logic
         window.initiatePrayer = (id, desc) => {
+            window.unlockAudioContext();
+            if (prayerTimerId) {
+                clearTimeout(prayerTimerId);
+                prayerTimerId = null;
+            }
+
             activePrayerId = id;
             document.getElementById('prayerFocusText').innerText = `"${desc}"`;
             document.getElementById('prayerModal').classList.remove('hidden');
-            document.getElementById('breathingCircle').classList.add('breathe-animation');
+            
+            const circle = document.getElementById('breathingCircle');
+            circle.classList.remove('breathe-animation');
+            void circle.offsetWidth; // Restart animation cleanly on Next
+            circle.classList.add('breathe-animation');
             
             document.getElementById('prePrayControls').classList.remove('hidden');
             document.getElementById('postPrayControls').classList.add('hidden');
@@ -865,9 +1014,11 @@
             btn.innerText = "Wait 8s..."; btn.disabled = true;
             btn.classList.add('bg-brand-300', 'cursor-not-allowed'); btn.classList.remove('bg-brand-600', 'hover:bg-brand-700');
             
-            setTimeout(() => { 
+            prayerTimerId = setTimeout(() => { 
+                prayerTimerId = null;
                 btn.innerText = "I Prayed"; btn.disabled = false; 
-                btn.classList.remove('bg-brand-300', 'cursor-not-allowed'); btn.classList.add('bg-brand-600', 'hover:bg-brand-700'); 
+                btn.classList.remove('bg-brand-300', 'cursor-not-allowed'); btn.classList.add('bg-brand-600', 'hover:bg-brand-700');
+                window.triggerCompletionFeedback();
             }, 8000);
         };
 
@@ -906,6 +1057,10 @@
         });
 
         window.closePrayerModal = () => {
+            if (prayerTimerId) {
+                clearTimeout(prayerTimerId);
+                prayerTimerId = null;
+            }
             document.getElementById('prayerModal').classList.add('hidden');
             document.getElementById('breathingCircle').classList.remove('breathe-animation');
             activePrayerId = null;
